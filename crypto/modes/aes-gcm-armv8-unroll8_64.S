@@ -1,7 +1,7 @@
 #include "arm_arch.h"
 
 #if __ARM_MAX_ARCH__>=8
-.arch	armv8.2-a+crypto
+.arch	armv8-a+crypto
 .text
 .globl	unroll8_eor3_aes_gcm_enc_128_kernel
 .type	unroll8_eor3_aes_gcm_enc_128_kernel,%function
