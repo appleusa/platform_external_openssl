@@ -24,14 +24,14 @@ ossl_aes_gcm_init_avx512:
 
 	movl	240(%rdi),%eax
 	cmpl	$9,%eax
-	je	.Laes_128_odfFyphirxGhDrj
+	je	.Laes_128_0
 	cmpl	$11,%eax
-	je	.Laes_192_odfFyphirxGhDrj
+	je	.Laes_192_0
 	cmpl	$13,%eax
-	je	.Laes_256_odfFyphirxGhDrj
-	jmp	.Lexit_aes_odfFyphirxGhDrj
+	je	.Laes_256_0
+	jmp	.Lexit_aes_0
 .align	32
-.Laes_128_odfFyphirxGhDrj:
+.Laes_128_0:
 	vpxorq	0(%rdi),%xmm16,%xmm16
 
 	vaesenc	16(%rdi),%xmm16,%xmm16
@@ -53,9 +53,9 @@ ossl_aes_gcm_init_avx512:
 	vaesenc	144(%rdi),%xmm16,%xmm16
 
 	vaesenclast	160(%rdi),%xmm16,%xmm16
-	jmp	.Lexit_aes_odfFyphirxGhDrj
+	jmp	.Lexit_aes_0
 .align	32
-.Laes_192_odfFyphirxGhDrj:
+.Laes_192_0:
 	vpxorq	0(%rdi),%xmm16,%xmm16
 
 	vaesenc	16(%rdi),%xmm16,%xmm16
@@ -81,9 +81,9 @@ ossl_aes_gcm_init_avx512:
 	vaesenc	176(%rdi),%xmm16,%xmm16
 
 	vaesenclast	192(%rdi),%xmm16,%xmm16
-	jmp	.Lexit_aes_odfFyphirxGhDrj
+	jmp	.Lexit_aes_0
 .align	32
-.Laes_256_odfFyphirxGhDrj:
+.Laes_256_0:
 	vpxorq	0(%rdi),%xmm16,%xmm16
 
 	vaesenc	16(%rdi),%xmm16,%xmm16
@@ -113,8 +113,8 @@ ossl_aes_gcm_init_avx512:
 	vaesenc	208(%rdi),%xmm16,%xmm16
 
 	vaesenclast	224(%rdi),%xmm16,%xmm16
-	jmp	.Lexit_aes_odfFyphirxGhDrj
-.Lexit_aes_odfFyphirxGhDrj:
+	jmp	.Lexit_aes_0
+.Lexit_aes_0:
 
 	vpshufb	SHUF_MASK(%rip),%xmm16,%xmm16
 
@@ -352,14 +352,14 @@ ossl_aes_gcm_setiv_avx512:
 	movq	%rdx,%r10
 	movq	%rcx,%r11
 	orq	%r11,%r11
-	jz	.L_CALC_AAD_done_vrxGfkkBAdBjnyf
+	jz	.L_CALC_AAD_done_1
 
 	xorq	%rbx,%rbx
 	vmovdqa64	SHUF_MASK(%rip),%zmm16
 
-.L_get_AAD_loop48x16_vrxGfkkBAdBjnyf:
+.L_get_AAD_loop48x16_1:
 	cmpq	$768,%r11
-	jl	.L_exit_AAD_loop48x16_vrxGfkkBAdBjnyf
+	jl	.L_exit_AAD_loop48x16_1
 	vmovdqu64	0(%r10),%zmm11
 	vmovdqu64	64(%r10),%zmm3
 	vmovdqu64	128(%r10),%zmm4
@@ -369,7 +369,7 @@ ossl_aes_gcm_setiv_avx512:
 	vpshufb	%zmm16,%zmm4,%zmm4
 	vpshufb	%zmm16,%zmm5,%zmm5
 	testq	%rbx,%rbx
-	jnz	.L_skip_hkeys_precomputation_FqcdCaGqcqsAspi
+	jnz	.L_skip_hkeys_precomputation_2
 
 	vmovdqu64	288(%rsi),%zmm1
 	vmovdqu64	%zmm1,704(%rsp)
@@ -625,7 +625,7 @@ ossl_aes_gcm_setiv_avx512:
 	vpternlogq	$0x96,%zmm15,%zmm13,%zmm12
 
 	vmovdqu64	%zmm12,0(%rsp)
-.L_skip_hkeys_precomputation_FqcdCaGqcqsAspi:
+.L_skip_hkeys_precomputation_2:
 	movq	$1,%rbx
 	vpxorq	%zmm2,%zmm11,%zmm11
 	vmovdqu64	0(%rsp),%zmm19
@@ -759,15 +759,15 @@ ossl_aes_gcm_setiv_avx512:
 	vpternlogq	$0x96,%xmm6,%xmm9,%xmm2
 
 	subq	$768,%r11
-	je	.L_CALC_AAD_done_vrxGfkkBAdBjnyf
+	je	.L_CALC_AAD_done_1
 
 	addq	$768,%r10
-	jmp	.L_get_AAD_loop48x16_vrxGfkkBAdBjnyf
+	jmp	.L_get_AAD_loop48x16_1
 
-.L_exit_AAD_loop48x16_vrxGfkkBAdBjnyf:
+.L_exit_AAD_loop48x16_1:
 
 	cmpq	$512,%r11
-	jl	.L_less_than_32x16_vrxGfkkBAdBjnyf
+	jl	.L_less_than_32x16_1
 
 	vmovdqu64	0(%r10),%zmm11
 	vmovdqu64	64(%r10),%zmm3
@@ -778,7 +778,7 @@ ossl_aes_gcm_setiv_avx512:
 	vpshufb	%zmm16,%zmm4,%zmm4
 	vpshufb	%zmm16,%zmm5,%zmm5
 	testq	%rbx,%rbx
-	jnz	.L_skip_hkeys_precomputation_aczcoxtefngFFlD
+	jnz	.L_skip_hkeys_precomputation_3
 
 	vmovdqu64	288(%rsi),%zmm1
 	vmovdqu64	%zmm1,704(%rsp)
@@ -914,7 +914,7 @@ ossl_aes_gcm_setiv_avx512:
 	vpternlogq	$0x96,%zmm15,%zmm13,%zmm12
 
 	vmovdqu64	%zmm12,256(%rsp)
-.L_skip_hkeys_precomputation_aczcoxtefngFFlD:
+.L_skip_hkeys_precomputation_3:
 	movq	$1,%rbx
 	vpxorq	%zmm2,%zmm11,%zmm11
 	vmovdqu64	256(%rsp),%zmm19
@@ -1011,14 +1011,14 @@ ossl_aes_gcm_setiv_avx512:
 	vpternlogq	$0x96,%xmm6,%xmm9,%xmm2
 
 	subq	$512,%r11
-	je	.L_CALC_AAD_done_vrxGfkkBAdBjnyf
+	je	.L_CALC_AAD_done_1
 
 	addq	$512,%r10
-	jmp	.L_less_than_16x16_vrxGfkkBAdBjnyf
+	jmp	.L_less_than_16x16_1
 
-.L_less_than_32x16_vrxGfkkBAdBjnyf:
+.L_less_than_32x16_1:
 	cmpq	$256,%r11
-	jl	.L_less_than_16x16_vrxGfkkBAdBjnyf
+	jl	.L_less_than_16x16_1
 
 	vmovdqu64	0(%r10),%zmm11
 	vmovdqu64	64(%r10),%zmm3
@@ -1086,11 +1086,11 @@ ossl_aes_gcm_setiv_avx512:
 	vpternlogq	$0x96,%xmm6,%xmm9,%xmm2
 
 	subq	$256,%r11
-	je	.L_CALC_AAD_done_vrxGfkkBAdBjnyf
+	je	.L_CALC_AAD_done_1
 
 	addq	$256,%r10
 
-.L_less_than_16x16_vrxGfkkBAdBjnyf:
+.L_less_than_16x16_1:
 
 	leaq	byte64_len_to_mask_table(%rip),%r12
 	leaq	(%r12,%r11,8),%r12
@@ -1099,29 +1099,29 @@ ossl_aes_gcm_setiv_avx512:
 	addl	$15,%r11d
 	shrl	$4,%r11d
 	cmpl	$2,%r11d
-	jb	.L_AAD_blocks_1_vrxGfkkBAdBjnyf
-	je	.L_AAD_blocks_2_vrxGfkkBAdBjnyf
+	jb	.L_AAD_blocks_1_1
+	je	.L_AAD_blocks_2_1
 	cmpl	$4,%r11d
-	jb	.L_AAD_blocks_3_vrxGfkkBAdBjnyf
-	je	.L_AAD_blocks_4_vrxGfkkBAdBjnyf
+	jb	.L_AAD_blocks_3_1
+	je	.L_AAD_blocks_4_1
 	cmpl	$6,%r11d
-	jb	.L_AAD_blocks_5_vrxGfkkBAdBjnyf
-	je	.L_AAD_blocks_6_vrxGfkkBAdBjnyf
+	jb	.L_AAD_blocks_5_1
+	je	.L_AAD_blocks_6_1
 	cmpl	$8,%r11d
-	jb	.L_AAD_blocks_7_vrxGfkkBAdBjnyf
-	je	.L_AAD_blocks_8_vrxGfkkBAdBjnyf
+	jb	.L_AAD_blocks_7_1
+	je	.L_AAD_blocks_8_1
 	cmpl	$10,%r11d
-	jb	.L_AAD_blocks_9_vrxGfkkBAdBjnyf
-	je	.L_AAD_blocks_10_vrxGfkkBAdBjnyf
+	jb	.L_AAD_blocks_9_1
+	je	.L_AAD_blocks_10_1
 	cmpl	$12,%r11d
-	jb	.L_AAD_blocks_11_vrxGfkkBAdBjnyf
-	je	.L_AAD_blocks_12_vrxGfkkBAdBjnyf
+	jb	.L_AAD_blocks_11_1
+	je	.L_AAD_blocks_12_1
 	cmpl	$14,%r11d
-	jb	.L_AAD_blocks_13_vrxGfkkBAdBjnyf
-	je	.L_AAD_blocks_14_vrxGfkkBAdBjnyf
+	jb	.L_AAD_blocks_13_1
+	je	.L_AAD_blocks_14_1
 	cmpl	$15,%r11d
-	je	.L_AAD_blocks_15_vrxGfkkBAdBjnyf
-.L_AAD_blocks_16_vrxGfkkBAdBjnyf:
+	je	.L_AAD_blocks_15_1
+.L_AAD_blocks_16_1:
 	subq	$1536,%r12
 	kmovq	(%r12),%k1
 	vmovdqu8	0(%r10),%zmm11
@@ -1189,8 +1189,8 @@ ossl_aes_gcm_setiv_avx512:
 	vpslldq	$4,%xmm2,%xmm2
 	vpternlogq	$0x96,%xmm1,%xmm8,%xmm2
 
-	jmp	.L_CALC_AAD_done_vrxGfkkBAdBjnyf
-.L_AAD_blocks_15_vrxGfkkBAdBjnyf:
+	jmp	.L_CALC_AAD_done_1
+.L_AAD_blocks_15_1:
 	subq	$1536,%r12
 	kmovq	(%r12),%k1
 	vmovdqu8	0(%r10),%zmm11
@@ -1260,8 +1260,8 @@ ossl_aes_gcm_setiv_avx512:
 	vpslldq	$4,%xmm2,%xmm2
 	vpternlogq	$0x96,%xmm1,%xmm8,%xmm2
 
-	jmp	.L_CALC_AAD_done_vrxGfkkBAdBjnyf
-.L_AAD_blocks_14_vrxGfkkBAdBjnyf:
+	jmp	.L_CALC_AAD_done_1
+.L_AAD_blocks_14_1:
 	subq	$1536,%r12
 	kmovq	(%r12),%k1
 	vmovdqu8	0(%r10),%zmm11
@@ -1330,8 +1330,8 @@ ossl_aes_gcm_setiv_avx512:
 	vpslldq	$4,%xmm2,%xmm2
 	vpternlogq	$0x96,%xmm1,%xmm8,%xmm2
 
-	jmp	.L_CALC_AAD_done_vrxGfkkBAdBjnyf
-.L_AAD_blocks_13_vrxGfkkBAdBjnyf:
+	jmp	.L_CALC_AAD_done_1
+.L_AAD_blocks_13_1:
 	subq	$1536,%r12
 	kmovq	(%r12),%k1
 	vmovdqu8	0(%r10),%zmm11
@@ -1400,8 +1400,8 @@ ossl_aes_gcm_setiv_avx512:
 	vpslldq	$4,%xmm2,%xmm2
 	vpternlogq	$0x96,%xmm1,%xmm8,%xmm2
 
-	jmp	.L_CALC_AAD_done_vrxGfkkBAdBjnyf
-.L_AAD_blocks_12_vrxGfkkBAdBjnyf:
+	jmp	.L_CALC_AAD_done_1
+.L_AAD_blocks_12_1:
 	subq	$1024,%r12
 	kmovq	(%r12),%k1
 	vmovdqu8	0(%r10),%zmm11
@@ -1458,8 +1458,8 @@ ossl_aes_gcm_setiv_avx512:
 	vpslldq	$4,%xmm2,%xmm2
 	vpternlogq	$0x96,%xmm1,%xmm8,%xmm2
 
-	jmp	.L_CALC_AAD_done_vrxGfkkBAdBjnyf
-.L_AAD_blocks_11_vrxGfkkBAdBjnyf:
+	jmp	.L_CALC_AAD_done_1
+.L_AAD_blocks_11_1:
 	subq	$1024,%r12
 	kmovq	(%r12),%k1
 	vmovdqu8	0(%r10),%zmm11
@@ -1522,8 +1522,8 @@ ossl_aes_gcm_setiv_avx512:
 	vpslldq	$4,%xmm2,%xmm2
 	vpternlogq	$0x96,%xmm1,%xmm8,%xmm2
 
-	jmp	.L_CALC_AAD_done_vrxGfkkBAdBjnyf
-.L_AAD_blocks_10_vrxGfkkBAdBjnyf:
+	jmp	.L_CALC_AAD_done_1
+.L_AAD_blocks_10_1:
 	subq	$1024,%r12
 	kmovq	(%r12),%k1
 	vmovdqu8	0(%r10),%zmm11
@@ -1585,8 +1585,8 @@ ossl_aes_gcm_setiv_avx512:
 	vpslldq	$4,%xmm2,%xmm2
 	vpternlogq	$0x96,%xmm1,%xmm8,%xmm2
 
-	jmp	.L_CALC_AAD_done_vrxGfkkBAdBjnyf
-.L_AAD_blocks_9_vrxGfkkBAdBjnyf:
+	jmp	.L_CALC_AAD_done_1
+.L_AAD_blocks_9_1:
 	subq	$1024,%r12
 	kmovq	(%r12),%k1
 	vmovdqu8	0(%r10),%zmm11
@@ -1648,8 +1648,8 @@ ossl_aes_gcm_setiv_avx512:
 	vpslldq	$4,%xmm2,%xmm2
 	vpternlogq	$0x96,%xmm1,%xmm8,%xmm2
 
-	jmp	.L_CALC_AAD_done_vrxGfkkBAdBjnyf
-.L_AAD_blocks_8_vrxGfkkBAdBjnyf:
+	jmp	.L_CALC_AAD_done_1
+.L_AAD_blocks_8_1:
 	subq	$512,%r12
 	kmovq	(%r12),%k1
 	vmovdqu8	0(%r10),%zmm11
@@ -1699,8 +1699,8 @@ ossl_aes_gcm_setiv_avx512:
 	vpslldq	$4,%xmm2,%xmm2
 	vpternlogq	$0x96,%xmm1,%xmm8,%xmm2
 
-	jmp	.L_CALC_AAD_done_vrxGfkkBAdBjnyf
-.L_AAD_blocks_7_vrxGfkkBAdBjnyf:
+	jmp	.L_CALC_AAD_done_1
+.L_AAD_blocks_7_1:
 	subq	$512,%r12
 	kmovq	(%r12),%k1
 	vmovdqu8	0(%r10),%zmm11
@@ -1752,8 +1752,8 @@ ossl_aes_gcm_setiv_avx512:
 	vpslldq	$4,%xmm2,%xmm2
 	vpternlogq	$0x96,%xmm1,%xmm8,%xmm2
 
-	jmp	.L_CALC_AAD_done_vrxGfkkBAdBjnyf
-.L_AAD_blocks_6_vrxGfkkBAdBjnyf:
+	jmp	.L_CALC_AAD_done_1
+.L_AAD_blocks_6_1:
 	subq	$512,%r12
 	kmovq	(%r12),%k1
 	vmovdqu8	0(%r10),%zmm11
@@ -1804,8 +1804,8 @@ ossl_aes_gcm_setiv_avx512:
 	vpslldq	$4,%xmm2,%xmm2
 	vpternlogq	$0x96,%xmm1,%xmm8,%xmm2
 
-	jmp	.L_CALC_AAD_done_vrxGfkkBAdBjnyf
-.L_AAD_blocks_5_vrxGfkkBAdBjnyf:
+	jmp	.L_CALC_AAD_done_1
+.L_AAD_blocks_5_1:
 	subq	$512,%r12
 	kmovq	(%r12),%k1
 	vmovdqu8	0(%r10),%zmm11
@@ -1856,8 +1856,8 @@ ossl_aes_gcm_setiv_avx512:
 	vpslldq	$4,%xmm2,%xmm2
 	vpternlogq	$0x96,%xmm1,%xmm8,%xmm2
 
-	jmp	.L_CALC_AAD_done_vrxGfkkBAdBjnyf
-.L_AAD_blocks_4_vrxGfkkBAdBjnyf:
+	jmp	.L_CALC_AAD_done_1
+.L_AAD_blocks_4_1:
 	kmovq	(%r12),%k1
 	vmovdqu8	0(%r10),%zmm11{%k1}{z}
 	vpshufb	%zmm16,%zmm11,%zmm11
@@ -1895,8 +1895,8 @@ ossl_aes_gcm_setiv_avx512:
 	vpslldq	$4,%xmm2,%xmm2
 	vpternlogq	$0x96,%xmm1,%xmm8,%xmm2
 
-	jmp	.L_CALC_AAD_done_vrxGfkkBAdBjnyf
-.L_AAD_blocks_3_vrxGfkkBAdBjnyf:
+	jmp	.L_CALC_AAD_done_1
+.L_AAD_blocks_3_1:
 	kmovq	(%r12),%k1
 	vmovdqu8	0(%r10),%zmm11{%k1}{z}
 	vpshufb	%zmm16,%zmm11,%zmm11
@@ -1935,8 +1935,8 @@ ossl_aes_gcm_setiv_avx512:
 	vpslldq	$4,%xmm2,%xmm2
 	vpternlogq	$0x96,%xmm1,%xmm8,%xmm2
 
-	jmp	.L_CALC_AAD_done_vrxGfkkBAdBjnyf
-.L_AAD_blocks_2_vrxGfkkBAdBjnyf:
+	jmp	.L_CALC_AAD_done_1
+.L_AAD_blocks_2_1:
 	kmovq	(%r12),%k1
 	vmovdqu8	0(%r10),%ymm11{%k1}{z}
 	vpshufb	%ymm16,%ymm11,%ymm11
@@ -1974,8 +1974,8 @@ ossl_aes_gcm_setiv_avx512:
 	vpslldq	$4,%xmm2,%xmm2
 	vpternlogq	$0x96,%xmm1,%xmm8,%xmm2
 
-	jmp	.L_CALC_AAD_done_vrxGfkkBAdBjnyf
-.L_AAD_blocks_1_vrxGfkkBAdBjnyf:
+	jmp	.L_CALC_AAD_done_1
+.L_AAD_blocks_1_1:
 	kmovq	(%r12),%k1
 	vmovdqu8	0(%r10),%xmm11{%k1}{z}
 	vpshufb	%xmm16,%xmm11,%xmm11
@@ -2013,7 +2013,7 @@ ossl_aes_gcm_setiv_avx512:
 	vpslldq	$4,%xmm2,%xmm2
 	vpternlogq	$0x96,%xmm1,%xmm8,%xmm2
 
-.L_CALC_AAD_done_vrxGfkkBAdBjnyf:
+.L_CALC_AAD_done_1:
 	movq	%rcx,%r10
 	shlq	$3,%r10
 	vmovq	%r10,%xmm3
@@ -2066,14 +2066,14 @@ skip_iv_len_12_init_IV:
 
 	movl	240(%rdi),%r10d
 	cmpl	$9,%r10d
-	je	.Laes_128_isEpywinmtmcbpz
+	je	.Laes_128_4
 	cmpl	$11,%r10d
-	je	.Laes_192_isEpywinmtmcbpz
+	je	.Laes_192_4
 	cmpl	$13,%r10d
-	je	.Laes_256_isEpywinmtmcbpz
-	jmp	.Lexit_aes_isEpywinmtmcbpz
+	je	.Laes_256_4
+	jmp	.Lexit_aes_4
 .align	32
-.Laes_128_isEpywinmtmcbpz:
+.Laes_128_4:
 	vpxorq	0(%rdi),%xmm1,%xmm1
 
 	vaesenc	16(%rdi),%xmm1,%xmm1
@@ -2095,9 +2095,9 @@ skip_iv_len_12_init_IV:
 	vaesenc	144(%rdi),%xmm1,%xmm1
 
 	vaesenclast	160(%rdi),%xmm1,%xmm1
-	jmp	.Lexit_aes_isEpywinmtmcbpz
+	jmp	.Lexit_aes_4
 .align	32
-.Laes_192_isEpywinmtmcbpz:
+.Laes_192_4:
 	vpxorq	0(%rdi),%xmm1,%xmm1
 
 	vaesenc	16(%rdi),%xmm1,%xmm1
@@ -2123,9 +2123,9 @@ skip_iv_len_12_init_IV:
 	vaesenc	176(%rdi),%xmm1,%xmm1
 
 	vaesenclast	192(%rdi),%xmm1,%xmm1
-	jmp	.Lexit_aes_isEpywinmtmcbpz
+	jmp	.Lexit_aes_4
 .align	32
-.Laes_256_isEpywinmtmcbpz:
+.Laes_256_4:
 	vpxorq	0(%rdi),%xmm1,%xmm1
 
 	vaesenc	16(%rdi),%xmm1,%xmm1
@@ -2155,8 +2155,8 @@ skip_iv_len_12_init_IV:
 	vaesenc	208(%rdi),%xmm1,%xmm1
 
 	vaesenclast	224(%rdi),%xmm1,%xmm1
-	jmp	.Lexit_aes_isEpywinmtmcbpz
-.Lexit_aes_isEpywinmtmcbpz:
+	jmp	.Lexit_aes_4
+.Lexit_aes_4:
 
 	vmovdqu	%xmm1,32(%rsi)
 
@@ -2164,7 +2164,7 @@ skip_iv_len_12_init_IV:
 	vpshufb	SHUF_MASK(%rip),%xmm2,%xmm2
 	vmovdqu	%xmm2,0(%rsi)
 	cmpq	$256,%rcx
-	jbe	.Lskip_hkeys_cleanup_rcDlkzbwxFzBbEs
+	jbe	.Lskip_hkeys_cleanup_5
 	vpxor	%xmm0,%xmm0,%xmm0
 	vmovdqa64	%zmm0,0(%rsp)
 	vmovdqa64	%zmm0,64(%rsp)
@@ -2178,7 +2178,7 @@ skip_iv_len_12_init_IV:
 	vmovdqa64	%zmm0,576(%rsp)
 	vmovdqa64	%zmm0,640(%rsp)
 	vmovdqa64	%zmm0,704(%rsp)
-.Lskip_hkeys_cleanup_rcDlkzbwxFzBbEs:
+.Lskip_hkeys_cleanup_5:
 	vzeroupper
 	leaq	(%rbp),%rsp
 .cfi_def_cfa_register	%rsp
@@ -2257,14 +2257,14 @@ ossl_aes_gcm_update_aad_avx512:
 	movq	%rsi,%r10
 	movq	%rdx,%r11
 	orq	%r11,%r11
-	jz	.L_CALC_AAD_done_nGbCkwBuzixFzEj
+	jz	.L_CALC_AAD_done_6
 
 	xorq	%rbx,%rbx
 	vmovdqa64	SHUF_MASK(%rip),%zmm16
 
-.L_get_AAD_loop48x16_nGbCkwBuzixFzEj:
+.L_get_AAD_loop48x16_6:
 	cmpq	$768,%r11
-	jl	.L_exit_AAD_loop48x16_nGbCkwBuzixFzEj
+	jl	.L_exit_AAD_loop48x16_6
 	vmovdqu64	0(%r10),%zmm11
 	vmovdqu64	64(%r10),%zmm3
 	vmovdqu64	128(%r10),%zmm4
@@ -2274,7 +2274,7 @@ ossl_aes_gcm_update_aad_avx512:
 	vpshufb	%zmm16,%zmm4,%zmm4
 	vpshufb	%zmm16,%zmm5,%zmm5
 	testq	%rbx,%rbx
-	jnz	.L_skip_hkeys_precomputation_sjeuCppfBAbChio
+	jnz	.L_skip_hkeys_precomputation_7
 
 	vmovdqu64	288(%rdi),%zmm1
 	vmovdqu64	%zmm1,704(%rsp)
@@ -2530,7 +2530,7 @@ ossl_aes_gcm_update_aad_avx512:
 	vpternlogq	$0x96,%zmm15,%zmm13,%zmm12
 
 	vmovdqu64	%zmm12,0(%rsp)
-.L_skip_hkeys_precomputation_sjeuCppfBAbChio:
+.L_skip_hkeys_precomputation_7:
 	movq	$1,%rbx
 	vpxorq	%zmm14,%zmm11,%zmm11
 	vmovdqu64	0(%rsp),%zmm19
@@ -2664,15 +2664,15 @@ ossl_aes_gcm_update_aad_avx512:
 	vpternlogq	$0x96,%xmm6,%xmm9,%xmm14
 
 	subq	$768,%r11
-	je	.L_CALC_AAD_done_nGbCkwBuzixFzEj
+	je	.L_CALC_AAD_done_6
 
 	addq	$768,%r10
-	jmp	.L_get_AAD_loop48x16_nGbCkwBuzixFzEj
+	jmp	.L_get_AAD_loop48x16_6
 
-.L_exit_AAD_loop48x16_nGbCkwBuzixFzEj:
+.L_exit_AAD_loop48x16_6:
 
 	cmpq	$512,%r11
-	jl	.L_less_than_32x16_nGbCkwBuzixFzEj
+	jl	.L_less_than_32x16_6
 
 	vmovdqu64	0(%r10),%zmm11
 	vmovdqu64	64(%r10),%zmm3
@@ -2683,7 +2683,7 @@ ossl_aes_gcm_update_aad_avx512:
 	vpshufb	%zmm16,%zmm4,%zmm4
 	vpshufb	%zmm16,%zmm5,%zmm5
 	testq	%rbx,%rbx
-	jnz	.L_skip_hkeys_precomputation_smhlmCdjvpexsEu
+	jnz	.L_skip_hkeys_precomputation_8
 
 	vmovdqu64	288(%rdi),%zmm1
 	vmovdqu64	%zmm1,704(%rsp)
@@ -2819,7 +2819,7 @@ ossl_aes_gcm_update_aad_avx512:
 	vpternlogq	$0x96,%zmm15,%zmm13,%zmm12
 
 	vmovdqu64	%zmm12,256(%rsp)
-.L_skip_hkeys_precomputation_smhlmCdjvpexsEu:
+.L_skip_hkeys_precomputation_8:
 	movq	$1,%rbx
 	vpxorq	%zmm14,%zmm11,%zmm11
 	vmovdqu64	256(%rsp),%zmm19
@@ -2916,14 +2916,14 @@ ossl_aes_gcm_update_aad_avx512:
 	vpternlogq	$0x96,%xmm6,%xmm9,%xmm14
 
 	subq	$512,%r11
-	je	.L_CALC_AAD_done_nGbCkwBuzixFzEj
+	je	.L_CALC_AAD_done_6
 
 	addq	$512,%r10
-	jmp	.L_less_than_16x16_nGbCkwBuzixFzEj
+	jmp	.L_less_than_16x16_6
 
-.L_less_than_32x16_nGbCkwBuzixFzEj:
+.L_less_than_32x16_6:
 	cmpq	$256,%r11
-	jl	.L_less_than_16x16_nGbCkwBuzixFzEj
+	jl	.L_less_than_16x16_6
 
 	vmovdqu64	0(%r10),%zmm11
 	vmovdqu64	64(%r10),%zmm3
@@ -2991,11 +2991,11 @@ ossl_aes_gcm_update_aad_avx512:
 	vpternlogq	$0x96,%xmm6,%xmm9,%xmm14
 
 	subq	$256,%r11
-	je	.L_CALC_AAD_done_nGbCkwBuzixFzEj
+	je	.L_CALC_AAD_done_6
 
 	addq	$256,%r10
 
-.L_less_than_16x16_nGbCkwBuzixFzEj:
+.L_less_than_16x16_6:
 
 	leaq	byte64_len_to_mask_table(%rip),%r12
 	leaq	(%r12,%r11,8),%r12
@@ -3004,29 +3004,29 @@ ossl_aes_gcm_update_aad_avx512:
 	addl	$15,%r11d
 	shrl	$4,%r11d
 	cmpl	$2,%r11d
-	jb	.L_AAD_blocks_1_nGbCkwBuzixFzEj
-	je	.L_AAD_blocks_2_nGbCkwBuzixFzEj
+	jb	.L_AAD_blocks_1_6
+	je	.L_AAD_blocks_2_6
 	cmpl	$4,%r11d
-	jb	.L_AAD_blocks_3_nGbCkwBuzixFzEj
-	je	.L_AAD_blocks_4_nGbCkwBuzixFzEj
+	jb	.L_AAD_blocks_3_6
+	je	.L_AAD_blocks_4_6
 	cmpl	$6,%r11d
-	jb	.L_AAD_blocks_5_nGbCkwBuzixFzEj
-	je	.L_AAD_blocks_6_nGbCkwBuzixFzEj
+	jb	.L_AAD_blocks_5_6
+	je	.L_AAD_blocks_6_6
 	cmpl	$8,%r11d
-	jb	.L_AAD_blocks_7_nGbCkwBuzixFzEj
-	je	.L_AAD_blocks_8_nGbCkwBuzixFzEj
+	jb	.L_AAD_blocks_7_6
+	je	.L_AAD_blocks_8_6
 	cmpl	$10,%r11d
-	jb	.L_AAD_blocks_9_nGbCkwBuzixFzEj
-	je	.L_AAD_blocks_10_nGbCkwBuzixFzEj
+	jb	.L_AAD_blocks_9_6
+	je	.L_AAD_blocks_10_6
 	cmpl	$12,%r11d
-	jb	.L_AAD_blocks_11_nGbCkwBuzixFzEj
-	je	.L_AAD_blocks_12_nGbCkwBuzixFzEj
+	jb	.L_AAD_blocks_11_6
+	je	.L_AAD_blocks_12_6
 	cmpl	$14,%r11d
-	jb	.L_AAD_blocks_13_nGbCkwBuzixFzEj
-	je	.L_AAD_blocks_14_nGbCkwBuzixFzEj
+	jb	.L_AAD_blocks_13_6
+	je	.L_AAD_blocks_14_6
 	cmpl	$15,%r11d
-	je	.L_AAD_blocks_15_nGbCkwBuzixFzEj
-.L_AAD_blocks_16_nGbCkwBuzixFzEj:
+	je	.L_AAD_blocks_15_6
+.L_AAD_blocks_16_6:
 	subq	$1536,%r12
 	kmovq	(%r12),%k1
 	vmovdqu8	0(%r10),%zmm11
@@ -3094,8 +3094,8 @@ ossl_aes_gcm_update_aad_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm1,%xmm8,%xmm14
 
-	jmp	.L_CALC_AAD_done_nGbCkwBuzixFzEj
-.L_AAD_blocks_15_nGbCkwBuzixFzEj:
+	jmp	.L_CALC_AAD_done_6
+.L_AAD_blocks_15_6:
 	subq	$1536,%r12
 	kmovq	(%r12),%k1
 	vmovdqu8	0(%r10),%zmm11
@@ -3165,8 +3165,8 @@ ossl_aes_gcm_update_aad_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm1,%xmm8,%xmm14
 
-	jmp	.L_CALC_AAD_done_nGbCkwBuzixFzEj
-.L_AAD_blocks_14_nGbCkwBuzixFzEj:
+	jmp	.L_CALC_AAD_done_6
+.L_AAD_blocks_14_6:
 	subq	$1536,%r12
 	kmovq	(%r12),%k1
 	vmovdqu8	0(%r10),%zmm11
@@ -3235,8 +3235,8 @@ ossl_aes_gcm_update_aad_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm1,%xmm8,%xmm14
 
-	jmp	.L_CALC_AAD_done_nGbCkwBuzixFzEj
-.L_AAD_blocks_13_nGbCkwBuzixFzEj:
+	jmp	.L_CALC_AAD_done_6
+.L_AAD_blocks_13_6:
 	subq	$1536,%r12
 	kmovq	(%r12),%k1
 	vmovdqu8	0(%r10),%zmm11
@@ -3305,8 +3305,8 @@ ossl_aes_gcm_update_aad_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm1,%xmm8,%xmm14
 
-	jmp	.L_CALC_AAD_done_nGbCkwBuzixFzEj
-.L_AAD_blocks_12_nGbCkwBuzixFzEj:
+	jmp	.L_CALC_AAD_done_6
+.L_AAD_blocks_12_6:
 	subq	$1024,%r12
 	kmovq	(%r12),%k1
 	vmovdqu8	0(%r10),%zmm11
@@ -3363,8 +3363,8 @@ ossl_aes_gcm_update_aad_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm1,%xmm8,%xmm14
 
-	jmp	.L_CALC_AAD_done_nGbCkwBuzixFzEj
-.L_AAD_blocks_11_nGbCkwBuzixFzEj:
+	jmp	.L_CALC_AAD_done_6
+.L_AAD_blocks_11_6:
 	subq	$1024,%r12
 	kmovq	(%r12),%k1
 	vmovdqu8	0(%r10),%zmm11
@@ -3427,8 +3427,8 @@ ossl_aes_gcm_update_aad_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm1,%xmm8,%xmm14
 
-	jmp	.L_CALC_AAD_done_nGbCkwBuzixFzEj
-.L_AAD_blocks_10_nGbCkwBuzixFzEj:
+	jmp	.L_CALC_AAD_done_6
+.L_AAD_blocks_10_6:
 	subq	$1024,%r12
 	kmovq	(%r12),%k1
 	vmovdqu8	0(%r10),%zmm11
@@ -3490,8 +3490,8 @@ ossl_aes_gcm_update_aad_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm1,%xmm8,%xmm14
 
-	jmp	.L_CALC_AAD_done_nGbCkwBuzixFzEj
-.L_AAD_blocks_9_nGbCkwBuzixFzEj:
+	jmp	.L_CALC_AAD_done_6
+.L_AAD_blocks_9_6:
 	subq	$1024,%r12
 	kmovq	(%r12),%k1
 	vmovdqu8	0(%r10),%zmm11
@@ -3553,8 +3553,8 @@ ossl_aes_gcm_update_aad_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm1,%xmm8,%xmm14
 
-	jmp	.L_CALC_AAD_done_nGbCkwBuzixFzEj
-.L_AAD_blocks_8_nGbCkwBuzixFzEj:
+	jmp	.L_CALC_AAD_done_6
+.L_AAD_blocks_8_6:
 	subq	$512,%r12
 	kmovq	(%r12),%k1
 	vmovdqu8	0(%r10),%zmm11
@@ -3604,8 +3604,8 @@ ossl_aes_gcm_update_aad_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm1,%xmm8,%xmm14
 
-	jmp	.L_CALC_AAD_done_nGbCkwBuzixFzEj
-.L_AAD_blocks_7_nGbCkwBuzixFzEj:
+	jmp	.L_CALC_AAD_done_6
+.L_AAD_blocks_7_6:
 	subq	$512,%r12
 	kmovq	(%r12),%k1
 	vmovdqu8	0(%r10),%zmm11
@@ -3657,8 +3657,8 @@ ossl_aes_gcm_update_aad_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm1,%xmm8,%xmm14
 
-	jmp	.L_CALC_AAD_done_nGbCkwBuzixFzEj
-.L_AAD_blocks_6_nGbCkwBuzixFzEj:
+	jmp	.L_CALC_AAD_done_6
+.L_AAD_blocks_6_6:
 	subq	$512,%r12
 	kmovq	(%r12),%k1
 	vmovdqu8	0(%r10),%zmm11
@@ -3709,8 +3709,8 @@ ossl_aes_gcm_update_aad_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm1,%xmm8,%xmm14
 
-	jmp	.L_CALC_AAD_done_nGbCkwBuzixFzEj
-.L_AAD_blocks_5_nGbCkwBuzixFzEj:
+	jmp	.L_CALC_AAD_done_6
+.L_AAD_blocks_5_6:
 	subq	$512,%r12
 	kmovq	(%r12),%k1
 	vmovdqu8	0(%r10),%zmm11
@@ -3761,8 +3761,8 @@ ossl_aes_gcm_update_aad_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm1,%xmm8,%xmm14
 
-	jmp	.L_CALC_AAD_done_nGbCkwBuzixFzEj
-.L_AAD_blocks_4_nGbCkwBuzixFzEj:
+	jmp	.L_CALC_AAD_done_6
+.L_AAD_blocks_4_6:
 	kmovq	(%r12),%k1
 	vmovdqu8	0(%r10),%zmm11{%k1}{z}
 	vpshufb	%zmm16,%zmm11,%zmm11
@@ -3800,8 +3800,8 @@ ossl_aes_gcm_update_aad_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm1,%xmm8,%xmm14
 
-	jmp	.L_CALC_AAD_done_nGbCkwBuzixFzEj
-.L_AAD_blocks_3_nGbCkwBuzixFzEj:
+	jmp	.L_CALC_AAD_done_6
+.L_AAD_blocks_3_6:
 	kmovq	(%r12),%k1
 	vmovdqu8	0(%r10),%zmm11{%k1}{z}
 	vpshufb	%zmm16,%zmm11,%zmm11
@@ -3840,8 +3840,8 @@ ossl_aes_gcm_update_aad_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm1,%xmm8,%xmm14
 
-	jmp	.L_CALC_AAD_done_nGbCkwBuzixFzEj
-.L_AAD_blocks_2_nGbCkwBuzixFzEj:
+	jmp	.L_CALC_AAD_done_6
+.L_AAD_blocks_2_6:
 	kmovq	(%r12),%k1
 	vmovdqu8	0(%r10),%ymm11{%k1}{z}
 	vpshufb	%ymm16,%ymm11,%ymm11
@@ -3879,8 +3879,8 @@ ossl_aes_gcm_update_aad_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm1,%xmm8,%xmm14
 
-	jmp	.L_CALC_AAD_done_nGbCkwBuzixFzEj
-.L_AAD_blocks_1_nGbCkwBuzixFzEj:
+	jmp	.L_CALC_AAD_done_6
+.L_AAD_blocks_1_6:
 	kmovq	(%r12),%k1
 	vmovdqu8	0(%r10),%xmm11{%k1}{z}
 	vpshufb	%xmm16,%xmm11,%xmm11
@@ -3918,10 +3918,10 @@ ossl_aes_gcm_update_aad_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm1,%xmm8,%xmm14
 
-.L_CALC_AAD_done_nGbCkwBuzixFzEj:
+.L_CALC_AAD_done_6:
 	vmovdqu64	%xmm14,64(%rdi)
 	cmpq	$256,%rdx
-	jbe	.Lskip_hkeys_cleanup_GwlvfgaDpaydbta
+	jbe	.Lskip_hkeys_cleanup_9
 	vpxor	%xmm0,%xmm0,%xmm0
 	vmovdqa64	%zmm0,0(%rsp)
 	vmovdqa64	%zmm0,64(%rsp)
@@ -3935,7 +3935,7 @@ ossl_aes_gcm_update_aad_avx512:
 	vmovdqa64	%zmm0,576(%rsp)
 	vmovdqa64	%zmm0,640(%rsp)
 	vmovdqa64	%zmm0,704(%rsp)
-.Lskip_hkeys_cleanup_GwlvfgaDpaydbta:
+.Lskip_hkeys_cleanup_9:
 	vzeroupper
 	leaq	(%rbp),%rsp
 .cfi_def_cfa_register	%rsp
@@ -4024,13 +4024,13 @@ ossl_aes_gcm_encrypt_avx512:
 .align	32
 .Laes_gcm_encrypt_128_avx512:
 	orq	%r8,%r8
-	je	.L_enc_dec_done_lzCeFkjwAopsEcs
+	je	.L_enc_dec_done_10
 	xorq	%r14,%r14
 	vmovdqu64	64(%rsi),%xmm14
 
 	movq	(%rdx),%r11
 	orq	%r11,%r11
-	je	.L_partial_block_done_fsBfxpgBswcpzpz
+	je	.L_partial_block_done_11
 	movl	$16,%r10d
 	leaq	byte_len_to_mask_table(%rip),%r12
 	cmpq	%r10,%r8
@@ -4052,9 +4052,9 @@ ossl_aes_gcm_encrypt_avx512:
 
 	leaq	(%r8,%r11,1),%r13
 	subq	$16,%r13
-	jge	.L_no_extra_mask_fsBfxpgBswcpzpz
+	jge	.L_no_extra_mask_11
 	subq	%r13,%r12
-.L_no_extra_mask_fsBfxpgBswcpzpz:
+.L_no_extra_mask_11:
 
 
 
@@ -4064,7 +4064,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%xmm5,%xmm3,%xmm3
 	vpxorq	%xmm3,%xmm14,%xmm14
 	cmpq	$0,%r13
-	jl	.L_partial_incomplete_fsBfxpgBswcpzpz
+	jl	.L_partial_incomplete_11
 
 	vpclmulqdq	$0x11,%xmm4,%xmm14,%xmm7
 	vpclmulqdq	$0x00,%xmm4,%xmm14,%xmm10
@@ -4099,13 +4099,13 @@ ossl_aes_gcm_encrypt_avx512:
 	movq	%r11,%r12
 	movq	$16,%r11
 	subq	%r12,%r11
-	jmp	.L_enc_dec_done_fsBfxpgBswcpzpz
+	jmp	.L_enc_dec_done_11
 
-.L_partial_incomplete_fsBfxpgBswcpzpz:
+.L_partial_incomplete_11:
 	addq	%r8,(%rdx)
 	movq	%r8,%r11
 
-.L_enc_dec_done_fsBfxpgBswcpzpz:
+.L_enc_dec_done_11:
 
 
 	leaq	byte_len_to_mask_table(%rip),%r12
@@ -4116,12 +4116,12 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%xmm5,%xmm3,%xmm3
 	movq	%r9,%r12
 	vmovdqu8	%xmm3,(%r12){%k1}
-.L_partial_block_done_fsBfxpgBswcpzpz:
+.L_partial_block_done_11:
 	vmovdqu64	0(%rsi),%xmm2
 	subq	%r11,%r8
-	je	.L_enc_dec_done_lzCeFkjwAopsEcs
+	je	.L_enc_dec_done_10
 	cmpq	$256,%r8
-	jbe	.L_message_below_equal_16_blocks_lzCeFkjwAopsEcs
+	jbe	.L_message_below_equal_16_blocks_10
 
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vmovdqa64	ddq_addbe_4444(%rip),%zmm27
@@ -4141,13 +4141,13 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpb	$240,%r15b
-	jae	.L_next_16_overflow_yeDAevFkpbodhed
+	jae	.L_next_16_overflow_12
 	vpaddd	%zmm28,%zmm2,%zmm7
 	vpaddd	%zmm27,%zmm7,%zmm10
 	vpaddd	%zmm27,%zmm10,%zmm11
 	vpaddd	%zmm27,%zmm11,%zmm12
-	jmp	.L_next_16_ok_yeDAevFkpbodhed
-.L_next_16_overflow_yeDAevFkpbodhed:
+	jmp	.L_next_16_ok_12
+.L_next_16_overflow_12:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vmovdqa64	ddq_add_4444(%rip),%zmm12
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm7
@@ -4158,7 +4158,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm10,%zmm10
 	vpshufb	%zmm29,%zmm11,%zmm11
 	vpshufb	%zmm29,%zmm12,%zmm12
-.L_next_16_ok_yeDAevFkpbodhed:
+.L_next_16_ok_12:
 	vshufi64x2	$255,%zmm12,%zmm12,%zmm2
 	addb	$16,%r15b
 
@@ -4246,7 +4246,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vmovdqa64	%zmm11,896(%rsp)
 	vmovdqa64	%zmm12,960(%rsp)
 	testq	%r14,%r14
-	jnz	.L_skip_hkeys_precomputation_brdupgngoBGiEzu
+	jnz	.L_skip_hkeys_precomputation_13
 
 	vmovdqu64	288(%rsi),%zmm0
 	vmovdqu64	%zmm0,704(%rsp)
@@ -4262,20 +4262,20 @@ ossl_aes_gcm_encrypt_avx512:
 
 	vmovdqu64	96(%rsi),%zmm5
 	vmovdqu64	%zmm5,512(%rsp)
-.L_skip_hkeys_precomputation_brdupgngoBGiEzu:
+.L_skip_hkeys_precomputation_13:
 	cmpq	$512,%r8
-	jb	.L_message_below_32_blocks_lzCeFkjwAopsEcs
+	jb	.L_message_below_32_blocks_10
 
 
 
 	cmpb	$240,%r15b
-	jae	.L_next_16_overflow_lEszhErgbnGcucm
+	jae	.L_next_16_overflow_14
 	vpaddd	%zmm28,%zmm2,%zmm7
 	vpaddd	%zmm27,%zmm7,%zmm10
 	vpaddd	%zmm27,%zmm10,%zmm11
 	vpaddd	%zmm27,%zmm11,%zmm12
-	jmp	.L_next_16_ok_lEszhErgbnGcucm
-.L_next_16_overflow_lEszhErgbnGcucm:
+	jmp	.L_next_16_ok_14
+.L_next_16_overflow_14:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vmovdqa64	ddq_add_4444(%rip),%zmm12
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm7
@@ -4286,7 +4286,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm10,%zmm10
 	vpshufb	%zmm29,%zmm11,%zmm11
 	vpshufb	%zmm29,%zmm12,%zmm12
-.L_next_16_ok_lEszhErgbnGcucm:
+.L_next_16_ok_14:
 	vshufi64x2	$255,%zmm12,%zmm12,%zmm2
 	addb	$16,%r15b
 
@@ -4374,7 +4374,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vmovdqa64	%zmm11,1152(%rsp)
 	vmovdqa64	%zmm12,1216(%rsp)
 	testq	%r14,%r14
-	jnz	.L_skip_hkeys_precomputation_wszjnpeoxAtloxo
+	jnz	.L_skip_hkeys_precomputation_15
 	vmovdqu64	640(%rsp),%zmm3
 
 
@@ -4622,22 +4622,22 @@ ossl_aes_gcm_encrypt_avx512:
 	vpternlogq	$0x96,%zmm7,%zmm6,%zmm5
 
 	vmovdqu64	%zmm5,0(%rsp)
-.L_skip_hkeys_precomputation_wszjnpeoxAtloxo:
+.L_skip_hkeys_precomputation_15:
 	movq	$1,%r14
 	addq	$512,%r11
 	subq	$512,%r8
 
 	cmpq	$768,%r8
-	jb	.L_no_more_big_nblocks_lzCeFkjwAopsEcs
-.L_encrypt_big_nblocks_lzCeFkjwAopsEcs:
+	jb	.L_no_more_big_nblocks_10
+.L_encrypt_big_nblocks_10:
 	cmpb	$240,%r15b
-	jae	.L_16_blocks_overflow_kaabkhCFxwftqvD
+	jae	.L_16_blocks_overflow_16
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_kaabkhCFxwftqvD
-.L_16_blocks_overflow_kaabkhCFxwftqvD:
+	jmp	.L_16_blocks_ok_16
+.L_16_blocks_overflow_16:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -4648,7 +4648,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_kaabkhCFxwftqvD:
+.L_16_blocks_ok_16:
 	vbroadcastf64x2	0(%rdi),%zmm30
 	vpxorq	768(%rsp),%zmm14,%zmm8
 	vmovdqu64	0(%rsp),%zmm1
@@ -4813,13 +4813,13 @@ ossl_aes_gcm_encrypt_avx512:
 	vmovdqa64	%zmm4,1408(%rsp)
 	vmovdqa64	%zmm5,1472(%rsp)
 	cmpb	$240,%r15b
-	jae	.L_16_blocks_overflow_BBfthmCnicfzcEn
+	jae	.L_16_blocks_overflow_17
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_BBfthmCnicfzcEn
-.L_16_blocks_overflow_BBfthmCnicfzcEn:
+	jmp	.L_16_blocks_ok_17
+.L_16_blocks_overflow_17:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -4830,7 +4830,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_BBfthmCnicfzcEn:
+.L_16_blocks_ok_17:
 	vbroadcastf64x2	0(%rdi),%zmm30
 	vmovdqa64	1024(%rsp),%zmm8
 	vmovdqu64	256(%rsp),%zmm1
@@ -4995,13 +4995,13 @@ ossl_aes_gcm_encrypt_avx512:
 	vmovdqa64	%zmm4,896(%rsp)
 	vmovdqa64	%zmm5,960(%rsp)
 	cmpb	$240,%r15b
-	jae	.L_16_blocks_overflow_uwseDjljigianhs
+	jae	.L_16_blocks_overflow_18
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_uwseDjljigianhs
-.L_16_blocks_overflow_uwseDjljigianhs:
+	jmp	.L_16_blocks_ok_18
+.L_16_blocks_overflow_18:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -5012,7 +5012,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_uwseDjljigianhs:
+.L_16_blocks_ok_18:
 	vbroadcastf64x2	0(%rdi),%zmm30
 	vmovdqa64	1280(%rsp),%zmm8
 	vmovdqu64	512(%rsp),%zmm1
@@ -5207,16 +5207,16 @@ ossl_aes_gcm_encrypt_avx512:
 	addq	$768,%r11
 	subq	$768,%r8
 	cmpq	$768,%r8
-	jae	.L_encrypt_big_nblocks_lzCeFkjwAopsEcs
+	jae	.L_encrypt_big_nblocks_10
 
-.L_no_more_big_nblocks_lzCeFkjwAopsEcs:
+.L_no_more_big_nblocks_10:
 
 	cmpq	$512,%r8
-	jae	.L_encrypt_32_blocks_lzCeFkjwAopsEcs
+	jae	.L_encrypt_32_blocks_10
 
 	cmpq	$256,%r8
-	jae	.L_encrypt_16_blocks_lzCeFkjwAopsEcs
-.L_encrypt_0_blocks_ghash_32_lzCeFkjwAopsEcs:
+	jae	.L_encrypt_16_blocks_10
+.L_encrypt_0_blocks_ghash_32_10:
 	movl	%r8d,%r10d
 	andl	$~15,%r10d
 	movl	$256,%ebx
@@ -5259,61 +5259,61 @@ ossl_aes_gcm_encrypt_avx512:
 	movl	%r8d,%r10d
 	addl	$15,%r10d
 	shrl	$4,%r10d
-	je	.L_last_num_blocks_is_0_mlwyCypwkirBzdm
+	je	.L_last_num_blocks_is_0_19
 
 	cmpl	$8,%r10d
-	je	.L_last_num_blocks_is_8_mlwyCypwkirBzdm
-	jb	.L_last_num_blocks_is_7_1_mlwyCypwkirBzdm
+	je	.L_last_num_blocks_is_8_19
+	jb	.L_last_num_blocks_is_7_1_19
 
 
 	cmpl	$12,%r10d
-	je	.L_last_num_blocks_is_12_mlwyCypwkirBzdm
-	jb	.L_last_num_blocks_is_11_9_mlwyCypwkirBzdm
+	je	.L_last_num_blocks_is_12_19
+	jb	.L_last_num_blocks_is_11_9_19
 
 
 	cmpl	$15,%r10d
-	je	.L_last_num_blocks_is_15_mlwyCypwkirBzdm
-	ja	.L_last_num_blocks_is_16_mlwyCypwkirBzdm
+	je	.L_last_num_blocks_is_15_19
+	ja	.L_last_num_blocks_is_16_19
 	cmpl	$14,%r10d
-	je	.L_last_num_blocks_is_14_mlwyCypwkirBzdm
-	jmp	.L_last_num_blocks_is_13_mlwyCypwkirBzdm
+	je	.L_last_num_blocks_is_14_19
+	jmp	.L_last_num_blocks_is_13_19
 
-.L_last_num_blocks_is_11_9_mlwyCypwkirBzdm:
+.L_last_num_blocks_is_11_9_19:
 
 	cmpl	$10,%r10d
-	je	.L_last_num_blocks_is_10_mlwyCypwkirBzdm
-	ja	.L_last_num_blocks_is_11_mlwyCypwkirBzdm
-	jmp	.L_last_num_blocks_is_9_mlwyCypwkirBzdm
+	je	.L_last_num_blocks_is_10_19
+	ja	.L_last_num_blocks_is_11_19
+	jmp	.L_last_num_blocks_is_9_19
 
-.L_last_num_blocks_is_7_1_mlwyCypwkirBzdm:
+.L_last_num_blocks_is_7_1_19:
 	cmpl	$4,%r10d
-	je	.L_last_num_blocks_is_4_mlwyCypwkirBzdm
-	jb	.L_last_num_blocks_is_3_1_mlwyCypwkirBzdm
+	je	.L_last_num_blocks_is_4_19
+	jb	.L_last_num_blocks_is_3_1_19
 
 	cmpl	$6,%r10d
-	ja	.L_last_num_blocks_is_7_mlwyCypwkirBzdm
-	je	.L_last_num_blocks_is_6_mlwyCypwkirBzdm
-	jmp	.L_last_num_blocks_is_5_mlwyCypwkirBzdm
+	ja	.L_last_num_blocks_is_7_19
+	je	.L_last_num_blocks_is_6_19
+	jmp	.L_last_num_blocks_is_5_19
 
-.L_last_num_blocks_is_3_1_mlwyCypwkirBzdm:
+.L_last_num_blocks_is_3_1_19:
 
 	cmpl	$2,%r10d
-	ja	.L_last_num_blocks_is_3_mlwyCypwkirBzdm
-	je	.L_last_num_blocks_is_2_mlwyCypwkirBzdm
-.L_last_num_blocks_is_1_mlwyCypwkirBzdm:
+	ja	.L_last_num_blocks_is_3_19
+	je	.L_last_num_blocks_is_2_19
+.L_last_num_blocks_is_1_19:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$255,%r15d
-	jae	.L_16_blocks_overflow_FymzAunapeyydiw
+	jae	.L_16_blocks_overflow_20
 	vpaddd	%xmm28,%xmm2,%xmm0
-	jmp	.L_16_blocks_ok_FymzAunapeyydiw
+	jmp	.L_16_blocks_ok_20
 
-.L_16_blocks_overflow_FymzAunapeyydiw:
+.L_16_blocks_overflow_20:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%xmm29,%xmm0,%xmm0
-.L_16_blocks_ok_FymzAunapeyydiw:
+.L_16_blocks_ok_20:
 
 
 
@@ -5397,7 +5397,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_badripyoEBzbFrh
+	jl	.L_small_initial_partial_block_21
 
 
 
@@ -5441,8 +5441,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_badripyoEBzbFrh
-.L_small_initial_partial_block_badripyoEBzbFrh:
+	jmp	.L_small_initial_compute_done_21
+.L_small_initial_partial_block_21:
 
 
 
@@ -5494,24 +5494,24 @@ ossl_aes_gcm_encrypt_avx512:
 
 	vpxorq	%xmm7,%xmm14,%xmm14
 
-	jmp	.L_after_reduction_badripyoEBzbFrh
-.L_small_initial_compute_done_badripyoEBzbFrh:
-.L_after_reduction_badripyoEBzbFrh:
-	jmp	.L_last_blocks_done_mlwyCypwkirBzdm
-.L_last_num_blocks_is_2_mlwyCypwkirBzdm:
+	jmp	.L_after_reduction_21
+.L_small_initial_compute_done_21:
+.L_after_reduction_21:
+	jmp	.L_last_blocks_done_19
+.L_last_num_blocks_is_2_19:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$254,%r15d
-	jae	.L_16_blocks_overflow_BmbbCbtwFgeymku
+	jae	.L_16_blocks_overflow_22
 	vpaddd	%ymm28,%ymm2,%ymm0
-	jmp	.L_16_blocks_ok_BmbbCbtwFgeymku
+	jmp	.L_16_blocks_ok_22
 
-.L_16_blocks_overflow_BmbbCbtwFgeymku:
+.L_16_blocks_overflow_22:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%ymm29,%ymm0,%ymm0
-.L_16_blocks_ok_BmbbCbtwFgeymku:
+.L_16_blocks_ok_22:
 
 
 
@@ -5596,7 +5596,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_dqpDAqAsqwAlAth
+	jl	.L_small_initial_partial_block_23
 
 
 
@@ -5640,8 +5640,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_dqpDAqAsqwAlAth
-.L_small_initial_partial_block_dqpDAqAsqwAlAth:
+	jmp	.L_small_initial_compute_done_23
+.L_small_initial_partial_block_23:
 
 
 
@@ -5688,27 +5688,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_dqpDAqAsqwAlAth:
+.L_small_initial_compute_done_23:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_dqpDAqAsqwAlAth
+	je	.L_after_reduction_23
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_dqpDAqAsqwAlAth:
-	jmp	.L_last_blocks_done_mlwyCypwkirBzdm
-.L_last_num_blocks_is_3_mlwyCypwkirBzdm:
+.L_after_reduction_23:
+	jmp	.L_last_blocks_done_19
+.L_last_num_blocks_is_3_19:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$253,%r15d
-	jae	.L_16_blocks_overflow_lvhfrjACGciwhsf
+	jae	.L_16_blocks_overflow_24
 	vpaddd	%zmm28,%zmm2,%zmm0
-	jmp	.L_16_blocks_ok_lvhfrjACGciwhsf
+	jmp	.L_16_blocks_ok_24
 
-.L_16_blocks_overflow_lvhfrjACGciwhsf:
+.L_16_blocks_overflow_24:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%zmm29,%zmm0,%zmm0
-.L_16_blocks_ok_lvhfrjACGciwhsf:
+.L_16_blocks_ok_24:
 
 
 
@@ -5793,7 +5793,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_lGEroisctpjGmAc
+	jl	.L_small_initial_partial_block_25
 
 
 
@@ -5838,8 +5838,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_lGEroisctpjGmAc
-.L_small_initial_partial_block_lGEroisctpjGmAc:
+	jmp	.L_small_initial_compute_done_25
+.L_small_initial_partial_block_25:
 
 
 
@@ -5886,27 +5886,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_lGEroisctpjGmAc:
+.L_small_initial_compute_done_25:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_lGEroisctpjGmAc
+	je	.L_after_reduction_25
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_lGEroisctpjGmAc:
-	jmp	.L_last_blocks_done_mlwyCypwkirBzdm
-.L_last_num_blocks_is_4_mlwyCypwkirBzdm:
+.L_after_reduction_25:
+	jmp	.L_last_blocks_done_19
+.L_last_num_blocks_is_4_19:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$252,%r15d
-	jae	.L_16_blocks_overflow_bCxgzuyBqruCbGi
+	jae	.L_16_blocks_overflow_26
 	vpaddd	%zmm28,%zmm2,%zmm0
-	jmp	.L_16_blocks_ok_bCxgzuyBqruCbGi
+	jmp	.L_16_blocks_ok_26
 
-.L_16_blocks_overflow_bCxgzuyBqruCbGi:
+.L_16_blocks_overflow_26:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%zmm29,%zmm0,%zmm0
-.L_16_blocks_ok_bCxgzuyBqruCbGi:
+.L_16_blocks_ok_26:
 
 
 
@@ -5991,7 +5991,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_vdoEhgqglqcCCds
+	jl	.L_small_initial_partial_block_27
 
 
 
@@ -6036,8 +6036,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_vdoEhgqglqcCCds
-.L_small_initial_partial_block_vdoEhgqglqcCCds:
+	jmp	.L_small_initial_compute_done_27
+.L_small_initial_partial_block_27:
 
 
 
@@ -6085,32 +6085,32 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_vdoEhgqglqcCCds:
+.L_small_initial_compute_done_27:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_vdoEhgqglqcCCds
+	je	.L_after_reduction_27
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_vdoEhgqglqcCCds:
-	jmp	.L_last_blocks_done_mlwyCypwkirBzdm
-.L_last_num_blocks_is_5_mlwyCypwkirBzdm:
+.L_after_reduction_27:
+	jmp	.L_last_blocks_done_19
+.L_last_num_blocks_is_5_19:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$251,%r15d
-	jae	.L_16_blocks_overflow_tceDFouqkwbhpGa
+	jae	.L_16_blocks_overflow_28
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%xmm27,%xmm0,%xmm3
-	jmp	.L_16_blocks_ok_tceDFouqkwbhpGa
+	jmp	.L_16_blocks_ok_28
 
-.L_16_blocks_overflow_tceDFouqkwbhpGa:
+.L_16_blocks_overflow_28:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%xmm29,%xmm3,%xmm3
-.L_16_blocks_ok_tceDFouqkwbhpGa:
+.L_16_blocks_ok_28:
 
 
 
@@ -6210,7 +6210,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_jipxbaCcpqfelhA
+	jl	.L_small_initial_partial_block_29
 
 
 
@@ -6261,8 +6261,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_jipxbaCcpqfelhA
-.L_small_initial_partial_block_jipxbaCcpqfelhA:
+	jmp	.L_small_initial_compute_done_29
+.L_small_initial_partial_block_29:
 
 
 
@@ -6310,32 +6310,32 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_jipxbaCcpqfelhA:
+.L_small_initial_compute_done_29:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_jipxbaCcpqfelhA
+	je	.L_after_reduction_29
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_jipxbaCcpqfelhA:
-	jmp	.L_last_blocks_done_mlwyCypwkirBzdm
-.L_last_num_blocks_is_6_mlwyCypwkirBzdm:
+.L_after_reduction_29:
+	jmp	.L_last_blocks_done_19
+.L_last_num_blocks_is_6_19:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$250,%r15d
-	jae	.L_16_blocks_overflow_bhAandlsDsncdpk
+	jae	.L_16_blocks_overflow_30
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%ymm27,%ymm0,%ymm3
-	jmp	.L_16_blocks_ok_bhAandlsDsncdpk
+	jmp	.L_16_blocks_ok_30
 
-.L_16_blocks_overflow_bhAandlsDsncdpk:
+.L_16_blocks_overflow_30:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%ymm29,%ymm3,%ymm3
-.L_16_blocks_ok_bhAandlsDsncdpk:
+.L_16_blocks_ok_30:
 
 
 
@@ -6435,7 +6435,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_cGyhAhzdmpoCdvg
+	jl	.L_small_initial_partial_block_31
 
 
 
@@ -6486,8 +6486,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_cGyhAhzdmpoCdvg
-.L_small_initial_partial_block_cGyhAhzdmpoCdvg:
+	jmp	.L_small_initial_compute_done_31
+.L_small_initial_partial_block_31:
 
 
 
@@ -6541,32 +6541,32 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_cGyhAhzdmpoCdvg:
+.L_small_initial_compute_done_31:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_cGyhAhzdmpoCdvg
+	je	.L_after_reduction_31
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_cGyhAhzdmpoCdvg:
-	jmp	.L_last_blocks_done_mlwyCypwkirBzdm
-.L_last_num_blocks_is_7_mlwyCypwkirBzdm:
+.L_after_reduction_31:
+	jmp	.L_last_blocks_done_19
+.L_last_num_blocks_is_7_19:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$249,%r15d
-	jae	.L_16_blocks_overflow_ixFxvahFcGyxdsb
+	jae	.L_16_blocks_overflow_32
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
-	jmp	.L_16_blocks_ok_ixFxvahFcGyxdsb
+	jmp	.L_16_blocks_ok_32
 
-.L_16_blocks_overflow_ixFxvahFcGyxdsb:
+.L_16_blocks_overflow_32:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
-.L_16_blocks_ok_ixFxvahFcGyxdsb:
+.L_16_blocks_ok_32:
 
 
 
@@ -6666,7 +6666,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_tiusChomznjoeDo
+	jl	.L_small_initial_partial_block_33
 
 
 
@@ -6718,8 +6718,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_tiusChomznjoeDo
-.L_small_initial_partial_block_tiusChomznjoeDo:
+	jmp	.L_small_initial_compute_done_33
+.L_small_initial_partial_block_33:
 
 
 
@@ -6773,32 +6773,32 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_tiusChomznjoeDo:
+.L_small_initial_compute_done_33:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_tiusChomznjoeDo
+	je	.L_after_reduction_33
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_tiusChomznjoeDo:
-	jmp	.L_last_blocks_done_mlwyCypwkirBzdm
-.L_last_num_blocks_is_8_mlwyCypwkirBzdm:
+.L_after_reduction_33:
+	jmp	.L_last_blocks_done_19
+.L_last_num_blocks_is_8_19:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$248,%r15d
-	jae	.L_16_blocks_overflow_dopAepDhwbqhuqj
+	jae	.L_16_blocks_overflow_34
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
-	jmp	.L_16_blocks_ok_dopAepDhwbqhuqj
+	jmp	.L_16_blocks_ok_34
 
-.L_16_blocks_overflow_dopAepDhwbqhuqj:
+.L_16_blocks_overflow_34:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
-.L_16_blocks_ok_dopAepDhwbqhuqj:
+.L_16_blocks_ok_34:
 
 
 
@@ -6898,7 +6898,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_GyqsqDzCFBtAlpz
+	jl	.L_small_initial_partial_block_35
 
 
 
@@ -6952,8 +6952,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_GyqsqDzCFBtAlpz
-.L_small_initial_partial_block_GyqsqDzCFBtAlpz:
+	jmp	.L_small_initial_compute_done_35
+.L_small_initial_partial_block_35:
 
 
 
@@ -7008,26 +7008,26 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_GyqsqDzCFBtAlpz:
+.L_small_initial_compute_done_35:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_GyqsqDzCFBtAlpz
+	je	.L_after_reduction_35
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_GyqsqDzCFBtAlpz:
-	jmp	.L_last_blocks_done_mlwyCypwkirBzdm
-.L_last_num_blocks_is_9_mlwyCypwkirBzdm:
+.L_after_reduction_35:
+	jmp	.L_last_blocks_done_19
+.L_last_num_blocks_is_9_19:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$247,%r15d
-	jae	.L_16_blocks_overflow_ECwcukirdurdueG
+	jae	.L_16_blocks_overflow_36
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%xmm27,%xmm3,%xmm4
-	jmp	.L_16_blocks_ok_ECwcukirdurdueG
+	jmp	.L_16_blocks_ok_36
 
-.L_16_blocks_overflow_ECwcukirdurdueG:
+.L_16_blocks_overflow_36:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -7036,7 +7036,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%xmm29,%xmm4,%xmm4
-.L_16_blocks_ok_ECwcukirdurdueG:
+.L_16_blocks_ok_36:
 
 
 
@@ -7151,7 +7151,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_zakyyybECukdlrD
+	jl	.L_small_initial_partial_block_37
 
 
 
@@ -7211,8 +7211,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_zakyyybECukdlrD
-.L_small_initial_partial_block_zakyyybECukdlrD:
+	jmp	.L_small_initial_compute_done_37
+.L_small_initial_partial_block_37:
 
 
 
@@ -7269,26 +7269,26 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_zakyyybECukdlrD:
+.L_small_initial_compute_done_37:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_zakyyybECukdlrD
+	je	.L_after_reduction_37
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_zakyyybECukdlrD:
-	jmp	.L_last_blocks_done_mlwyCypwkirBzdm
-.L_last_num_blocks_is_10_mlwyCypwkirBzdm:
+.L_after_reduction_37:
+	jmp	.L_last_blocks_done_19
+.L_last_num_blocks_is_10_19:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$246,%r15d
-	jae	.L_16_blocks_overflow_fikAepqkgbwnqAp
+	jae	.L_16_blocks_overflow_38
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%ymm27,%ymm3,%ymm4
-	jmp	.L_16_blocks_ok_fikAepqkgbwnqAp
+	jmp	.L_16_blocks_ok_38
 
-.L_16_blocks_overflow_fikAepqkgbwnqAp:
+.L_16_blocks_overflow_38:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -7297,7 +7297,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%ymm29,%ymm4,%ymm4
-.L_16_blocks_ok_fikAepqkgbwnqAp:
+.L_16_blocks_ok_38:
 
 
 
@@ -7412,7 +7412,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_cEjqkDtdfxxsrnj
+	jl	.L_small_initial_partial_block_39
 
 
 
@@ -7472,8 +7472,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_cEjqkDtdfxxsrnj
-.L_small_initial_partial_block_cEjqkDtdfxxsrnj:
+	jmp	.L_small_initial_compute_done_39
+.L_small_initial_partial_block_39:
 
 
 
@@ -7536,26 +7536,26 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_cEjqkDtdfxxsrnj:
+.L_small_initial_compute_done_39:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_cEjqkDtdfxxsrnj
+	je	.L_after_reduction_39
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_cEjqkDtdfxxsrnj:
-	jmp	.L_last_blocks_done_mlwyCypwkirBzdm
-.L_last_num_blocks_is_11_mlwyCypwkirBzdm:
+.L_after_reduction_39:
+	jmp	.L_last_blocks_done_19
+.L_last_num_blocks_is_11_19:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$245,%r15d
-	jae	.L_16_blocks_overflow_uhBCuzelfsqdvbe
+	jae	.L_16_blocks_overflow_40
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
-	jmp	.L_16_blocks_ok_uhBCuzelfsqdvbe
+	jmp	.L_16_blocks_ok_40
 
-.L_16_blocks_overflow_uhBCuzelfsqdvbe:
+.L_16_blocks_overflow_40:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -7564,7 +7564,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
-.L_16_blocks_ok_uhBCuzelfsqdvbe:
+.L_16_blocks_ok_40:
 
 
 
@@ -7679,7 +7679,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_EDvDxgDtsdjjkye
+	jl	.L_small_initial_partial_block_41
 
 
 
@@ -7740,8 +7740,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_EDvDxgDtsdjjkye
-.L_small_initial_partial_block_EDvDxgDtsdjjkye:
+	jmp	.L_small_initial_compute_done_41
+.L_small_initial_partial_block_41:
 
 
 
@@ -7804,26 +7804,26 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_EDvDxgDtsdjjkye:
+.L_small_initial_compute_done_41:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_EDvDxgDtsdjjkye
+	je	.L_after_reduction_41
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_EDvDxgDtsdjjkye:
-	jmp	.L_last_blocks_done_mlwyCypwkirBzdm
-.L_last_num_blocks_is_12_mlwyCypwkirBzdm:
+.L_after_reduction_41:
+	jmp	.L_last_blocks_done_19
+.L_last_num_blocks_is_12_19:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$244,%r15d
-	jae	.L_16_blocks_overflow_vvGybiowhiEjjhv
+	jae	.L_16_blocks_overflow_42
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
-	jmp	.L_16_blocks_ok_vvGybiowhiEjjhv
+	jmp	.L_16_blocks_ok_42
 
-.L_16_blocks_overflow_vvGybiowhiEjjhv:
+.L_16_blocks_overflow_42:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -7832,7 +7832,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
-.L_16_blocks_ok_vvGybiowhiEjjhv:
+.L_16_blocks_ok_42:
 
 
 
@@ -7947,7 +7947,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_iFhjvcxypnbuhvs
+	jl	.L_small_initial_partial_block_43
 
 
 
@@ -8006,8 +8006,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_iFhjvcxypnbuhvs
-.L_small_initial_partial_block_iFhjvcxypnbuhvs:
+	jmp	.L_small_initial_compute_done_43
+.L_small_initial_partial_block_43:
 
 
 
@@ -8071,27 +8071,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_iFhjvcxypnbuhvs:
+.L_small_initial_compute_done_43:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_iFhjvcxypnbuhvs
+	je	.L_after_reduction_43
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_iFhjvcxypnbuhvs:
-	jmp	.L_last_blocks_done_mlwyCypwkirBzdm
-.L_last_num_blocks_is_13_mlwyCypwkirBzdm:
+.L_after_reduction_43:
+	jmp	.L_last_blocks_done_19
+.L_last_num_blocks_is_13_19:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$243,%r15d
-	jae	.L_16_blocks_overflow_cvoDCneGarpdspC
+	jae	.L_16_blocks_overflow_44
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%xmm27,%xmm4,%xmm5
-	jmp	.L_16_blocks_ok_cvoDCneGarpdspC
+	jmp	.L_16_blocks_ok_44
 
-.L_16_blocks_overflow_cvoDCneGarpdspC:
+.L_16_blocks_overflow_44:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -8102,7 +8102,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%xmm29,%xmm5,%xmm5
-.L_16_blocks_ok_cvoDCneGarpdspC:
+.L_16_blocks_ok_44:
 
 
 
@@ -8232,7 +8232,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_dbnAEpbjbaCgfzC
+	jl	.L_small_initial_partial_block_45
 
 
 
@@ -8297,8 +8297,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_dbnAEpbjbaCgfzC
-.L_small_initial_partial_block_dbnAEpbjbaCgfzC:
+	jmp	.L_small_initial_compute_done_45
+.L_small_initial_partial_block_45:
 
 
 
@@ -8360,27 +8360,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_dbnAEpbjbaCgfzC:
+.L_small_initial_compute_done_45:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_dbnAEpbjbaCgfzC
+	je	.L_after_reduction_45
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_dbnAEpbjbaCgfzC:
-	jmp	.L_last_blocks_done_mlwyCypwkirBzdm
-.L_last_num_blocks_is_14_mlwyCypwkirBzdm:
+.L_after_reduction_45:
+	jmp	.L_last_blocks_done_19
+.L_last_num_blocks_is_14_19:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$242,%r15d
-	jae	.L_16_blocks_overflow_hdGdsixcoklvFzo
+	jae	.L_16_blocks_overflow_46
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%ymm27,%ymm4,%ymm5
-	jmp	.L_16_blocks_ok_hdGdsixcoklvFzo
+	jmp	.L_16_blocks_ok_46
 
-.L_16_blocks_overflow_hdGdsixcoklvFzo:
+.L_16_blocks_overflow_46:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -8391,7 +8391,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%ymm29,%ymm5,%ymm5
-.L_16_blocks_ok_hdGdsixcoklvFzo:
+.L_16_blocks_ok_46:
 
 
 
@@ -8521,7 +8521,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_EwqzzBBaoveDrAF
+	jl	.L_small_initial_partial_block_47
 
 
 
@@ -8586,8 +8586,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_EwqzzBBaoveDrAF
-.L_small_initial_partial_block_EwqzzBBaoveDrAF:
+	jmp	.L_small_initial_compute_done_47
+.L_small_initial_partial_block_47:
 
 
 
@@ -8655,27 +8655,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_EwqzzBBaoveDrAF:
+.L_small_initial_compute_done_47:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_EwqzzBBaoveDrAF
+	je	.L_after_reduction_47
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_EwqzzBBaoveDrAF:
-	jmp	.L_last_blocks_done_mlwyCypwkirBzdm
-.L_last_num_blocks_is_15_mlwyCypwkirBzdm:
+.L_after_reduction_47:
+	jmp	.L_last_blocks_done_19
+.L_last_num_blocks_is_15_19:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$241,%r15d
-	jae	.L_16_blocks_overflow_zzkgklGxjyzrhtG
+	jae	.L_16_blocks_overflow_48
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_zzkgklGxjyzrhtG
+	jmp	.L_16_blocks_ok_48
 
-.L_16_blocks_overflow_zzkgklGxjyzrhtG:
+.L_16_blocks_overflow_48:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -8686,7 +8686,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_zzkgklGxjyzrhtG:
+.L_16_blocks_ok_48:
 
 
 
@@ -8816,7 +8816,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_xuzcyflqChzaomB
+	jl	.L_small_initial_partial_block_49
 
 
 
@@ -8882,8 +8882,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_xuzcyflqChzaomB
-.L_small_initial_partial_block_xuzcyflqChzaomB:
+	jmp	.L_small_initial_compute_done_49
+.L_small_initial_partial_block_49:
 
 
 
@@ -8951,27 +8951,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_xuzcyflqChzaomB:
+.L_small_initial_compute_done_49:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_xuzcyflqChzaomB
+	je	.L_after_reduction_49
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_xuzcyflqChzaomB:
-	jmp	.L_last_blocks_done_mlwyCypwkirBzdm
-.L_last_num_blocks_is_16_mlwyCypwkirBzdm:
+.L_after_reduction_49:
+	jmp	.L_last_blocks_done_19
+.L_last_num_blocks_is_16_19:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$240,%r15d
-	jae	.L_16_blocks_overflow_hsjsiokhvhqCsuF
+	jae	.L_16_blocks_overflow_50
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_hsjsiokhvhqCsuF
+	jmp	.L_16_blocks_ok_50
 
-.L_16_blocks_overflow_hsjsiokhvhqCsuF:
+.L_16_blocks_overflow_50:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -8982,7 +8982,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_hsjsiokhvhqCsuF:
+.L_16_blocks_ok_50:
 
 
 
@@ -9109,7 +9109,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm5,%zmm21
 	vextracti32x4	$3,%zmm21,%xmm7
 	subq	$16 * (16 - 1),%r8
-.L_small_initial_partial_block_vbicziAksonxcyl:
+.L_small_initial_partial_block_51:
 
 
 
@@ -9178,11 +9178,11 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_vbicziAksonxcyl:
+.L_small_initial_compute_done_51:
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_vbicziAksonxcyl:
-	jmp	.L_last_blocks_done_mlwyCypwkirBzdm
-.L_last_num_blocks_is_0_mlwyCypwkirBzdm:
+.L_after_reduction_51:
+	jmp	.L_last_blocks_done_19
+.L_last_num_blocks_is_0_19:
 	vmovdqa64	1024(%rsp),%zmm13
 	vmovdqu64	0(%rsp,%rbx,1),%zmm12
 	vpclmulqdq	$0x11,%zmm12,%zmm13,%zmm0
@@ -9243,18 +9243,18 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm24,%xmm3,%xmm14
 
-.L_last_blocks_done_mlwyCypwkirBzdm:
+.L_last_blocks_done_19:
 	vpshufb	%xmm29,%xmm2,%xmm2
-	jmp	.L_ghash_done_lzCeFkjwAopsEcs
-.L_encrypt_32_blocks_lzCeFkjwAopsEcs:
+	jmp	.L_ghash_done_10
+.L_encrypt_32_blocks_10:
 	cmpb	$240,%r15b
-	jae	.L_16_blocks_overflow_dGGDApsErcyjgAG
+	jae	.L_16_blocks_overflow_52
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_dGGDApsErcyjgAG
-.L_16_blocks_overflow_dGGDApsErcyjgAG:
+	jmp	.L_16_blocks_ok_52
+.L_16_blocks_overflow_52:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -9265,7 +9265,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_dGGDApsErcyjgAG:
+.L_16_blocks_ok_52:
 	vbroadcastf64x2	0(%rdi),%zmm30
 	vpxorq	768(%rsp),%zmm14,%zmm8
 	vmovdqu64	0(%rsp),%zmm1
@@ -9430,13 +9430,13 @@ ossl_aes_gcm_encrypt_avx512:
 	vmovdqa64	%zmm4,1408(%rsp)
 	vmovdqa64	%zmm5,1472(%rsp)
 	cmpb	$240,%r15b
-	jae	.L_16_blocks_overflow_nuxkhCGiEwndcAA
+	jae	.L_16_blocks_overflow_53
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_nuxkhCGiEwndcAA
-.L_16_blocks_overflow_nuxkhCGiEwndcAA:
+	jmp	.L_16_blocks_ok_53
+.L_16_blocks_overflow_53:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -9447,7 +9447,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_nuxkhCGiEwndcAA:
+.L_16_blocks_ok_53:
 	vbroadcastf64x2	0(%rdi),%zmm30
 	vmovdqa64	1024(%rsp),%zmm8
 	vmovdqu64	256(%rsp),%zmm1
@@ -9680,61 +9680,61 @@ ossl_aes_gcm_encrypt_avx512:
 	movl	%r8d,%r10d
 	addl	$15,%r10d
 	shrl	$4,%r10d
-	je	.L_last_num_blocks_is_0_yCoasknksvcxrbz
+	je	.L_last_num_blocks_is_0_54
 
 	cmpl	$8,%r10d
-	je	.L_last_num_blocks_is_8_yCoasknksvcxrbz
-	jb	.L_last_num_blocks_is_7_1_yCoasknksvcxrbz
+	je	.L_last_num_blocks_is_8_54
+	jb	.L_last_num_blocks_is_7_1_54
 
 
 	cmpl	$12,%r10d
-	je	.L_last_num_blocks_is_12_yCoasknksvcxrbz
-	jb	.L_last_num_blocks_is_11_9_yCoasknksvcxrbz
+	je	.L_last_num_blocks_is_12_54
+	jb	.L_last_num_blocks_is_11_9_54
 
 
 	cmpl	$15,%r10d
-	je	.L_last_num_blocks_is_15_yCoasknksvcxrbz
-	ja	.L_last_num_blocks_is_16_yCoasknksvcxrbz
+	je	.L_last_num_blocks_is_15_54
+	ja	.L_last_num_blocks_is_16_54
 	cmpl	$14,%r10d
-	je	.L_last_num_blocks_is_14_yCoasknksvcxrbz
-	jmp	.L_last_num_blocks_is_13_yCoasknksvcxrbz
+	je	.L_last_num_blocks_is_14_54
+	jmp	.L_last_num_blocks_is_13_54
 
-.L_last_num_blocks_is_11_9_yCoasknksvcxrbz:
+.L_last_num_blocks_is_11_9_54:
 
 	cmpl	$10,%r10d
-	je	.L_last_num_blocks_is_10_yCoasknksvcxrbz
-	ja	.L_last_num_blocks_is_11_yCoasknksvcxrbz
-	jmp	.L_last_num_blocks_is_9_yCoasknksvcxrbz
+	je	.L_last_num_blocks_is_10_54
+	ja	.L_last_num_blocks_is_11_54
+	jmp	.L_last_num_blocks_is_9_54
 
-.L_last_num_blocks_is_7_1_yCoasknksvcxrbz:
+.L_last_num_blocks_is_7_1_54:
 	cmpl	$4,%r10d
-	je	.L_last_num_blocks_is_4_yCoasknksvcxrbz
-	jb	.L_last_num_blocks_is_3_1_yCoasknksvcxrbz
+	je	.L_last_num_blocks_is_4_54
+	jb	.L_last_num_blocks_is_3_1_54
 
 	cmpl	$6,%r10d
-	ja	.L_last_num_blocks_is_7_yCoasknksvcxrbz
-	je	.L_last_num_blocks_is_6_yCoasknksvcxrbz
-	jmp	.L_last_num_blocks_is_5_yCoasknksvcxrbz
+	ja	.L_last_num_blocks_is_7_54
+	je	.L_last_num_blocks_is_6_54
+	jmp	.L_last_num_blocks_is_5_54
 
-.L_last_num_blocks_is_3_1_yCoasknksvcxrbz:
+.L_last_num_blocks_is_3_1_54:
 
 	cmpl	$2,%r10d
-	ja	.L_last_num_blocks_is_3_yCoasknksvcxrbz
-	je	.L_last_num_blocks_is_2_yCoasknksvcxrbz
-.L_last_num_blocks_is_1_yCoasknksvcxrbz:
+	ja	.L_last_num_blocks_is_3_54
+	je	.L_last_num_blocks_is_2_54
+.L_last_num_blocks_is_1_54:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$255,%r15d
-	jae	.L_16_blocks_overflow_bgFgFkkmrGvFujm
+	jae	.L_16_blocks_overflow_55
 	vpaddd	%xmm28,%xmm2,%xmm0
-	jmp	.L_16_blocks_ok_bgFgFkkmrGvFujm
+	jmp	.L_16_blocks_ok_55
 
-.L_16_blocks_overflow_bgFgFkkmrGvFujm:
+.L_16_blocks_overflow_55:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%xmm29,%xmm0,%xmm0
-.L_16_blocks_ok_bgFgFkkmrGvFujm:
+.L_16_blocks_ok_55:
 
 
 
@@ -9818,7 +9818,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_lanzDhyxGCdmwtd
+	jl	.L_small_initial_partial_block_56
 
 
 
@@ -9862,8 +9862,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_lanzDhyxGCdmwtd
-.L_small_initial_partial_block_lanzDhyxGCdmwtd:
+	jmp	.L_small_initial_compute_done_56
+.L_small_initial_partial_block_56:
 
 
 
@@ -9915,24 +9915,24 @@ ossl_aes_gcm_encrypt_avx512:
 
 	vpxorq	%xmm7,%xmm14,%xmm14
 
-	jmp	.L_after_reduction_lanzDhyxGCdmwtd
-.L_small_initial_compute_done_lanzDhyxGCdmwtd:
-.L_after_reduction_lanzDhyxGCdmwtd:
-	jmp	.L_last_blocks_done_yCoasknksvcxrbz
-.L_last_num_blocks_is_2_yCoasknksvcxrbz:
+	jmp	.L_after_reduction_56
+.L_small_initial_compute_done_56:
+.L_after_reduction_56:
+	jmp	.L_last_blocks_done_54
+.L_last_num_blocks_is_2_54:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$254,%r15d
-	jae	.L_16_blocks_overflow_oAxdwmzDttnfxrb
+	jae	.L_16_blocks_overflow_57
 	vpaddd	%ymm28,%ymm2,%ymm0
-	jmp	.L_16_blocks_ok_oAxdwmzDttnfxrb
+	jmp	.L_16_blocks_ok_57
 
-.L_16_blocks_overflow_oAxdwmzDttnfxrb:
+.L_16_blocks_overflow_57:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%ymm29,%ymm0,%ymm0
-.L_16_blocks_ok_oAxdwmzDttnfxrb:
+.L_16_blocks_ok_57:
 
 
 
@@ -10017,7 +10017,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_rmlicyhaCuksFka
+	jl	.L_small_initial_partial_block_58
 
 
 
@@ -10061,8 +10061,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_rmlicyhaCuksFka
-.L_small_initial_partial_block_rmlicyhaCuksFka:
+	jmp	.L_small_initial_compute_done_58
+.L_small_initial_partial_block_58:
 
 
 
@@ -10109,27 +10109,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_rmlicyhaCuksFka:
+.L_small_initial_compute_done_58:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_rmlicyhaCuksFka
+	je	.L_after_reduction_58
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_rmlicyhaCuksFka:
-	jmp	.L_last_blocks_done_yCoasknksvcxrbz
-.L_last_num_blocks_is_3_yCoasknksvcxrbz:
+.L_after_reduction_58:
+	jmp	.L_last_blocks_done_54
+.L_last_num_blocks_is_3_54:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$253,%r15d
-	jae	.L_16_blocks_overflow_FlcptspGAfyiqxE
+	jae	.L_16_blocks_overflow_59
 	vpaddd	%zmm28,%zmm2,%zmm0
-	jmp	.L_16_blocks_ok_FlcptspGAfyiqxE
+	jmp	.L_16_blocks_ok_59
 
-.L_16_blocks_overflow_FlcptspGAfyiqxE:
+.L_16_blocks_overflow_59:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%zmm29,%zmm0,%zmm0
-.L_16_blocks_ok_FlcptspGAfyiqxE:
+.L_16_blocks_ok_59:
 
 
 
@@ -10214,7 +10214,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_FipAdjmyyyeyzva
+	jl	.L_small_initial_partial_block_60
 
 
 
@@ -10259,8 +10259,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_FipAdjmyyyeyzva
-.L_small_initial_partial_block_FipAdjmyyyeyzva:
+	jmp	.L_small_initial_compute_done_60
+.L_small_initial_partial_block_60:
 
 
 
@@ -10307,27 +10307,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_FipAdjmyyyeyzva:
+.L_small_initial_compute_done_60:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_FipAdjmyyyeyzva
+	je	.L_after_reduction_60
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_FipAdjmyyyeyzva:
-	jmp	.L_last_blocks_done_yCoasknksvcxrbz
-.L_last_num_blocks_is_4_yCoasknksvcxrbz:
+.L_after_reduction_60:
+	jmp	.L_last_blocks_done_54
+.L_last_num_blocks_is_4_54:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$252,%r15d
-	jae	.L_16_blocks_overflow_zbACEBDauizbtgw
+	jae	.L_16_blocks_overflow_61
 	vpaddd	%zmm28,%zmm2,%zmm0
-	jmp	.L_16_blocks_ok_zbACEBDauizbtgw
+	jmp	.L_16_blocks_ok_61
 
-.L_16_blocks_overflow_zbACEBDauizbtgw:
+.L_16_blocks_overflow_61:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%zmm29,%zmm0,%zmm0
-.L_16_blocks_ok_zbACEBDauizbtgw:
+.L_16_blocks_ok_61:
 
 
 
@@ -10412,7 +10412,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_ugbqDDimEpcebth
+	jl	.L_small_initial_partial_block_62
 
 
 
@@ -10457,8 +10457,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_ugbqDDimEpcebth
-.L_small_initial_partial_block_ugbqDDimEpcebth:
+	jmp	.L_small_initial_compute_done_62
+.L_small_initial_partial_block_62:
 
 
 
@@ -10506,32 +10506,32 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_ugbqDDimEpcebth:
+.L_small_initial_compute_done_62:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_ugbqDDimEpcebth
+	je	.L_after_reduction_62
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_ugbqDDimEpcebth:
-	jmp	.L_last_blocks_done_yCoasknksvcxrbz
-.L_last_num_blocks_is_5_yCoasknksvcxrbz:
+.L_after_reduction_62:
+	jmp	.L_last_blocks_done_54
+.L_last_num_blocks_is_5_54:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$251,%r15d
-	jae	.L_16_blocks_overflow_whnpxcGiiqAwyzh
+	jae	.L_16_blocks_overflow_63
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%xmm27,%xmm0,%xmm3
-	jmp	.L_16_blocks_ok_whnpxcGiiqAwyzh
+	jmp	.L_16_blocks_ok_63
 
-.L_16_blocks_overflow_whnpxcGiiqAwyzh:
+.L_16_blocks_overflow_63:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%xmm29,%xmm3,%xmm3
-.L_16_blocks_ok_whnpxcGiiqAwyzh:
+.L_16_blocks_ok_63:
 
 
 
@@ -10631,7 +10631,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_vdmtGlyqavdgxds
+	jl	.L_small_initial_partial_block_64
 
 
 
@@ -10682,8 +10682,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_vdmtGlyqavdgxds
-.L_small_initial_partial_block_vdmtGlyqavdgxds:
+	jmp	.L_small_initial_compute_done_64
+.L_small_initial_partial_block_64:
 
 
 
@@ -10731,32 +10731,32 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_vdmtGlyqavdgxds:
+.L_small_initial_compute_done_64:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_vdmtGlyqavdgxds
+	je	.L_after_reduction_64
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_vdmtGlyqavdgxds:
-	jmp	.L_last_blocks_done_yCoasknksvcxrbz
-.L_last_num_blocks_is_6_yCoasknksvcxrbz:
+.L_after_reduction_64:
+	jmp	.L_last_blocks_done_54
+.L_last_num_blocks_is_6_54:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$250,%r15d
-	jae	.L_16_blocks_overflow_hEkukgbuBklfAxe
+	jae	.L_16_blocks_overflow_65
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%ymm27,%ymm0,%ymm3
-	jmp	.L_16_blocks_ok_hEkukgbuBklfAxe
+	jmp	.L_16_blocks_ok_65
 
-.L_16_blocks_overflow_hEkukgbuBklfAxe:
+.L_16_blocks_overflow_65:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%ymm29,%ymm3,%ymm3
-.L_16_blocks_ok_hEkukgbuBklfAxe:
+.L_16_blocks_ok_65:
 
 
 
@@ -10856,7 +10856,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_Btrqfjdicmqzbiu
+	jl	.L_small_initial_partial_block_66
 
 
 
@@ -10907,8 +10907,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_Btrqfjdicmqzbiu
-.L_small_initial_partial_block_Btrqfjdicmqzbiu:
+	jmp	.L_small_initial_compute_done_66
+.L_small_initial_partial_block_66:
 
 
 
@@ -10962,32 +10962,32 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_Btrqfjdicmqzbiu:
+.L_small_initial_compute_done_66:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_Btrqfjdicmqzbiu
+	je	.L_after_reduction_66
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_Btrqfjdicmqzbiu:
-	jmp	.L_last_blocks_done_yCoasknksvcxrbz
-.L_last_num_blocks_is_7_yCoasknksvcxrbz:
+.L_after_reduction_66:
+	jmp	.L_last_blocks_done_54
+.L_last_num_blocks_is_7_54:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$249,%r15d
-	jae	.L_16_blocks_overflow_qmvgyuEEotwbcGm
+	jae	.L_16_blocks_overflow_67
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
-	jmp	.L_16_blocks_ok_qmvgyuEEotwbcGm
+	jmp	.L_16_blocks_ok_67
 
-.L_16_blocks_overflow_qmvgyuEEotwbcGm:
+.L_16_blocks_overflow_67:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
-.L_16_blocks_ok_qmvgyuEEotwbcGm:
+.L_16_blocks_ok_67:
 
 
 
@@ -11087,7 +11087,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_DaaqzwgAxvvkqDC
+	jl	.L_small_initial_partial_block_68
 
 
 
@@ -11139,8 +11139,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_DaaqzwgAxvvkqDC
-.L_small_initial_partial_block_DaaqzwgAxvvkqDC:
+	jmp	.L_small_initial_compute_done_68
+.L_small_initial_partial_block_68:
 
 
 
@@ -11194,32 +11194,32 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_DaaqzwgAxvvkqDC:
+.L_small_initial_compute_done_68:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_DaaqzwgAxvvkqDC
+	je	.L_after_reduction_68
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_DaaqzwgAxvvkqDC:
-	jmp	.L_last_blocks_done_yCoasknksvcxrbz
-.L_last_num_blocks_is_8_yCoasknksvcxrbz:
+.L_after_reduction_68:
+	jmp	.L_last_blocks_done_54
+.L_last_num_blocks_is_8_54:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$248,%r15d
-	jae	.L_16_blocks_overflow_qsvmACcwxGzazwG
+	jae	.L_16_blocks_overflow_69
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
-	jmp	.L_16_blocks_ok_qsvmACcwxGzazwG
+	jmp	.L_16_blocks_ok_69
 
-.L_16_blocks_overflow_qsvmACcwxGzazwG:
+.L_16_blocks_overflow_69:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
-.L_16_blocks_ok_qsvmACcwxGzazwG:
+.L_16_blocks_ok_69:
 
 
 
@@ -11319,7 +11319,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_luejwGylbbqttxD
+	jl	.L_small_initial_partial_block_70
 
 
 
@@ -11373,8 +11373,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_luejwGylbbqttxD
-.L_small_initial_partial_block_luejwGylbbqttxD:
+	jmp	.L_small_initial_compute_done_70
+.L_small_initial_partial_block_70:
 
 
 
@@ -11429,26 +11429,26 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_luejwGylbbqttxD:
+.L_small_initial_compute_done_70:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_luejwGylbbqttxD
+	je	.L_after_reduction_70
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_luejwGylbbqttxD:
-	jmp	.L_last_blocks_done_yCoasknksvcxrbz
-.L_last_num_blocks_is_9_yCoasknksvcxrbz:
+.L_after_reduction_70:
+	jmp	.L_last_blocks_done_54
+.L_last_num_blocks_is_9_54:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$247,%r15d
-	jae	.L_16_blocks_overflow_BFGyztoirptABqf
+	jae	.L_16_blocks_overflow_71
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%xmm27,%xmm3,%xmm4
-	jmp	.L_16_blocks_ok_BFGyztoirptABqf
+	jmp	.L_16_blocks_ok_71
 
-.L_16_blocks_overflow_BFGyztoirptABqf:
+.L_16_blocks_overflow_71:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -11457,7 +11457,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%xmm29,%xmm4,%xmm4
-.L_16_blocks_ok_BFGyztoirptABqf:
+.L_16_blocks_ok_71:
 
 
 
@@ -11572,7 +11572,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_vwsDgenrpsinatA
+	jl	.L_small_initial_partial_block_72
 
 
 
@@ -11632,8 +11632,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_vwsDgenrpsinatA
-.L_small_initial_partial_block_vwsDgenrpsinatA:
+	jmp	.L_small_initial_compute_done_72
+.L_small_initial_partial_block_72:
 
 
 
@@ -11690,26 +11690,26 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_vwsDgenrpsinatA:
+.L_small_initial_compute_done_72:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_vwsDgenrpsinatA
+	je	.L_after_reduction_72
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_vwsDgenrpsinatA:
-	jmp	.L_last_blocks_done_yCoasknksvcxrbz
-.L_last_num_blocks_is_10_yCoasknksvcxrbz:
+.L_after_reduction_72:
+	jmp	.L_last_blocks_done_54
+.L_last_num_blocks_is_10_54:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$246,%r15d
-	jae	.L_16_blocks_overflow_BvpouEdxtnAzhcb
+	jae	.L_16_blocks_overflow_73
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%ymm27,%ymm3,%ymm4
-	jmp	.L_16_blocks_ok_BvpouEdxtnAzhcb
+	jmp	.L_16_blocks_ok_73
 
-.L_16_blocks_overflow_BvpouEdxtnAzhcb:
+.L_16_blocks_overflow_73:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -11718,7 +11718,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%ymm29,%ymm4,%ymm4
-.L_16_blocks_ok_BvpouEdxtnAzhcb:
+.L_16_blocks_ok_73:
 
 
 
@@ -11833,7 +11833,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_AAfhgDnmzkhEpcy
+	jl	.L_small_initial_partial_block_74
 
 
 
@@ -11893,8 +11893,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_AAfhgDnmzkhEpcy
-.L_small_initial_partial_block_AAfhgDnmzkhEpcy:
+	jmp	.L_small_initial_compute_done_74
+.L_small_initial_partial_block_74:
 
 
 
@@ -11957,26 +11957,26 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_AAfhgDnmzkhEpcy:
+.L_small_initial_compute_done_74:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_AAfhgDnmzkhEpcy
+	je	.L_after_reduction_74
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_AAfhgDnmzkhEpcy:
-	jmp	.L_last_blocks_done_yCoasknksvcxrbz
-.L_last_num_blocks_is_11_yCoasknksvcxrbz:
+.L_after_reduction_74:
+	jmp	.L_last_blocks_done_54
+.L_last_num_blocks_is_11_54:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$245,%r15d
-	jae	.L_16_blocks_overflow_mmtypFqeagAsznG
+	jae	.L_16_blocks_overflow_75
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
-	jmp	.L_16_blocks_ok_mmtypFqeagAsznG
+	jmp	.L_16_blocks_ok_75
 
-.L_16_blocks_overflow_mmtypFqeagAsznG:
+.L_16_blocks_overflow_75:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -11985,7 +11985,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
-.L_16_blocks_ok_mmtypFqeagAsznG:
+.L_16_blocks_ok_75:
 
 
 
@@ -12100,7 +12100,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_oDzFCkpkpEkjAll
+	jl	.L_small_initial_partial_block_76
 
 
 
@@ -12161,8 +12161,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_oDzFCkpkpEkjAll
-.L_small_initial_partial_block_oDzFCkpkpEkjAll:
+	jmp	.L_small_initial_compute_done_76
+.L_small_initial_partial_block_76:
 
 
 
@@ -12225,26 +12225,26 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_oDzFCkpkpEkjAll:
+.L_small_initial_compute_done_76:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_oDzFCkpkpEkjAll
+	je	.L_after_reduction_76
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_oDzFCkpkpEkjAll:
-	jmp	.L_last_blocks_done_yCoasknksvcxrbz
-.L_last_num_blocks_is_12_yCoasknksvcxrbz:
+.L_after_reduction_76:
+	jmp	.L_last_blocks_done_54
+.L_last_num_blocks_is_12_54:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$244,%r15d
-	jae	.L_16_blocks_overflow_jigvdlhsqxusgzv
+	jae	.L_16_blocks_overflow_77
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
-	jmp	.L_16_blocks_ok_jigvdlhsqxusgzv
+	jmp	.L_16_blocks_ok_77
 
-.L_16_blocks_overflow_jigvdlhsqxusgzv:
+.L_16_blocks_overflow_77:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -12253,7 +12253,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
-.L_16_blocks_ok_jigvdlhsqxusgzv:
+.L_16_blocks_ok_77:
 
 
 
@@ -12368,7 +12368,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_BztygblGrCvnamF
+	jl	.L_small_initial_partial_block_78
 
 
 
@@ -12427,8 +12427,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_BztygblGrCvnamF
-.L_small_initial_partial_block_BztygblGrCvnamF:
+	jmp	.L_small_initial_compute_done_78
+.L_small_initial_partial_block_78:
 
 
 
@@ -12492,27 +12492,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_BztygblGrCvnamF:
+.L_small_initial_compute_done_78:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_BztygblGrCvnamF
+	je	.L_after_reduction_78
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_BztygblGrCvnamF:
-	jmp	.L_last_blocks_done_yCoasknksvcxrbz
-.L_last_num_blocks_is_13_yCoasknksvcxrbz:
+.L_after_reduction_78:
+	jmp	.L_last_blocks_done_54
+.L_last_num_blocks_is_13_54:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$243,%r15d
-	jae	.L_16_blocks_overflow_nCmFdlrEctfwynG
+	jae	.L_16_blocks_overflow_79
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%xmm27,%xmm4,%xmm5
-	jmp	.L_16_blocks_ok_nCmFdlrEctfwynG
+	jmp	.L_16_blocks_ok_79
 
-.L_16_blocks_overflow_nCmFdlrEctfwynG:
+.L_16_blocks_overflow_79:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -12523,7 +12523,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%xmm29,%xmm5,%xmm5
-.L_16_blocks_ok_nCmFdlrEctfwynG:
+.L_16_blocks_ok_79:
 
 
 
@@ -12653,7 +12653,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_dtpxlGFwrvwweur
+	jl	.L_small_initial_partial_block_80
 
 
 
@@ -12718,8 +12718,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_dtpxlGFwrvwweur
-.L_small_initial_partial_block_dtpxlGFwrvwweur:
+	jmp	.L_small_initial_compute_done_80
+.L_small_initial_partial_block_80:
 
 
 
@@ -12781,27 +12781,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_dtpxlGFwrvwweur:
+.L_small_initial_compute_done_80:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_dtpxlGFwrvwweur
+	je	.L_after_reduction_80
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_dtpxlGFwrvwweur:
-	jmp	.L_last_blocks_done_yCoasknksvcxrbz
-.L_last_num_blocks_is_14_yCoasknksvcxrbz:
+.L_after_reduction_80:
+	jmp	.L_last_blocks_done_54
+.L_last_num_blocks_is_14_54:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$242,%r15d
-	jae	.L_16_blocks_overflow_pEocmDmlECvduGF
+	jae	.L_16_blocks_overflow_81
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%ymm27,%ymm4,%ymm5
-	jmp	.L_16_blocks_ok_pEocmDmlECvduGF
+	jmp	.L_16_blocks_ok_81
 
-.L_16_blocks_overflow_pEocmDmlECvduGF:
+.L_16_blocks_overflow_81:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -12812,7 +12812,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%ymm29,%ymm5,%ymm5
-.L_16_blocks_ok_pEocmDmlECvduGF:
+.L_16_blocks_ok_81:
 
 
 
@@ -12942,7 +12942,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_FevpdlBzDiGAmkn
+	jl	.L_small_initial_partial_block_82
 
 
 
@@ -13007,8 +13007,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_FevpdlBzDiGAmkn
-.L_small_initial_partial_block_FevpdlBzDiGAmkn:
+	jmp	.L_small_initial_compute_done_82
+.L_small_initial_partial_block_82:
 
 
 
@@ -13076,27 +13076,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_FevpdlBzDiGAmkn:
+.L_small_initial_compute_done_82:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_FevpdlBzDiGAmkn
+	je	.L_after_reduction_82
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_FevpdlBzDiGAmkn:
-	jmp	.L_last_blocks_done_yCoasknksvcxrbz
-.L_last_num_blocks_is_15_yCoasknksvcxrbz:
+.L_after_reduction_82:
+	jmp	.L_last_blocks_done_54
+.L_last_num_blocks_is_15_54:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$241,%r15d
-	jae	.L_16_blocks_overflow_ngzCfxddkveBxdu
+	jae	.L_16_blocks_overflow_83
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_ngzCfxddkveBxdu
+	jmp	.L_16_blocks_ok_83
 
-.L_16_blocks_overflow_ngzCfxddkveBxdu:
+.L_16_blocks_overflow_83:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -13107,7 +13107,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_ngzCfxddkveBxdu:
+.L_16_blocks_ok_83:
 
 
 
@@ -13237,7 +13237,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_tjDhmjvbxeoydem
+	jl	.L_small_initial_partial_block_84
 
 
 
@@ -13303,8 +13303,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_tjDhmjvbxeoydem
-.L_small_initial_partial_block_tjDhmjvbxeoydem:
+	jmp	.L_small_initial_compute_done_84
+.L_small_initial_partial_block_84:
 
 
 
@@ -13372,27 +13372,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_tjDhmjvbxeoydem:
+.L_small_initial_compute_done_84:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_tjDhmjvbxeoydem
+	je	.L_after_reduction_84
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_tjDhmjvbxeoydem:
-	jmp	.L_last_blocks_done_yCoasknksvcxrbz
-.L_last_num_blocks_is_16_yCoasknksvcxrbz:
+.L_after_reduction_84:
+	jmp	.L_last_blocks_done_54
+.L_last_num_blocks_is_16_54:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$240,%r15d
-	jae	.L_16_blocks_overflow_xchCsiGcxhfAbta
+	jae	.L_16_blocks_overflow_85
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_xchCsiGcxhfAbta
+	jmp	.L_16_blocks_ok_85
 
-.L_16_blocks_overflow_xchCsiGcxhfAbta:
+.L_16_blocks_overflow_85:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -13403,7 +13403,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_xchCsiGcxhfAbta:
+.L_16_blocks_ok_85:
 
 
 
@@ -13530,7 +13530,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm5,%zmm21
 	vextracti32x4	$3,%zmm21,%xmm7
 	subq	$16 * (16 - 1),%r8
-.L_small_initial_partial_block_hFzDxrwyiwtqwAe:
+.L_small_initial_partial_block_86:
 
 
 
@@ -13599,11 +13599,11 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_hFzDxrwyiwtqwAe:
+.L_small_initial_compute_done_86:
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_hFzDxrwyiwtqwAe:
-	jmp	.L_last_blocks_done_yCoasknksvcxrbz
-.L_last_num_blocks_is_0_yCoasknksvcxrbz:
+.L_after_reduction_86:
+	jmp	.L_last_blocks_done_54
+.L_last_num_blocks_is_0_54:
 	vmovdqa64	768(%rsp),%zmm13
 	vpxorq	%zmm14,%zmm13,%zmm13
 	vmovdqu64	0(%rsp,%rbx,1),%zmm12
@@ -13665,18 +13665,18 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm24,%xmm3,%xmm14
 
-.L_last_blocks_done_yCoasknksvcxrbz:
+.L_last_blocks_done_54:
 	vpshufb	%xmm29,%xmm2,%xmm2
-	jmp	.L_ghash_done_lzCeFkjwAopsEcs
-.L_encrypt_16_blocks_lzCeFkjwAopsEcs:
+	jmp	.L_ghash_done_10
+.L_encrypt_16_blocks_10:
 	cmpb	$240,%r15b
-	jae	.L_16_blocks_overflow_gxeyciouArFndur
+	jae	.L_16_blocks_overflow_87
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_gxeyciouArFndur
-.L_16_blocks_overflow_gxeyciouArFndur:
+	jmp	.L_16_blocks_ok_87
+.L_16_blocks_overflow_87:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -13687,7 +13687,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_gxeyciouArFndur:
+.L_16_blocks_ok_87:
 	vbroadcastf64x2	0(%rdi),%zmm30
 	vpxorq	768(%rsp),%zmm14,%zmm8
 	vmovdqu64	0(%rsp),%zmm1
@@ -13889,61 +13889,61 @@ ossl_aes_gcm_encrypt_avx512:
 	movl	%r8d,%r10d
 	addl	$15,%r10d
 	shrl	$4,%r10d
-	je	.L_last_num_blocks_is_0_BuoycnDoulvvizd
+	je	.L_last_num_blocks_is_0_88
 
 	cmpl	$8,%r10d
-	je	.L_last_num_blocks_is_8_BuoycnDoulvvizd
-	jb	.L_last_num_blocks_is_7_1_BuoycnDoulvvizd
+	je	.L_last_num_blocks_is_8_88
+	jb	.L_last_num_blocks_is_7_1_88
 
 
 	cmpl	$12,%r10d
-	je	.L_last_num_blocks_is_12_BuoycnDoulvvizd
-	jb	.L_last_num_blocks_is_11_9_BuoycnDoulvvizd
+	je	.L_last_num_blocks_is_12_88
+	jb	.L_last_num_blocks_is_11_9_88
 
 
 	cmpl	$15,%r10d
-	je	.L_last_num_blocks_is_15_BuoycnDoulvvizd
-	ja	.L_last_num_blocks_is_16_BuoycnDoulvvizd
+	je	.L_last_num_blocks_is_15_88
+	ja	.L_last_num_blocks_is_16_88
 	cmpl	$14,%r10d
-	je	.L_last_num_blocks_is_14_BuoycnDoulvvizd
-	jmp	.L_last_num_blocks_is_13_BuoycnDoulvvizd
+	je	.L_last_num_blocks_is_14_88
+	jmp	.L_last_num_blocks_is_13_88
 
-.L_last_num_blocks_is_11_9_BuoycnDoulvvizd:
+.L_last_num_blocks_is_11_9_88:
 
 	cmpl	$10,%r10d
-	je	.L_last_num_blocks_is_10_BuoycnDoulvvizd
-	ja	.L_last_num_blocks_is_11_BuoycnDoulvvizd
-	jmp	.L_last_num_blocks_is_9_BuoycnDoulvvizd
+	je	.L_last_num_blocks_is_10_88
+	ja	.L_last_num_blocks_is_11_88
+	jmp	.L_last_num_blocks_is_9_88
 
-.L_last_num_blocks_is_7_1_BuoycnDoulvvizd:
+.L_last_num_blocks_is_7_1_88:
 	cmpl	$4,%r10d
-	je	.L_last_num_blocks_is_4_BuoycnDoulvvizd
-	jb	.L_last_num_blocks_is_3_1_BuoycnDoulvvizd
+	je	.L_last_num_blocks_is_4_88
+	jb	.L_last_num_blocks_is_3_1_88
 
 	cmpl	$6,%r10d
-	ja	.L_last_num_blocks_is_7_BuoycnDoulvvizd
-	je	.L_last_num_blocks_is_6_BuoycnDoulvvizd
-	jmp	.L_last_num_blocks_is_5_BuoycnDoulvvizd
+	ja	.L_last_num_blocks_is_7_88
+	je	.L_last_num_blocks_is_6_88
+	jmp	.L_last_num_blocks_is_5_88
 
-.L_last_num_blocks_is_3_1_BuoycnDoulvvizd:
+.L_last_num_blocks_is_3_1_88:
 
 	cmpl	$2,%r10d
-	ja	.L_last_num_blocks_is_3_BuoycnDoulvvizd
-	je	.L_last_num_blocks_is_2_BuoycnDoulvvizd
-.L_last_num_blocks_is_1_BuoycnDoulvvizd:
+	ja	.L_last_num_blocks_is_3_88
+	je	.L_last_num_blocks_is_2_88
+.L_last_num_blocks_is_1_88:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$255,%r15d
-	jae	.L_16_blocks_overflow_pksscjjkgBywAtt
+	jae	.L_16_blocks_overflow_89
 	vpaddd	%xmm28,%xmm2,%xmm0
-	jmp	.L_16_blocks_ok_pksscjjkgBywAtt
+	jmp	.L_16_blocks_ok_89
 
-.L_16_blocks_overflow_pksscjjkgBywAtt:
+.L_16_blocks_overflow_89:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%xmm29,%xmm0,%xmm0
-.L_16_blocks_ok_pksscjjkgBywAtt:
+.L_16_blocks_ok_89:
 
 
 
@@ -14050,7 +14050,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_iCegDcofaFgyAdo
+	jl	.L_small_initial_partial_block_90
 
 
 
@@ -14092,8 +14092,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_iCegDcofaFgyAdo
-.L_small_initial_partial_block_iCegDcofaFgyAdo:
+	jmp	.L_small_initial_compute_done_90
+.L_small_initial_partial_block_90:
 
 
 
@@ -14117,24 +14117,24 @@ ossl_aes_gcm_encrypt_avx512:
 
 	vpxorq	%xmm7,%xmm14,%xmm14
 
-	jmp	.L_after_reduction_iCegDcofaFgyAdo
-.L_small_initial_compute_done_iCegDcofaFgyAdo:
-.L_after_reduction_iCegDcofaFgyAdo:
-	jmp	.L_last_blocks_done_BuoycnDoulvvizd
-.L_last_num_blocks_is_2_BuoycnDoulvvizd:
+	jmp	.L_after_reduction_90
+.L_small_initial_compute_done_90:
+.L_after_reduction_90:
+	jmp	.L_last_blocks_done_88
+.L_last_num_blocks_is_2_88:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$254,%r15d
-	jae	.L_16_blocks_overflow_uEAqnbDFrGDyfDv
+	jae	.L_16_blocks_overflow_91
 	vpaddd	%ymm28,%ymm2,%ymm0
-	jmp	.L_16_blocks_ok_uEAqnbDFrGDyfDv
+	jmp	.L_16_blocks_ok_91
 
-.L_16_blocks_overflow_uEAqnbDFrGDyfDv:
+.L_16_blocks_overflow_91:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%ymm29,%ymm0,%ymm0
-.L_16_blocks_ok_uEAqnbDFrGDyfDv:
+.L_16_blocks_ok_91:
 
 
 
@@ -14242,7 +14242,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_cCycbDfAihCmGuD
+	jl	.L_small_initial_partial_block_92
 
 
 
@@ -14284,8 +14284,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_cCycbDfAihCmGuD
-.L_small_initial_partial_block_cCycbDfAihCmGuD:
+	jmp	.L_small_initial_compute_done_92
+.L_small_initial_partial_block_92:
 
 
 
@@ -14330,27 +14330,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_cCycbDfAihCmGuD:
+.L_small_initial_compute_done_92:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_cCycbDfAihCmGuD
+	je	.L_after_reduction_92
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_cCycbDfAihCmGuD:
-	jmp	.L_last_blocks_done_BuoycnDoulvvizd
-.L_last_num_blocks_is_3_BuoycnDoulvvizd:
+.L_after_reduction_92:
+	jmp	.L_last_blocks_done_88
+.L_last_num_blocks_is_3_88:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$253,%r15d
-	jae	.L_16_blocks_overflow_tdsclgzaphzezBr
+	jae	.L_16_blocks_overflow_93
 	vpaddd	%zmm28,%zmm2,%zmm0
-	jmp	.L_16_blocks_ok_tdsclgzaphzezBr
+	jmp	.L_16_blocks_ok_93
 
-.L_16_blocks_overflow_tdsclgzaphzezBr:
+.L_16_blocks_overflow_93:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%zmm29,%zmm0,%zmm0
-.L_16_blocks_ok_tdsclgzaphzezBr:
+.L_16_blocks_ok_93:
 
 
 
@@ -14458,7 +14458,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_vessyjqipofivra
+	jl	.L_small_initial_partial_block_94
 
 
 
@@ -14501,8 +14501,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_vessyjqipofivra
-.L_small_initial_partial_block_vessyjqipofivra:
+	jmp	.L_small_initial_compute_done_94
+.L_small_initial_partial_block_94:
 
 
 
@@ -14547,27 +14547,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_vessyjqipofivra:
+.L_small_initial_compute_done_94:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_vessyjqipofivra
+	je	.L_after_reduction_94
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_vessyjqipofivra:
-	jmp	.L_last_blocks_done_BuoycnDoulvvizd
-.L_last_num_blocks_is_4_BuoycnDoulvvizd:
+.L_after_reduction_94:
+	jmp	.L_last_blocks_done_88
+.L_last_num_blocks_is_4_88:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$252,%r15d
-	jae	.L_16_blocks_overflow_BtzndArGfxAjmzd
+	jae	.L_16_blocks_overflow_95
 	vpaddd	%zmm28,%zmm2,%zmm0
-	jmp	.L_16_blocks_ok_BtzndArGfxAjmzd
+	jmp	.L_16_blocks_ok_95
 
-.L_16_blocks_overflow_BtzndArGfxAjmzd:
+.L_16_blocks_overflow_95:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%zmm29,%zmm0,%zmm0
-.L_16_blocks_ok_BtzndArGfxAjmzd:
+.L_16_blocks_ok_95:
 
 
 
@@ -14675,7 +14675,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_vBbpjsCpcpbfheG
+	jl	.L_small_initial_partial_block_96
 
 
 
@@ -14717,8 +14717,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_vBbpjsCpcpbfheG
-.L_small_initial_partial_block_vBbpjsCpcpbfheG:
+	jmp	.L_small_initial_compute_done_96
+.L_small_initial_partial_block_96:
 
 
 
@@ -14764,32 +14764,32 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_vBbpjsCpcpbfheG:
+.L_small_initial_compute_done_96:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_vBbpjsCpcpbfheG
+	je	.L_after_reduction_96
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_vBbpjsCpcpbfheG:
-	jmp	.L_last_blocks_done_BuoycnDoulvvizd
-.L_last_num_blocks_is_5_BuoycnDoulvvizd:
+.L_after_reduction_96:
+	jmp	.L_last_blocks_done_88
+.L_last_num_blocks_is_5_88:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$251,%r15d
-	jae	.L_16_blocks_overflow_ycEywfuBvizmpgg
+	jae	.L_16_blocks_overflow_97
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%xmm27,%xmm0,%xmm3
-	jmp	.L_16_blocks_ok_ycEywfuBvizmpgg
+	jmp	.L_16_blocks_ok_97
 
-.L_16_blocks_overflow_ycEywfuBvizmpgg:
+.L_16_blocks_overflow_97:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%xmm29,%xmm3,%xmm3
-.L_16_blocks_ok_ycEywfuBvizmpgg:
+.L_16_blocks_ok_97:
 
 
 
@@ -14912,7 +14912,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_ngtwkfvbdByyCfs
+	jl	.L_small_initial_partial_block_98
 
 
 
@@ -14964,8 +14964,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_ngtwkfvbdByyCfs
-.L_small_initial_partial_block_ngtwkfvbdByyCfs:
+	jmp	.L_small_initial_compute_done_98
+.L_small_initial_partial_block_98:
 
 
 
@@ -15010,32 +15010,32 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_ngtwkfvbdByyCfs:
+.L_small_initial_compute_done_98:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_ngtwkfvbdByyCfs
+	je	.L_after_reduction_98
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_ngtwkfvbdByyCfs:
-	jmp	.L_last_blocks_done_BuoycnDoulvvizd
-.L_last_num_blocks_is_6_BuoycnDoulvvizd:
+.L_after_reduction_98:
+	jmp	.L_last_blocks_done_88
+.L_last_num_blocks_is_6_88:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$250,%r15d
-	jae	.L_16_blocks_overflow_ufoBeEaDpgdqGAF
+	jae	.L_16_blocks_overflow_99
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%ymm27,%ymm0,%ymm3
-	jmp	.L_16_blocks_ok_ufoBeEaDpgdqGAF
+	jmp	.L_16_blocks_ok_99
 
-.L_16_blocks_overflow_ufoBeEaDpgdqGAF:
+.L_16_blocks_overflow_99:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%ymm29,%ymm3,%ymm3
-.L_16_blocks_ok_ufoBeEaDpgdqGAF:
+.L_16_blocks_ok_99:
 
 
 
@@ -15158,7 +15158,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_FDBhlDqpiBBBkin
+	jl	.L_small_initial_partial_block_100
 
 
 
@@ -15210,8 +15210,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_FDBhlDqpiBBBkin
-.L_small_initial_partial_block_FDBhlDqpiBBBkin:
+	jmp	.L_small_initial_compute_done_100
+.L_small_initial_partial_block_100:
 
 
 
@@ -15266,32 +15266,32 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_FDBhlDqpiBBBkin:
+.L_small_initial_compute_done_100:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_FDBhlDqpiBBBkin
+	je	.L_after_reduction_100
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_FDBhlDqpiBBBkin:
-	jmp	.L_last_blocks_done_BuoycnDoulvvizd
-.L_last_num_blocks_is_7_BuoycnDoulvvizd:
+.L_after_reduction_100:
+	jmp	.L_last_blocks_done_88
+.L_last_num_blocks_is_7_88:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$249,%r15d
-	jae	.L_16_blocks_overflow_EnldzDvbFsxudDB
+	jae	.L_16_blocks_overflow_101
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
-	jmp	.L_16_blocks_ok_EnldzDvbFsxudDB
+	jmp	.L_16_blocks_ok_101
 
-.L_16_blocks_overflow_EnldzDvbFsxudDB:
+.L_16_blocks_overflow_101:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
-.L_16_blocks_ok_EnldzDvbFsxudDB:
+.L_16_blocks_ok_101:
 
 
 
@@ -15414,7 +15414,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_xaGcCawFDhaucDt
+	jl	.L_small_initial_partial_block_102
 
 
 
@@ -15467,8 +15467,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_xaGcCawFDhaucDt
-.L_small_initial_partial_block_xaGcCawFDhaucDt:
+	jmp	.L_small_initial_compute_done_102
+.L_small_initial_partial_block_102:
 
 
 
@@ -15523,32 +15523,32 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_xaGcCawFDhaucDt:
+.L_small_initial_compute_done_102:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_xaGcCawFDhaucDt
+	je	.L_after_reduction_102
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_xaGcCawFDhaucDt:
-	jmp	.L_last_blocks_done_BuoycnDoulvvizd
-.L_last_num_blocks_is_8_BuoycnDoulvvizd:
+.L_after_reduction_102:
+	jmp	.L_last_blocks_done_88
+.L_last_num_blocks_is_8_88:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$248,%r15d
-	jae	.L_16_blocks_overflow_EvBzjrpplobxhsp
+	jae	.L_16_blocks_overflow_103
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
-	jmp	.L_16_blocks_ok_EvBzjrpplobxhsp
+	jmp	.L_16_blocks_ok_103
 
-.L_16_blocks_overflow_EvBzjrpplobxhsp:
+.L_16_blocks_overflow_103:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
-.L_16_blocks_ok_EvBzjrpplobxhsp:
+.L_16_blocks_ok_103:
 
 
 
@@ -15671,7 +15671,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_hnfxrytabzGpDze
+	jl	.L_small_initial_partial_block_104
 
 
 
@@ -15722,8 +15722,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_hnfxrytabzGpDze
-.L_small_initial_partial_block_hnfxrytabzGpDze:
+	jmp	.L_small_initial_compute_done_104
+.L_small_initial_partial_block_104:
 
 
 
@@ -15779,26 +15779,26 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_hnfxrytabzGpDze:
+.L_small_initial_compute_done_104:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_hnfxrytabzGpDze
+	je	.L_after_reduction_104
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_hnfxrytabzGpDze:
-	jmp	.L_last_blocks_done_BuoycnDoulvvizd
-.L_last_num_blocks_is_9_BuoycnDoulvvizd:
+.L_after_reduction_104:
+	jmp	.L_last_blocks_done_88
+.L_last_num_blocks_is_9_88:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$247,%r15d
-	jae	.L_16_blocks_overflow_mfyeDgnGaACDqoe
+	jae	.L_16_blocks_overflow_105
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%xmm27,%xmm3,%xmm4
-	jmp	.L_16_blocks_ok_mfyeDgnGaACDqoe
+	jmp	.L_16_blocks_ok_105
 
-.L_16_blocks_overflow_mfyeDgnGaACDqoe:
+.L_16_blocks_overflow_105:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -15807,7 +15807,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%xmm29,%xmm4,%xmm4
-.L_16_blocks_ok_mfyeDgnGaACDqoe:
+.L_16_blocks_ok_105:
 
 
 
@@ -15945,7 +15945,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_DdihFzytwBhpGdu
+	jl	.L_small_initial_partial_block_106
 
 
 
@@ -16006,8 +16006,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_DdihFzytwBhpGdu
-.L_small_initial_partial_block_DdihFzytwBhpGdu:
+	jmp	.L_small_initial_compute_done_106
+.L_small_initial_partial_block_106:
 
 
 
@@ -16061,26 +16061,26 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_DdihFzytwBhpGdu:
+.L_small_initial_compute_done_106:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_DdihFzytwBhpGdu
+	je	.L_after_reduction_106
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_DdihFzytwBhpGdu:
-	jmp	.L_last_blocks_done_BuoycnDoulvvizd
-.L_last_num_blocks_is_10_BuoycnDoulvvizd:
+.L_after_reduction_106:
+	jmp	.L_last_blocks_done_88
+.L_last_num_blocks_is_10_88:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$246,%r15d
-	jae	.L_16_blocks_overflow_GxsvkqtsrDEtGuA
+	jae	.L_16_blocks_overflow_107
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%ymm27,%ymm3,%ymm4
-	jmp	.L_16_blocks_ok_GxsvkqtsrDEtGuA
+	jmp	.L_16_blocks_ok_107
 
-.L_16_blocks_overflow_GxsvkqtsrDEtGuA:
+.L_16_blocks_overflow_107:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -16089,7 +16089,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%ymm29,%ymm4,%ymm4
-.L_16_blocks_ok_GxsvkqtsrDEtGuA:
+.L_16_blocks_ok_107:
 
 
 
@@ -16227,7 +16227,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_tAdqwAwmmudhgnx
+	jl	.L_small_initial_partial_block_108
 
 
 
@@ -16288,8 +16288,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_tAdqwAwmmudhgnx
-.L_small_initial_partial_block_tAdqwAwmmudhgnx:
+	jmp	.L_small_initial_compute_done_108
+.L_small_initial_partial_block_108:
 
 
 
@@ -16353,26 +16353,26 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_tAdqwAwmmudhgnx:
+.L_small_initial_compute_done_108:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_tAdqwAwmmudhgnx
+	je	.L_after_reduction_108
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_tAdqwAwmmudhgnx:
-	jmp	.L_last_blocks_done_BuoycnDoulvvizd
-.L_last_num_blocks_is_11_BuoycnDoulvvizd:
+.L_after_reduction_108:
+	jmp	.L_last_blocks_done_88
+.L_last_num_blocks_is_11_88:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$245,%r15d
-	jae	.L_16_blocks_overflow_xiqcEDtyDyGwkBr
+	jae	.L_16_blocks_overflow_109
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
-	jmp	.L_16_blocks_ok_xiqcEDtyDyGwkBr
+	jmp	.L_16_blocks_ok_109
 
-.L_16_blocks_overflow_xiqcEDtyDyGwkBr:
+.L_16_blocks_overflow_109:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -16381,7 +16381,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
-.L_16_blocks_ok_xiqcEDtyDyGwkBr:
+.L_16_blocks_ok_109:
 
 
 
@@ -16519,7 +16519,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_uoFmhCcDchipCvt
+	jl	.L_small_initial_partial_block_110
 
 
 
@@ -16581,8 +16581,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_uoFmhCcDchipCvt
-.L_small_initial_partial_block_uoFmhCcDchipCvt:
+	jmp	.L_small_initial_compute_done_110
+.L_small_initial_partial_block_110:
 
 
 
@@ -16646,26 +16646,26 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_uoFmhCcDchipCvt:
+.L_small_initial_compute_done_110:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_uoFmhCcDchipCvt
+	je	.L_after_reduction_110
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_uoFmhCcDchipCvt:
-	jmp	.L_last_blocks_done_BuoycnDoulvvizd
-.L_last_num_blocks_is_12_BuoycnDoulvvizd:
+.L_after_reduction_110:
+	jmp	.L_last_blocks_done_88
+.L_last_num_blocks_is_12_88:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$244,%r15d
-	jae	.L_16_blocks_overflow_emmqcahqycrbAvy
+	jae	.L_16_blocks_overflow_111
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
-	jmp	.L_16_blocks_ok_emmqcahqycrbAvy
+	jmp	.L_16_blocks_ok_111
 
-.L_16_blocks_overflow_emmqcahqycrbAvy:
+.L_16_blocks_overflow_111:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -16674,7 +16674,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
-.L_16_blocks_ok_emmqcahqycrbAvy:
+.L_16_blocks_ok_111:
 
 
 
@@ -16812,7 +16812,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_yrofwmknufBhqkg
+	jl	.L_small_initial_partial_block_112
 
 
 
@@ -16868,8 +16868,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_yrofwmknufBhqkg
-.L_small_initial_partial_block_yrofwmknufBhqkg:
+	jmp	.L_small_initial_compute_done_112
+.L_small_initial_partial_block_112:
 
 
 
@@ -16934,27 +16934,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_yrofwmknufBhqkg:
+.L_small_initial_compute_done_112:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_yrofwmknufBhqkg
+	je	.L_after_reduction_112
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_yrofwmknufBhqkg:
-	jmp	.L_last_blocks_done_BuoycnDoulvvizd
-.L_last_num_blocks_is_13_BuoycnDoulvvizd:
+.L_after_reduction_112:
+	jmp	.L_last_blocks_done_88
+.L_last_num_blocks_is_13_88:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$243,%r15d
-	jae	.L_16_blocks_overflow_gyyvpyrBamvxicd
+	jae	.L_16_blocks_overflow_113
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%xmm27,%xmm4,%xmm5
-	jmp	.L_16_blocks_ok_gyyvpyrBamvxicd
+	jmp	.L_16_blocks_ok_113
 
-.L_16_blocks_overflow_gyyvpyrBamvxicd:
+.L_16_blocks_overflow_113:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -16965,7 +16965,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%xmm29,%xmm5,%xmm5
-.L_16_blocks_ok_gyyvpyrBamvxicd:
+.L_16_blocks_ok_113:
 
 
 
@@ -17118,7 +17118,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_gejEbitlocEoFpj
+	jl	.L_small_initial_partial_block_114
 
 
 
@@ -17184,8 +17184,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_gejEbitlocEoFpj
-.L_small_initial_partial_block_gejEbitlocEoFpj:
+	jmp	.L_small_initial_compute_done_114
+.L_small_initial_partial_block_114:
 
 
 
@@ -17244,27 +17244,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_gejEbitlocEoFpj:
+.L_small_initial_compute_done_114:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_gejEbitlocEoFpj
+	je	.L_after_reduction_114
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_gejEbitlocEoFpj:
-	jmp	.L_last_blocks_done_BuoycnDoulvvizd
-.L_last_num_blocks_is_14_BuoycnDoulvvizd:
+.L_after_reduction_114:
+	jmp	.L_last_blocks_done_88
+.L_last_num_blocks_is_14_88:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$242,%r15d
-	jae	.L_16_blocks_overflow_hyFgdkqlfCEoeCm
+	jae	.L_16_blocks_overflow_115
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%ymm27,%ymm4,%ymm5
-	jmp	.L_16_blocks_ok_hyFgdkqlfCEoeCm
+	jmp	.L_16_blocks_ok_115
 
-.L_16_blocks_overflow_hyFgdkqlfCEoeCm:
+.L_16_blocks_overflow_115:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -17275,7 +17275,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%ymm29,%ymm5,%ymm5
-.L_16_blocks_ok_hyFgdkqlfCEoeCm:
+.L_16_blocks_ok_115:
 
 
 
@@ -17428,7 +17428,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_daxGpkfmviuqtkm
+	jl	.L_small_initial_partial_block_116
 
 
 
@@ -17494,8 +17494,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_daxGpkfmviuqtkm
-.L_small_initial_partial_block_daxGpkfmviuqtkm:
+	jmp	.L_small_initial_compute_done_116
+.L_small_initial_partial_block_116:
 
 
 
@@ -17564,27 +17564,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_daxGpkfmviuqtkm:
+.L_small_initial_compute_done_116:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_daxGpkfmviuqtkm
+	je	.L_after_reduction_116
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_daxGpkfmviuqtkm:
-	jmp	.L_last_blocks_done_BuoycnDoulvvizd
-.L_last_num_blocks_is_15_BuoycnDoulvvizd:
+.L_after_reduction_116:
+	jmp	.L_last_blocks_done_88
+.L_last_num_blocks_is_15_88:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$241,%r15d
-	jae	.L_16_blocks_overflow_tuelGvmqaeAhhmd
+	jae	.L_16_blocks_overflow_117
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_tuelGvmqaeAhhmd
+	jmp	.L_16_blocks_ok_117
 
-.L_16_blocks_overflow_tuelGvmqaeAhhmd:
+.L_16_blocks_overflow_117:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -17595,7 +17595,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_tuelGvmqaeAhhmd:
+.L_16_blocks_ok_117:
 
 
 
@@ -17748,7 +17748,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_aqtprFqqDktCCtx
+	jl	.L_small_initial_partial_block_118
 
 
 
@@ -17815,8 +17815,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_aqtprFqqDktCCtx
-.L_small_initial_partial_block_aqtprFqqDktCCtx:
+	jmp	.L_small_initial_compute_done_118
+.L_small_initial_partial_block_118:
 
 
 
@@ -17885,27 +17885,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_aqtprFqqDktCCtx:
+.L_small_initial_compute_done_118:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_aqtprFqqDktCCtx
+	je	.L_after_reduction_118
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_aqtprFqqDktCCtx:
-	jmp	.L_last_blocks_done_BuoycnDoulvvizd
-.L_last_num_blocks_is_16_BuoycnDoulvvizd:
+.L_after_reduction_118:
+	jmp	.L_last_blocks_done_88
+.L_last_num_blocks_is_16_88:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$240,%r15d
-	jae	.L_16_blocks_overflow_pcvkptvvvrwnmdr
+	jae	.L_16_blocks_overflow_119
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_pcvkptvvvrwnmdr
+	jmp	.L_16_blocks_ok_119
 
-.L_16_blocks_overflow_pcvkptvvvrwnmdr:
+.L_16_blocks_overflow_119:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -17916,7 +17916,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_pcvkptvvvrwnmdr:
+.L_16_blocks_ok_119:
 
 
 
@@ -18066,7 +18066,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm5,%zmm21
 	vextracti32x4	$3,%zmm21,%xmm7
 	subq	$16 * (16 - 1),%r8
-.L_small_initial_partial_block_GdmkuGblwdrtsjm:
+.L_small_initial_partial_block_120:
 
 
 
@@ -18136,11 +18136,11 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_GdmkuGblwdrtsjm:
+.L_small_initial_compute_done_120:
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_GdmkuGblwdrtsjm:
-	jmp	.L_last_blocks_done_BuoycnDoulvvizd
-.L_last_num_blocks_is_0_BuoycnDoulvvizd:
+.L_after_reduction_120:
+	jmp	.L_last_blocks_done_88
+.L_last_num_blocks_is_0_88:
 	vmovdqa64	1280(%rsp),%zmm13
 	vmovdqu64	512(%rsp),%zmm12
 	vpclmulqdq	$0x11,%zmm12,%zmm13,%zmm0
@@ -18201,18 +18201,18 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm24,%xmm3,%xmm14
 
-.L_last_blocks_done_BuoycnDoulvvizd:
+.L_last_blocks_done_88:
 	vpshufb	%xmm29,%xmm2,%xmm2
-	jmp	.L_ghash_done_lzCeFkjwAopsEcs
+	jmp	.L_ghash_done_10
 
-.L_message_below_32_blocks_lzCeFkjwAopsEcs:
+.L_message_below_32_blocks_10:
 
 
 	subq	$256,%r8
 	addq	$256,%r11
 	movl	%r8d,%r10d
 	testq	%r14,%r14
-	jnz	.L_skip_hkeys_precomputation_ahiskmgfntrjFdo
+	jnz	.L_skip_hkeys_precomputation_121
 	vmovdqu64	640(%rsp),%zmm3
 
 
@@ -18340,7 +18340,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpternlogq	$0x96,%zmm7,%zmm6,%zmm5
 
 	vmovdqu64	%zmm5,256(%rsp)
-.L_skip_hkeys_precomputation_ahiskmgfntrjFdo:
+.L_skip_hkeys_precomputation_121:
 	movq	$1,%r14
 	andl	$~15,%r10d
 	movl	$512,%ebx
@@ -18348,61 +18348,61 @@ ossl_aes_gcm_encrypt_avx512:
 	movl	%r8d,%r10d
 	addl	$15,%r10d
 	shrl	$4,%r10d
-	je	.L_last_num_blocks_is_0_jpCbfqoGugGzzuz
+	je	.L_last_num_blocks_is_0_122
 
 	cmpl	$8,%r10d
-	je	.L_last_num_blocks_is_8_jpCbfqoGugGzzuz
-	jb	.L_last_num_blocks_is_7_1_jpCbfqoGugGzzuz
+	je	.L_last_num_blocks_is_8_122
+	jb	.L_last_num_blocks_is_7_1_122
 
 
 	cmpl	$12,%r10d
-	je	.L_last_num_blocks_is_12_jpCbfqoGugGzzuz
-	jb	.L_last_num_blocks_is_11_9_jpCbfqoGugGzzuz
+	je	.L_last_num_blocks_is_12_122
+	jb	.L_last_num_blocks_is_11_9_122
 
 
 	cmpl	$15,%r10d
-	je	.L_last_num_blocks_is_15_jpCbfqoGugGzzuz
-	ja	.L_last_num_blocks_is_16_jpCbfqoGugGzzuz
+	je	.L_last_num_blocks_is_15_122
+	ja	.L_last_num_blocks_is_16_122
 	cmpl	$14,%r10d
-	je	.L_last_num_blocks_is_14_jpCbfqoGugGzzuz
-	jmp	.L_last_num_blocks_is_13_jpCbfqoGugGzzuz
+	je	.L_last_num_blocks_is_14_122
+	jmp	.L_last_num_blocks_is_13_122
 
-.L_last_num_blocks_is_11_9_jpCbfqoGugGzzuz:
+.L_last_num_blocks_is_11_9_122:
 
 	cmpl	$10,%r10d
-	je	.L_last_num_blocks_is_10_jpCbfqoGugGzzuz
-	ja	.L_last_num_blocks_is_11_jpCbfqoGugGzzuz
-	jmp	.L_last_num_blocks_is_9_jpCbfqoGugGzzuz
+	je	.L_last_num_blocks_is_10_122
+	ja	.L_last_num_blocks_is_11_122
+	jmp	.L_last_num_blocks_is_9_122
 
-.L_last_num_blocks_is_7_1_jpCbfqoGugGzzuz:
+.L_last_num_blocks_is_7_1_122:
 	cmpl	$4,%r10d
-	je	.L_last_num_blocks_is_4_jpCbfqoGugGzzuz
-	jb	.L_last_num_blocks_is_3_1_jpCbfqoGugGzzuz
+	je	.L_last_num_blocks_is_4_122
+	jb	.L_last_num_blocks_is_3_1_122
 
 	cmpl	$6,%r10d
-	ja	.L_last_num_blocks_is_7_jpCbfqoGugGzzuz
-	je	.L_last_num_blocks_is_6_jpCbfqoGugGzzuz
-	jmp	.L_last_num_blocks_is_5_jpCbfqoGugGzzuz
+	ja	.L_last_num_blocks_is_7_122
+	je	.L_last_num_blocks_is_6_122
+	jmp	.L_last_num_blocks_is_5_122
 
-.L_last_num_blocks_is_3_1_jpCbfqoGugGzzuz:
+.L_last_num_blocks_is_3_1_122:
 
 	cmpl	$2,%r10d
-	ja	.L_last_num_blocks_is_3_jpCbfqoGugGzzuz
-	je	.L_last_num_blocks_is_2_jpCbfqoGugGzzuz
-.L_last_num_blocks_is_1_jpCbfqoGugGzzuz:
+	ja	.L_last_num_blocks_is_3_122
+	je	.L_last_num_blocks_is_2_122
+.L_last_num_blocks_is_1_122:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$255,%r15d
-	jae	.L_16_blocks_overflow_cEtkbFsluzmifan
+	jae	.L_16_blocks_overflow_123
 	vpaddd	%xmm28,%xmm2,%xmm0
-	jmp	.L_16_blocks_ok_cEtkbFsluzmifan
+	jmp	.L_16_blocks_ok_123
 
-.L_16_blocks_overflow_cEtkbFsluzmifan:
+.L_16_blocks_overflow_123:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%xmm29,%xmm0,%xmm0
-.L_16_blocks_ok_cEtkbFsluzmifan:
+.L_16_blocks_ok_123:
 
 
 
@@ -18486,7 +18486,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_pjaofmycugtfpqf
+	jl	.L_small_initial_partial_block_124
 
 
 
@@ -18530,8 +18530,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_pjaofmycugtfpqf
-.L_small_initial_partial_block_pjaofmycugtfpqf:
+	jmp	.L_small_initial_compute_done_124
+.L_small_initial_partial_block_124:
 
 
 
@@ -18583,24 +18583,24 @@ ossl_aes_gcm_encrypt_avx512:
 
 	vpxorq	%xmm7,%xmm14,%xmm14
 
-	jmp	.L_after_reduction_pjaofmycugtfpqf
-.L_small_initial_compute_done_pjaofmycugtfpqf:
-.L_after_reduction_pjaofmycugtfpqf:
-	jmp	.L_last_blocks_done_jpCbfqoGugGzzuz
-.L_last_num_blocks_is_2_jpCbfqoGugGzzuz:
+	jmp	.L_after_reduction_124
+.L_small_initial_compute_done_124:
+.L_after_reduction_124:
+	jmp	.L_last_blocks_done_122
+.L_last_num_blocks_is_2_122:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$254,%r15d
-	jae	.L_16_blocks_overflow_DpvcmqCisGpGwGd
+	jae	.L_16_blocks_overflow_125
 	vpaddd	%ymm28,%ymm2,%ymm0
-	jmp	.L_16_blocks_ok_DpvcmqCisGpGwGd
+	jmp	.L_16_blocks_ok_125
 
-.L_16_blocks_overflow_DpvcmqCisGpGwGd:
+.L_16_blocks_overflow_125:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%ymm29,%ymm0,%ymm0
-.L_16_blocks_ok_DpvcmqCisGpGwGd:
+.L_16_blocks_ok_125:
 
 
 
@@ -18685,7 +18685,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_CrDslAwddrtubet
+	jl	.L_small_initial_partial_block_126
 
 
 
@@ -18729,8 +18729,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_CrDslAwddrtubet
-.L_small_initial_partial_block_CrDslAwddrtubet:
+	jmp	.L_small_initial_compute_done_126
+.L_small_initial_partial_block_126:
 
 
 
@@ -18777,27 +18777,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_CrDslAwddrtubet:
+.L_small_initial_compute_done_126:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_CrDslAwddrtubet
+	je	.L_after_reduction_126
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_CrDslAwddrtubet:
-	jmp	.L_last_blocks_done_jpCbfqoGugGzzuz
-.L_last_num_blocks_is_3_jpCbfqoGugGzzuz:
+.L_after_reduction_126:
+	jmp	.L_last_blocks_done_122
+.L_last_num_blocks_is_3_122:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$253,%r15d
-	jae	.L_16_blocks_overflow_vGCsoGAxuhlfCAg
+	jae	.L_16_blocks_overflow_127
 	vpaddd	%zmm28,%zmm2,%zmm0
-	jmp	.L_16_blocks_ok_vGCsoGAxuhlfCAg
+	jmp	.L_16_blocks_ok_127
 
-.L_16_blocks_overflow_vGCsoGAxuhlfCAg:
+.L_16_blocks_overflow_127:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%zmm29,%zmm0,%zmm0
-.L_16_blocks_ok_vGCsoGAxuhlfCAg:
+.L_16_blocks_ok_127:
 
 
 
@@ -18882,7 +18882,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_lqzFgFBpwwknxwd
+	jl	.L_small_initial_partial_block_128
 
 
 
@@ -18927,8 +18927,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_lqzFgFBpwwknxwd
-.L_small_initial_partial_block_lqzFgFBpwwknxwd:
+	jmp	.L_small_initial_compute_done_128
+.L_small_initial_partial_block_128:
 
 
 
@@ -18975,27 +18975,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_lqzFgFBpwwknxwd:
+.L_small_initial_compute_done_128:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_lqzFgFBpwwknxwd
+	je	.L_after_reduction_128
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_lqzFgFBpwwknxwd:
-	jmp	.L_last_blocks_done_jpCbfqoGugGzzuz
-.L_last_num_blocks_is_4_jpCbfqoGugGzzuz:
+.L_after_reduction_128:
+	jmp	.L_last_blocks_done_122
+.L_last_num_blocks_is_4_122:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$252,%r15d
-	jae	.L_16_blocks_overflow_qGdeoEGzqjAtsEv
+	jae	.L_16_blocks_overflow_129
 	vpaddd	%zmm28,%zmm2,%zmm0
-	jmp	.L_16_blocks_ok_qGdeoEGzqjAtsEv
+	jmp	.L_16_blocks_ok_129
 
-.L_16_blocks_overflow_qGdeoEGzqjAtsEv:
+.L_16_blocks_overflow_129:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%zmm29,%zmm0,%zmm0
-.L_16_blocks_ok_qGdeoEGzqjAtsEv:
+.L_16_blocks_ok_129:
 
 
 
@@ -19080,7 +19080,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_yDhjepihmppntDz
+	jl	.L_small_initial_partial_block_130
 
 
 
@@ -19125,8 +19125,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_yDhjepihmppntDz
-.L_small_initial_partial_block_yDhjepihmppntDz:
+	jmp	.L_small_initial_compute_done_130
+.L_small_initial_partial_block_130:
 
 
 
@@ -19174,32 +19174,32 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_yDhjepihmppntDz:
+.L_small_initial_compute_done_130:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_yDhjepihmppntDz
+	je	.L_after_reduction_130
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_yDhjepihmppntDz:
-	jmp	.L_last_blocks_done_jpCbfqoGugGzzuz
-.L_last_num_blocks_is_5_jpCbfqoGugGzzuz:
+.L_after_reduction_130:
+	jmp	.L_last_blocks_done_122
+.L_last_num_blocks_is_5_122:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$251,%r15d
-	jae	.L_16_blocks_overflow_wqfiDzxfapbFAxx
+	jae	.L_16_blocks_overflow_131
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%xmm27,%xmm0,%xmm3
-	jmp	.L_16_blocks_ok_wqfiDzxfapbFAxx
+	jmp	.L_16_blocks_ok_131
 
-.L_16_blocks_overflow_wqfiDzxfapbFAxx:
+.L_16_blocks_overflow_131:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%xmm29,%xmm3,%xmm3
-.L_16_blocks_ok_wqfiDzxfapbFAxx:
+.L_16_blocks_ok_131:
 
 
 
@@ -19299,7 +19299,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_yjakqsCiAeACmDA
+	jl	.L_small_initial_partial_block_132
 
 
 
@@ -19350,8 +19350,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_yjakqsCiAeACmDA
-.L_small_initial_partial_block_yjakqsCiAeACmDA:
+	jmp	.L_small_initial_compute_done_132
+.L_small_initial_partial_block_132:
 
 
 
@@ -19399,32 +19399,32 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_yjakqsCiAeACmDA:
+.L_small_initial_compute_done_132:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_yjakqsCiAeACmDA
+	je	.L_after_reduction_132
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_yjakqsCiAeACmDA:
-	jmp	.L_last_blocks_done_jpCbfqoGugGzzuz
-.L_last_num_blocks_is_6_jpCbfqoGugGzzuz:
+.L_after_reduction_132:
+	jmp	.L_last_blocks_done_122
+.L_last_num_blocks_is_6_122:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$250,%r15d
-	jae	.L_16_blocks_overflow_vDpyprgABGpAtls
+	jae	.L_16_blocks_overflow_133
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%ymm27,%ymm0,%ymm3
-	jmp	.L_16_blocks_ok_vDpyprgABGpAtls
+	jmp	.L_16_blocks_ok_133
 
-.L_16_blocks_overflow_vDpyprgABGpAtls:
+.L_16_blocks_overflow_133:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%ymm29,%ymm3,%ymm3
-.L_16_blocks_ok_vDpyprgABGpAtls:
+.L_16_blocks_ok_133:
 
 
 
@@ -19524,7 +19524,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_wEbqcegdEDyEnez
+	jl	.L_small_initial_partial_block_134
 
 
 
@@ -19575,8 +19575,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_wEbqcegdEDyEnez
-.L_small_initial_partial_block_wEbqcegdEDyEnez:
+	jmp	.L_small_initial_compute_done_134
+.L_small_initial_partial_block_134:
 
 
 
@@ -19630,32 +19630,32 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_wEbqcegdEDyEnez:
+.L_small_initial_compute_done_134:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_wEbqcegdEDyEnez
+	je	.L_after_reduction_134
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_wEbqcegdEDyEnez:
-	jmp	.L_last_blocks_done_jpCbfqoGugGzzuz
-.L_last_num_blocks_is_7_jpCbfqoGugGzzuz:
+.L_after_reduction_134:
+	jmp	.L_last_blocks_done_122
+.L_last_num_blocks_is_7_122:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$249,%r15d
-	jae	.L_16_blocks_overflow_CGxECAnvzGlfqff
+	jae	.L_16_blocks_overflow_135
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
-	jmp	.L_16_blocks_ok_CGxECAnvzGlfqff
+	jmp	.L_16_blocks_ok_135
 
-.L_16_blocks_overflow_CGxECAnvzGlfqff:
+.L_16_blocks_overflow_135:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
-.L_16_blocks_ok_CGxECAnvzGlfqff:
+.L_16_blocks_ok_135:
 
 
 
@@ -19755,7 +19755,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_DDAbEjgjlayDwuh
+	jl	.L_small_initial_partial_block_136
 
 
 
@@ -19807,8 +19807,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_DDAbEjgjlayDwuh
-.L_small_initial_partial_block_DDAbEjgjlayDwuh:
+	jmp	.L_small_initial_compute_done_136
+.L_small_initial_partial_block_136:
 
 
 
@@ -19862,32 +19862,32 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_DDAbEjgjlayDwuh:
+.L_small_initial_compute_done_136:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_DDAbEjgjlayDwuh
+	je	.L_after_reduction_136
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_DDAbEjgjlayDwuh:
-	jmp	.L_last_blocks_done_jpCbfqoGugGzzuz
-.L_last_num_blocks_is_8_jpCbfqoGugGzzuz:
+.L_after_reduction_136:
+	jmp	.L_last_blocks_done_122
+.L_last_num_blocks_is_8_122:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$248,%r15d
-	jae	.L_16_blocks_overflow_wfjjunzjbgueygm
+	jae	.L_16_blocks_overflow_137
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
-	jmp	.L_16_blocks_ok_wfjjunzjbgueygm
+	jmp	.L_16_blocks_ok_137
 
-.L_16_blocks_overflow_wfjjunzjbgueygm:
+.L_16_blocks_overflow_137:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
-.L_16_blocks_ok_wfjjunzjbgueygm:
+.L_16_blocks_ok_137:
 
 
 
@@ -19987,7 +19987,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_zagbvdDpuuGnysG
+	jl	.L_small_initial_partial_block_138
 
 
 
@@ -20041,8 +20041,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_zagbvdDpuuGnysG
-.L_small_initial_partial_block_zagbvdDpuuGnysG:
+	jmp	.L_small_initial_compute_done_138
+.L_small_initial_partial_block_138:
 
 
 
@@ -20097,26 +20097,26 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_zagbvdDpuuGnysG:
+.L_small_initial_compute_done_138:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_zagbvdDpuuGnysG
+	je	.L_after_reduction_138
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_zagbvdDpuuGnysG:
-	jmp	.L_last_blocks_done_jpCbfqoGugGzzuz
-.L_last_num_blocks_is_9_jpCbfqoGugGzzuz:
+.L_after_reduction_138:
+	jmp	.L_last_blocks_done_122
+.L_last_num_blocks_is_9_122:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$247,%r15d
-	jae	.L_16_blocks_overflow_FkirsAyzfbljhxg
+	jae	.L_16_blocks_overflow_139
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%xmm27,%xmm3,%xmm4
-	jmp	.L_16_blocks_ok_FkirsAyzfbljhxg
+	jmp	.L_16_blocks_ok_139
 
-.L_16_blocks_overflow_FkirsAyzfbljhxg:
+.L_16_blocks_overflow_139:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -20125,7 +20125,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%xmm29,%xmm4,%xmm4
-.L_16_blocks_ok_FkirsAyzfbljhxg:
+.L_16_blocks_ok_139:
 
 
 
@@ -20240,7 +20240,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_jhAAwghgigseemB
+	jl	.L_small_initial_partial_block_140
 
 
 
@@ -20300,8 +20300,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_jhAAwghgigseemB
-.L_small_initial_partial_block_jhAAwghgigseemB:
+	jmp	.L_small_initial_compute_done_140
+.L_small_initial_partial_block_140:
 
 
 
@@ -20358,26 +20358,26 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_jhAAwghgigseemB:
+.L_small_initial_compute_done_140:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_jhAAwghgigseemB
+	je	.L_after_reduction_140
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_jhAAwghgigseemB:
-	jmp	.L_last_blocks_done_jpCbfqoGugGzzuz
-.L_last_num_blocks_is_10_jpCbfqoGugGzzuz:
+.L_after_reduction_140:
+	jmp	.L_last_blocks_done_122
+.L_last_num_blocks_is_10_122:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$246,%r15d
-	jae	.L_16_blocks_overflow_vyaCsCeBwgFiAjF
+	jae	.L_16_blocks_overflow_141
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%ymm27,%ymm3,%ymm4
-	jmp	.L_16_blocks_ok_vyaCsCeBwgFiAjF
+	jmp	.L_16_blocks_ok_141
 
-.L_16_blocks_overflow_vyaCsCeBwgFiAjF:
+.L_16_blocks_overflow_141:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -20386,7 +20386,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%ymm29,%ymm4,%ymm4
-.L_16_blocks_ok_vyaCsCeBwgFiAjF:
+.L_16_blocks_ok_141:
 
 
 
@@ -20501,7 +20501,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_BDfFypvGGGelziE
+	jl	.L_small_initial_partial_block_142
 
 
 
@@ -20561,8 +20561,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_BDfFypvGGGelziE
-.L_small_initial_partial_block_BDfFypvGGGelziE:
+	jmp	.L_small_initial_compute_done_142
+.L_small_initial_partial_block_142:
 
 
 
@@ -20625,26 +20625,26 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_BDfFypvGGGelziE:
+.L_small_initial_compute_done_142:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_BDfFypvGGGelziE
+	je	.L_after_reduction_142
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_BDfFypvGGGelziE:
-	jmp	.L_last_blocks_done_jpCbfqoGugGzzuz
-.L_last_num_blocks_is_11_jpCbfqoGugGzzuz:
+.L_after_reduction_142:
+	jmp	.L_last_blocks_done_122
+.L_last_num_blocks_is_11_122:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$245,%r15d
-	jae	.L_16_blocks_overflow_GdktpFFwnbByrcE
+	jae	.L_16_blocks_overflow_143
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
-	jmp	.L_16_blocks_ok_GdktpFFwnbByrcE
+	jmp	.L_16_blocks_ok_143
 
-.L_16_blocks_overflow_GdktpFFwnbByrcE:
+.L_16_blocks_overflow_143:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -20653,7 +20653,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
-.L_16_blocks_ok_GdktpFFwnbByrcE:
+.L_16_blocks_ok_143:
 
 
 
@@ -20768,7 +20768,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_EGkdlABaCFCeiic
+	jl	.L_small_initial_partial_block_144
 
 
 
@@ -20829,8 +20829,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_EGkdlABaCFCeiic
-.L_small_initial_partial_block_EGkdlABaCFCeiic:
+	jmp	.L_small_initial_compute_done_144
+.L_small_initial_partial_block_144:
 
 
 
@@ -20893,26 +20893,26 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_EGkdlABaCFCeiic:
+.L_small_initial_compute_done_144:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_EGkdlABaCFCeiic
+	je	.L_after_reduction_144
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_EGkdlABaCFCeiic:
-	jmp	.L_last_blocks_done_jpCbfqoGugGzzuz
-.L_last_num_blocks_is_12_jpCbfqoGugGzzuz:
+.L_after_reduction_144:
+	jmp	.L_last_blocks_done_122
+.L_last_num_blocks_is_12_122:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$244,%r15d
-	jae	.L_16_blocks_overflow_gmmmDpxtjyvfhel
+	jae	.L_16_blocks_overflow_145
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
-	jmp	.L_16_blocks_ok_gmmmDpxtjyvfhel
+	jmp	.L_16_blocks_ok_145
 
-.L_16_blocks_overflow_gmmmDpxtjyvfhel:
+.L_16_blocks_overflow_145:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -20921,7 +20921,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
-.L_16_blocks_ok_gmmmDpxtjyvfhel:
+.L_16_blocks_ok_145:
 
 
 
@@ -21036,7 +21036,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_xfswggahvljdbBp
+	jl	.L_small_initial_partial_block_146
 
 
 
@@ -21095,8 +21095,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_xfswggahvljdbBp
-.L_small_initial_partial_block_xfswggahvljdbBp:
+	jmp	.L_small_initial_compute_done_146
+.L_small_initial_partial_block_146:
 
 
 
@@ -21160,27 +21160,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_xfswggahvljdbBp:
+.L_small_initial_compute_done_146:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_xfswggahvljdbBp
+	je	.L_after_reduction_146
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_xfswggahvljdbBp:
-	jmp	.L_last_blocks_done_jpCbfqoGugGzzuz
-.L_last_num_blocks_is_13_jpCbfqoGugGzzuz:
+.L_after_reduction_146:
+	jmp	.L_last_blocks_done_122
+.L_last_num_blocks_is_13_122:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$243,%r15d
-	jae	.L_16_blocks_overflow_kofAeFCEmiCGlpk
+	jae	.L_16_blocks_overflow_147
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%xmm27,%xmm4,%xmm5
-	jmp	.L_16_blocks_ok_kofAeFCEmiCGlpk
+	jmp	.L_16_blocks_ok_147
 
-.L_16_blocks_overflow_kofAeFCEmiCGlpk:
+.L_16_blocks_overflow_147:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -21191,7 +21191,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%xmm29,%xmm5,%xmm5
-.L_16_blocks_ok_kofAeFCEmiCGlpk:
+.L_16_blocks_ok_147:
 
 
 
@@ -21321,7 +21321,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_EbdBGdunrlvsrkF
+	jl	.L_small_initial_partial_block_148
 
 
 
@@ -21386,8 +21386,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_EbdBGdunrlvsrkF
-.L_small_initial_partial_block_EbdBGdunrlvsrkF:
+	jmp	.L_small_initial_compute_done_148
+.L_small_initial_partial_block_148:
 
 
 
@@ -21449,27 +21449,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_EbdBGdunrlvsrkF:
+.L_small_initial_compute_done_148:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_EbdBGdunrlvsrkF
+	je	.L_after_reduction_148
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_EbdBGdunrlvsrkF:
-	jmp	.L_last_blocks_done_jpCbfqoGugGzzuz
-.L_last_num_blocks_is_14_jpCbfqoGugGzzuz:
+.L_after_reduction_148:
+	jmp	.L_last_blocks_done_122
+.L_last_num_blocks_is_14_122:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$242,%r15d
-	jae	.L_16_blocks_overflow_bAzDwrrmtwFlhxC
+	jae	.L_16_blocks_overflow_149
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%ymm27,%ymm4,%ymm5
-	jmp	.L_16_blocks_ok_bAzDwrrmtwFlhxC
+	jmp	.L_16_blocks_ok_149
 
-.L_16_blocks_overflow_bAzDwrrmtwFlhxC:
+.L_16_blocks_overflow_149:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -21480,7 +21480,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%ymm29,%ymm5,%ymm5
-.L_16_blocks_ok_bAzDwrrmtwFlhxC:
+.L_16_blocks_ok_149:
 
 
 
@@ -21610,7 +21610,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_xhFuzvedBfnrcsm
+	jl	.L_small_initial_partial_block_150
 
 
 
@@ -21675,8 +21675,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_xhFuzvedBfnrcsm
-.L_small_initial_partial_block_xhFuzvedBfnrcsm:
+	jmp	.L_small_initial_compute_done_150
+.L_small_initial_partial_block_150:
 
 
 
@@ -21744,27 +21744,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_xhFuzvedBfnrcsm:
+.L_small_initial_compute_done_150:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_xhFuzvedBfnrcsm
+	je	.L_after_reduction_150
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_xhFuzvedBfnrcsm:
-	jmp	.L_last_blocks_done_jpCbfqoGugGzzuz
-.L_last_num_blocks_is_15_jpCbfqoGugGzzuz:
+.L_after_reduction_150:
+	jmp	.L_last_blocks_done_122
+.L_last_num_blocks_is_15_122:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$241,%r15d
-	jae	.L_16_blocks_overflow_aAutogzlhjupvBp
+	jae	.L_16_blocks_overflow_151
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_aAutogzlhjupvBp
+	jmp	.L_16_blocks_ok_151
 
-.L_16_blocks_overflow_aAutogzlhjupvBp:
+.L_16_blocks_overflow_151:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -21775,7 +21775,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_aAutogzlhjupvBp:
+.L_16_blocks_ok_151:
 
 
 
@@ -21905,7 +21905,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_nhezthvFnxtuGCA
+	jl	.L_small_initial_partial_block_152
 
 
 
@@ -21971,8 +21971,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_nhezthvFnxtuGCA
-.L_small_initial_partial_block_nhezthvFnxtuGCA:
+	jmp	.L_small_initial_compute_done_152
+.L_small_initial_partial_block_152:
 
 
 
@@ -22040,27 +22040,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_nhezthvFnxtuGCA:
+.L_small_initial_compute_done_152:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_nhezthvFnxtuGCA
+	je	.L_after_reduction_152
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_nhezthvFnxtuGCA:
-	jmp	.L_last_blocks_done_jpCbfqoGugGzzuz
-.L_last_num_blocks_is_16_jpCbfqoGugGzzuz:
+.L_after_reduction_152:
+	jmp	.L_last_blocks_done_122
+.L_last_num_blocks_is_16_122:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$240,%r15d
-	jae	.L_16_blocks_overflow_DDrqwAsdakzdjjn
+	jae	.L_16_blocks_overflow_153
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_DDrqwAsdakzdjjn
+	jmp	.L_16_blocks_ok_153
 
-.L_16_blocks_overflow_DDrqwAsdakzdjjn:
+.L_16_blocks_overflow_153:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -22071,7 +22071,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_DDrqwAsdakzdjjn:
+.L_16_blocks_ok_153:
 
 
 
@@ -22198,7 +22198,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm5,%zmm21
 	vextracti32x4	$3,%zmm21,%xmm7
 	subq	$16 * (16 - 1),%r8
-.L_small_initial_partial_block_gmngxddcExbEDrt:
+.L_small_initial_partial_block_154:
 
 
 
@@ -22267,11 +22267,11 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_gmngxddcExbEDrt:
+.L_small_initial_compute_done_154:
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_gmngxddcExbEDrt:
-	jmp	.L_last_blocks_done_jpCbfqoGugGzzuz
-.L_last_num_blocks_is_0_jpCbfqoGugGzzuz:
+.L_after_reduction_154:
+	jmp	.L_last_blocks_done_122
+.L_last_num_blocks_is_0_122:
 	vmovdqa64	768(%rsp),%zmm13
 	vpxorq	%zmm14,%zmm13,%zmm13
 	vmovdqu64	0(%rsp,%rbx,1),%zmm12
@@ -22333,65 +22333,65 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm24,%xmm3,%xmm14
 
-.L_last_blocks_done_jpCbfqoGugGzzuz:
+.L_last_blocks_done_122:
 	vpshufb	%xmm29,%xmm2,%xmm2
-	jmp	.L_ghash_done_lzCeFkjwAopsEcs
+	jmp	.L_ghash_done_10
 
-.L_message_below_equal_16_blocks_lzCeFkjwAopsEcs:
+.L_message_below_equal_16_blocks_10:
 
 
 	movl	%r8d,%r12d
 	addl	$15,%r12d
 	shrl	$4,%r12d
 	cmpq	$8,%r12
-	je	.L_small_initial_num_blocks_is_8_wijDzFksCtEctgd
-	jl	.L_small_initial_num_blocks_is_7_1_wijDzFksCtEctgd
+	je	.L_small_initial_num_blocks_is_8_155
+	jl	.L_small_initial_num_blocks_is_7_1_155
 
 
 	cmpq	$12,%r12
-	je	.L_small_initial_num_blocks_is_12_wijDzFksCtEctgd
-	jl	.L_small_initial_num_blocks_is_11_9_wijDzFksCtEctgd
+	je	.L_small_initial_num_blocks_is_12_155
+	jl	.L_small_initial_num_blocks_is_11_9_155
 
 
 	cmpq	$16,%r12
-	je	.L_small_initial_num_blocks_is_16_wijDzFksCtEctgd
+	je	.L_small_initial_num_blocks_is_16_155
 	cmpq	$15,%r12
-	je	.L_small_initial_num_blocks_is_15_wijDzFksCtEctgd
+	je	.L_small_initial_num_blocks_is_15_155
 	cmpq	$14,%r12
-	je	.L_small_initial_num_blocks_is_14_wijDzFksCtEctgd
-	jmp	.L_small_initial_num_blocks_is_13_wijDzFksCtEctgd
+	je	.L_small_initial_num_blocks_is_14_155
+	jmp	.L_small_initial_num_blocks_is_13_155
 
-.L_small_initial_num_blocks_is_11_9_wijDzFksCtEctgd:
+.L_small_initial_num_blocks_is_11_9_155:
 
 	cmpq	$11,%r12
-	je	.L_small_initial_num_blocks_is_11_wijDzFksCtEctgd
+	je	.L_small_initial_num_blocks_is_11_155
 	cmpq	$10,%r12
-	je	.L_small_initial_num_blocks_is_10_wijDzFksCtEctgd
-	jmp	.L_small_initial_num_blocks_is_9_wijDzFksCtEctgd
+	je	.L_small_initial_num_blocks_is_10_155
+	jmp	.L_small_initial_num_blocks_is_9_155
 
-.L_small_initial_num_blocks_is_7_1_wijDzFksCtEctgd:
+.L_small_initial_num_blocks_is_7_1_155:
 	cmpq	$4,%r12
-	je	.L_small_initial_num_blocks_is_4_wijDzFksCtEctgd
-	jl	.L_small_initial_num_blocks_is_3_1_wijDzFksCtEctgd
+	je	.L_small_initial_num_blocks_is_4_155
+	jl	.L_small_initial_num_blocks_is_3_1_155
 
 	cmpq	$7,%r12
-	je	.L_small_initial_num_blocks_is_7_wijDzFksCtEctgd
+	je	.L_small_initial_num_blocks_is_7_155
 	cmpq	$6,%r12
-	je	.L_small_initial_num_blocks_is_6_wijDzFksCtEctgd
-	jmp	.L_small_initial_num_blocks_is_5_wijDzFksCtEctgd
+	je	.L_small_initial_num_blocks_is_6_155
+	jmp	.L_small_initial_num_blocks_is_5_155
 
-.L_small_initial_num_blocks_is_3_1_wijDzFksCtEctgd:
+.L_small_initial_num_blocks_is_3_1_155:
 
 	cmpq	$3,%r12
-	je	.L_small_initial_num_blocks_is_3_wijDzFksCtEctgd
+	je	.L_small_initial_num_blocks_is_3_155
 	cmpq	$2,%r12
-	je	.L_small_initial_num_blocks_is_2_wijDzFksCtEctgd
+	je	.L_small_initial_num_blocks_is_2_155
 
 
 
 
 
-.L_small_initial_num_blocks_is_1_wijDzFksCtEctgd:
+.L_small_initial_num_blocks_is_1_155:
 	vmovdqa64	SHUF_MASK(%rip),%xmm29
 	vpaddd	ONE(%rip),%xmm2,%xmm0
 	leaq	byte64_len_to_mask_table(%rip),%r10
@@ -22432,7 +22432,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_cdAvgtnbxxzgBEE
+	jl	.L_small_initial_partial_block_156
 
 
 
@@ -22474,8 +22474,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_cdAvgtnbxxzgBEE
-.L_small_initial_partial_block_cdAvgtnbxxzgBEE:
+	jmp	.L_small_initial_compute_done_156
+.L_small_initial_partial_block_156:
 
 
 
@@ -22499,11 +22499,11 @@ ossl_aes_gcm_encrypt_avx512:
 
 	vpxorq	%xmm13,%xmm14,%xmm14
 
-	jmp	.L_after_reduction_cdAvgtnbxxzgBEE
-.L_small_initial_compute_done_cdAvgtnbxxzgBEE:
-.L_after_reduction_cdAvgtnbxxzgBEE:
-	jmp	.L_small_initial_blocks_encrypted_wijDzFksCtEctgd
-.L_small_initial_num_blocks_is_2_wijDzFksCtEctgd:
+	jmp	.L_after_reduction_156
+.L_small_initial_compute_done_156:
+.L_after_reduction_156:
+	jmp	.L_small_initial_blocks_encrypted_155
+.L_small_initial_num_blocks_is_2_155:
 	vmovdqa64	SHUF_MASK(%rip),%ymm29
 	vshufi64x2	$0,%ymm2,%ymm2,%ymm0
 	vpaddd	ddq_add_1234(%rip),%ymm0,%ymm0
@@ -22546,7 +22546,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_gpBucAtECbpwEFx
+	jl	.L_small_initial_partial_block_157
 
 
 
@@ -22588,8 +22588,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_gpBucAtECbpwEFx
-.L_small_initial_partial_block_gpBucAtECbpwEFx:
+	jmp	.L_small_initial_compute_done_157
+.L_small_initial_partial_block_157:
 
 
 
@@ -22634,14 +22634,14 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_gpBucAtECbpwEFx:
+.L_small_initial_compute_done_157:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_gpBucAtECbpwEFx
+	je	.L_after_reduction_157
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_gpBucAtECbpwEFx:
-	jmp	.L_small_initial_blocks_encrypted_wijDzFksCtEctgd
-.L_small_initial_num_blocks_is_3_wijDzFksCtEctgd:
+.L_after_reduction_157:
+	jmp	.L_small_initial_blocks_encrypted_155
+.L_small_initial_num_blocks_is_3_155:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -22684,7 +22684,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_rpnDyjbCAFatcpG
+	jl	.L_small_initial_partial_block_158
 
 
 
@@ -22727,8 +22727,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_rpnDyjbCAFatcpG
-.L_small_initial_partial_block_rpnDyjbCAFatcpG:
+	jmp	.L_small_initial_compute_done_158
+.L_small_initial_partial_block_158:
 
 
 
@@ -22773,14 +22773,14 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_rpnDyjbCAFatcpG:
+.L_small_initial_compute_done_158:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_rpnDyjbCAFatcpG
+	je	.L_after_reduction_158
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_rpnDyjbCAFatcpG:
-	jmp	.L_small_initial_blocks_encrypted_wijDzFksCtEctgd
-.L_small_initial_num_blocks_is_4_wijDzFksCtEctgd:
+.L_after_reduction_158:
+	jmp	.L_small_initial_blocks_encrypted_155
+.L_small_initial_num_blocks_is_4_155:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -22823,7 +22823,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_smeDbbjDqesjGDp
+	jl	.L_small_initial_partial_block_159
 
 
 
@@ -22865,8 +22865,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_smeDbbjDqesjGDp
-.L_small_initial_partial_block_smeDbbjDqesjGDp:
+	jmp	.L_small_initial_compute_done_159
+.L_small_initial_partial_block_159:
 
 
 
@@ -22912,14 +22912,14 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_smeDbbjDqesjGDp:
+.L_small_initial_compute_done_159:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_smeDbbjDqesjGDp
+	je	.L_after_reduction_159
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_smeDbbjDqesjGDp:
-	jmp	.L_small_initial_blocks_encrypted_wijDzFksCtEctgd
-.L_small_initial_num_blocks_is_5_wijDzFksCtEctgd:
+.L_after_reduction_159:
+	jmp	.L_small_initial_blocks_encrypted_155
+.L_small_initial_num_blocks_is_5_155:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -22980,7 +22980,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_fDFhCFygAdApCbm
+	jl	.L_small_initial_partial_block_160
 
 
 
@@ -23032,8 +23032,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_fDFhCFygAdApCbm
-.L_small_initial_partial_block_fDFhCFygAdApCbm:
+	jmp	.L_small_initial_compute_done_160
+.L_small_initial_partial_block_160:
 
 
 
@@ -23078,14 +23078,14 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_fDFhCFygAdApCbm:
+.L_small_initial_compute_done_160:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_fDFhCFygAdApCbm
+	je	.L_after_reduction_160
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_fDFhCFygAdApCbm:
-	jmp	.L_small_initial_blocks_encrypted_wijDzFksCtEctgd
-.L_small_initial_num_blocks_is_6_wijDzFksCtEctgd:
+.L_after_reduction_160:
+	jmp	.L_small_initial_blocks_encrypted_155
+.L_small_initial_num_blocks_is_6_155:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -23146,7 +23146,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_ovicpoebcCGGnqr
+	jl	.L_small_initial_partial_block_161
 
 
 
@@ -23198,8 +23198,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_ovicpoebcCGGnqr
-.L_small_initial_partial_block_ovicpoebcCGGnqr:
+	jmp	.L_small_initial_compute_done_161
+.L_small_initial_partial_block_161:
 
 
 
@@ -23254,14 +23254,14 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_ovicpoebcCGGnqr:
+.L_small_initial_compute_done_161:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_ovicpoebcCGGnqr
+	je	.L_after_reduction_161
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_ovicpoebcCGGnqr:
-	jmp	.L_small_initial_blocks_encrypted_wijDzFksCtEctgd
-.L_small_initial_num_blocks_is_7_wijDzFksCtEctgd:
+.L_after_reduction_161:
+	jmp	.L_small_initial_blocks_encrypted_155
+.L_small_initial_num_blocks_is_7_155:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -23322,7 +23322,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_zgDAchseBvzBuyv
+	jl	.L_small_initial_partial_block_162
 
 
 
@@ -23375,8 +23375,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_zgDAchseBvzBuyv
-.L_small_initial_partial_block_zgDAchseBvzBuyv:
+	jmp	.L_small_initial_compute_done_162
+.L_small_initial_partial_block_162:
 
 
 
@@ -23431,14 +23431,14 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_zgDAchseBvzBuyv:
+.L_small_initial_compute_done_162:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_zgDAchseBvzBuyv
+	je	.L_after_reduction_162
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_zgDAchseBvzBuyv:
-	jmp	.L_small_initial_blocks_encrypted_wijDzFksCtEctgd
-.L_small_initial_num_blocks_is_8_wijDzFksCtEctgd:
+.L_after_reduction_162:
+	jmp	.L_small_initial_blocks_encrypted_155
+.L_small_initial_num_blocks_is_8_155:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -23499,7 +23499,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_noDemAfhlyicirA
+	jl	.L_small_initial_partial_block_163
 
 
 
@@ -23550,8 +23550,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_noDemAfhlyicirA
-.L_small_initial_partial_block_noDemAfhlyicirA:
+	jmp	.L_small_initial_compute_done_163
+.L_small_initial_partial_block_163:
 
 
 
@@ -23607,14 +23607,14 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_noDemAfhlyicirA:
+.L_small_initial_compute_done_163:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_noDemAfhlyicirA
+	je	.L_after_reduction_163
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_noDemAfhlyicirA:
-	jmp	.L_small_initial_blocks_encrypted_wijDzFksCtEctgd
-.L_small_initial_num_blocks_is_9_wijDzFksCtEctgd:
+.L_after_reduction_163:
+	jmp	.L_small_initial_blocks_encrypted_155
+.L_small_initial_num_blocks_is_9_155:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -23692,7 +23692,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_leACxlrecbFaxxu
+	jl	.L_small_initial_partial_block_164
 
 
 
@@ -23753,8 +23753,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_leACxlrecbFaxxu
-.L_small_initial_partial_block_leACxlrecbFaxxu:
+	jmp	.L_small_initial_compute_done_164
+.L_small_initial_partial_block_164:
 
 
 
@@ -23808,14 +23808,14 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_leACxlrecbFaxxu:
+.L_small_initial_compute_done_164:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_leACxlrecbFaxxu
+	je	.L_after_reduction_164
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_leACxlrecbFaxxu:
-	jmp	.L_small_initial_blocks_encrypted_wijDzFksCtEctgd
-.L_small_initial_num_blocks_is_10_wijDzFksCtEctgd:
+.L_after_reduction_164:
+	jmp	.L_small_initial_blocks_encrypted_155
+.L_small_initial_num_blocks_is_10_155:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -23893,7 +23893,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_ohycDCEtckixpxv
+	jl	.L_small_initial_partial_block_165
 
 
 
@@ -23954,8 +23954,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_ohycDCEtckixpxv
-.L_small_initial_partial_block_ohycDCEtckixpxv:
+	jmp	.L_small_initial_compute_done_165
+.L_small_initial_partial_block_165:
 
 
 
@@ -24019,14 +24019,14 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_ohycDCEtckixpxv:
+.L_small_initial_compute_done_165:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_ohycDCEtckixpxv
+	je	.L_after_reduction_165
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_ohycDCEtckixpxv:
-	jmp	.L_small_initial_blocks_encrypted_wijDzFksCtEctgd
-.L_small_initial_num_blocks_is_11_wijDzFksCtEctgd:
+.L_after_reduction_165:
+	jmp	.L_small_initial_blocks_encrypted_155
+.L_small_initial_num_blocks_is_11_155:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -24104,7 +24104,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_EduChntaFbpelre
+	jl	.L_small_initial_partial_block_166
 
 
 
@@ -24166,8 +24166,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_EduChntaFbpelre
-.L_small_initial_partial_block_EduChntaFbpelre:
+	jmp	.L_small_initial_compute_done_166
+.L_small_initial_partial_block_166:
 
 
 
@@ -24231,14 +24231,14 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_EduChntaFbpelre:
+.L_small_initial_compute_done_166:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_EduChntaFbpelre
+	je	.L_after_reduction_166
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_EduChntaFbpelre:
-	jmp	.L_small_initial_blocks_encrypted_wijDzFksCtEctgd
-.L_small_initial_num_blocks_is_12_wijDzFksCtEctgd:
+.L_after_reduction_166:
+	jmp	.L_small_initial_blocks_encrypted_155
+.L_small_initial_num_blocks_is_12_155:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -24316,7 +24316,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_BDfdqCilqdtdboq
+	jl	.L_small_initial_partial_block_167
 
 
 
@@ -24372,8 +24372,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_BDfdqCilqdtdboq
-.L_small_initial_partial_block_BDfdqCilqdtdboq:
+	jmp	.L_small_initial_compute_done_167
+.L_small_initial_partial_block_167:
 
 
 
@@ -24438,14 +24438,14 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_BDfdqCilqdtdboq:
+.L_small_initial_compute_done_167:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_BDfdqCilqdtdboq
+	je	.L_after_reduction_167
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_BDfdqCilqdtdboq:
-	jmp	.L_small_initial_blocks_encrypted_wijDzFksCtEctgd
-.L_small_initial_num_blocks_is_13_wijDzFksCtEctgd:
+.L_after_reduction_167:
+	jmp	.L_small_initial_blocks_encrypted_155
+.L_small_initial_num_blocks_is_13_155:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -24540,7 +24540,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_zirgafvblskfhfG
+	jl	.L_small_initial_partial_block_168
 
 
 
@@ -24606,8 +24606,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_zirgafvblskfhfG
-.L_small_initial_partial_block_zirgafvblskfhfG:
+	jmp	.L_small_initial_compute_done_168
+.L_small_initial_partial_block_168:
 
 
 
@@ -24666,14 +24666,14 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_zirgafvblskfhfG:
+.L_small_initial_compute_done_168:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_zirgafvblskfhfG
+	je	.L_after_reduction_168
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_zirgafvblskfhfG:
-	jmp	.L_small_initial_blocks_encrypted_wijDzFksCtEctgd
-.L_small_initial_num_blocks_is_14_wijDzFksCtEctgd:
+.L_after_reduction_168:
+	jmp	.L_small_initial_blocks_encrypted_155
+.L_small_initial_num_blocks_is_14_155:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -24768,7 +24768,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_hqBladADqvzsmDo
+	jl	.L_small_initial_partial_block_169
 
 
 
@@ -24834,8 +24834,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_hqBladADqvzsmDo
-.L_small_initial_partial_block_hqBladADqvzsmDo:
+	jmp	.L_small_initial_compute_done_169
+.L_small_initial_partial_block_169:
 
 
 
@@ -24904,14 +24904,14 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_hqBladADqvzsmDo:
+.L_small_initial_compute_done_169:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_hqBladADqvzsmDo
+	je	.L_after_reduction_169
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_hqBladADqvzsmDo:
-	jmp	.L_small_initial_blocks_encrypted_wijDzFksCtEctgd
-.L_small_initial_num_blocks_is_15_wijDzFksCtEctgd:
+.L_after_reduction_169:
+	jmp	.L_small_initial_blocks_encrypted_155
+.L_small_initial_num_blocks_is_15_155:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -25006,7 +25006,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_ichkEFdjicxsfBw
+	jl	.L_small_initial_partial_block_170
 
 
 
@@ -25073,8 +25073,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_ichkEFdjicxsfBw
-.L_small_initial_partial_block_ichkEFdjicxsfBw:
+	jmp	.L_small_initial_compute_done_170
+.L_small_initial_partial_block_170:
 
 
 
@@ -25143,14 +25143,14 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_ichkEFdjicxsfBw:
+.L_small_initial_compute_done_170:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_ichkEFdjicxsfBw
+	je	.L_after_reduction_170
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_ichkEFdjicxsfBw:
-	jmp	.L_small_initial_blocks_encrypted_wijDzFksCtEctgd
-.L_small_initial_num_blocks_is_16_wijDzFksCtEctgd:
+.L_after_reduction_170:
+	jmp	.L_small_initial_blocks_encrypted_155
+.L_small_initial_num_blocks_is_16_155:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -25242,7 +25242,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm5,%zmm11
 	vextracti32x4	$3,%zmm11,%xmm13
 	subq	$16 * (16 - 1),%r8
-.L_small_initial_partial_block_uqzDyuiwEoxxmyu:
+.L_small_initial_partial_block_171:
 
 
 
@@ -25312,25 +25312,25 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_uqzDyuiwEoxxmyu:
+.L_small_initial_compute_done_171:
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_uqzDyuiwEoxxmyu:
-.L_small_initial_blocks_encrypted_wijDzFksCtEctgd:
-.L_ghash_done_lzCeFkjwAopsEcs:
+.L_after_reduction_171:
+.L_small_initial_blocks_encrypted_155:
+.L_ghash_done_10:
 	vmovdqu64	%xmm2,0(%rsi)
 	vmovdqu64	%xmm14,64(%rsi)
-.L_enc_dec_done_lzCeFkjwAopsEcs:
+.L_enc_dec_done_10:
 	jmp	.Lexit_gcm_encrypt
 .align	32
 .Laes_gcm_encrypt_192_avx512:
 	orq	%r8,%r8
-	je	.L_enc_dec_done_uygCycEksAzDBkF
+	je	.L_enc_dec_done_172
 	xorq	%r14,%r14
 	vmovdqu64	64(%rsi),%xmm14
 
 	movq	(%rdx),%r11
 	orq	%r11,%r11
-	je	.L_partial_block_done_avtoynvscnevCsc
+	je	.L_partial_block_done_173
 	movl	$16,%r10d
 	leaq	byte_len_to_mask_table(%rip),%r12
 	cmpq	%r10,%r8
@@ -25352,9 +25352,9 @@ ossl_aes_gcm_encrypt_avx512:
 
 	leaq	(%r8,%r11,1),%r13
 	subq	$16,%r13
-	jge	.L_no_extra_mask_avtoynvscnevCsc
+	jge	.L_no_extra_mask_173
 	subq	%r13,%r12
-.L_no_extra_mask_avtoynvscnevCsc:
+.L_no_extra_mask_173:
 
 
 
@@ -25364,7 +25364,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%xmm5,%xmm3,%xmm3
 	vpxorq	%xmm3,%xmm14,%xmm14
 	cmpq	$0,%r13
-	jl	.L_partial_incomplete_avtoynvscnevCsc
+	jl	.L_partial_incomplete_173
 
 	vpclmulqdq	$0x11,%xmm4,%xmm14,%xmm7
 	vpclmulqdq	$0x00,%xmm4,%xmm14,%xmm10
@@ -25399,13 +25399,13 @@ ossl_aes_gcm_encrypt_avx512:
 	movq	%r11,%r12
 	movq	$16,%r11
 	subq	%r12,%r11
-	jmp	.L_enc_dec_done_avtoynvscnevCsc
+	jmp	.L_enc_dec_done_173
 
-.L_partial_incomplete_avtoynvscnevCsc:
+.L_partial_incomplete_173:
 	addq	%r8,(%rdx)
 	movq	%r8,%r11
 
-.L_enc_dec_done_avtoynvscnevCsc:
+.L_enc_dec_done_173:
 
 
 	leaq	byte_len_to_mask_table(%rip),%r12
@@ -25416,12 +25416,12 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%xmm5,%xmm3,%xmm3
 	movq	%r9,%r12
 	vmovdqu8	%xmm3,(%r12){%k1}
-.L_partial_block_done_avtoynvscnevCsc:
+.L_partial_block_done_173:
 	vmovdqu64	0(%rsi),%xmm2
 	subq	%r11,%r8
-	je	.L_enc_dec_done_uygCycEksAzDBkF
+	je	.L_enc_dec_done_172
 	cmpq	$256,%r8
-	jbe	.L_message_below_equal_16_blocks_uygCycEksAzDBkF
+	jbe	.L_message_below_equal_16_blocks_172
 
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vmovdqa64	ddq_addbe_4444(%rip),%zmm27
@@ -25441,13 +25441,13 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpb	$240,%r15b
-	jae	.L_next_16_overflow_nijtGaqavDwFnCo
+	jae	.L_next_16_overflow_174
 	vpaddd	%zmm28,%zmm2,%zmm7
 	vpaddd	%zmm27,%zmm7,%zmm10
 	vpaddd	%zmm27,%zmm10,%zmm11
 	vpaddd	%zmm27,%zmm11,%zmm12
-	jmp	.L_next_16_ok_nijtGaqavDwFnCo
-.L_next_16_overflow_nijtGaqavDwFnCo:
+	jmp	.L_next_16_ok_174
+.L_next_16_overflow_174:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vmovdqa64	ddq_add_4444(%rip),%zmm12
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm7
@@ -25458,7 +25458,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm10,%zmm10
 	vpshufb	%zmm29,%zmm11,%zmm11
 	vpshufb	%zmm29,%zmm12,%zmm12
-.L_next_16_ok_nijtGaqavDwFnCo:
+.L_next_16_ok_174:
 	vshufi64x2	$255,%zmm12,%zmm12,%zmm2
 	addb	$16,%r15b
 
@@ -25556,7 +25556,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vmovdqa64	%zmm11,896(%rsp)
 	vmovdqa64	%zmm12,960(%rsp)
 	testq	%r14,%r14
-	jnz	.L_skip_hkeys_precomputation_Cjoxtbrddqyewif
+	jnz	.L_skip_hkeys_precomputation_175
 
 	vmovdqu64	288(%rsi),%zmm0
 	vmovdqu64	%zmm0,704(%rsp)
@@ -25572,20 +25572,20 @@ ossl_aes_gcm_encrypt_avx512:
 
 	vmovdqu64	96(%rsi),%zmm5
 	vmovdqu64	%zmm5,512(%rsp)
-.L_skip_hkeys_precomputation_Cjoxtbrddqyewif:
+.L_skip_hkeys_precomputation_175:
 	cmpq	$512,%r8
-	jb	.L_message_below_32_blocks_uygCycEksAzDBkF
+	jb	.L_message_below_32_blocks_172
 
 
 
 	cmpb	$240,%r15b
-	jae	.L_next_16_overflow_chaAbahDBuexCqc
+	jae	.L_next_16_overflow_176
 	vpaddd	%zmm28,%zmm2,%zmm7
 	vpaddd	%zmm27,%zmm7,%zmm10
 	vpaddd	%zmm27,%zmm10,%zmm11
 	vpaddd	%zmm27,%zmm11,%zmm12
-	jmp	.L_next_16_ok_chaAbahDBuexCqc
-.L_next_16_overflow_chaAbahDBuexCqc:
+	jmp	.L_next_16_ok_176
+.L_next_16_overflow_176:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vmovdqa64	ddq_add_4444(%rip),%zmm12
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm7
@@ -25596,7 +25596,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm10,%zmm10
 	vpshufb	%zmm29,%zmm11,%zmm11
 	vpshufb	%zmm29,%zmm12,%zmm12
-.L_next_16_ok_chaAbahDBuexCqc:
+.L_next_16_ok_176:
 	vshufi64x2	$255,%zmm12,%zmm12,%zmm2
 	addb	$16,%r15b
 
@@ -25694,7 +25694,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vmovdqa64	%zmm11,1152(%rsp)
 	vmovdqa64	%zmm12,1216(%rsp)
 	testq	%r14,%r14
-	jnz	.L_skip_hkeys_precomputation_mgEtihCaEBdbsrp
+	jnz	.L_skip_hkeys_precomputation_177
 	vmovdqu64	640(%rsp),%zmm3
 
 
@@ -25942,22 +25942,22 @@ ossl_aes_gcm_encrypt_avx512:
 	vpternlogq	$0x96,%zmm7,%zmm6,%zmm5
 
 	vmovdqu64	%zmm5,0(%rsp)
-.L_skip_hkeys_precomputation_mgEtihCaEBdbsrp:
+.L_skip_hkeys_precomputation_177:
 	movq	$1,%r14
 	addq	$512,%r11
 	subq	$512,%r8
 
 	cmpq	$768,%r8
-	jb	.L_no_more_big_nblocks_uygCycEksAzDBkF
-.L_encrypt_big_nblocks_uygCycEksAzDBkF:
+	jb	.L_no_more_big_nblocks_172
+.L_encrypt_big_nblocks_172:
 	cmpb	$240,%r15b
-	jae	.L_16_blocks_overflow_hazEzhzaufyAlsq
+	jae	.L_16_blocks_overflow_178
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_hazEzhzaufyAlsq
-.L_16_blocks_overflow_hazEzhzaufyAlsq:
+	jmp	.L_16_blocks_ok_178
+.L_16_blocks_overflow_178:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -25968,7 +25968,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_hazEzhzaufyAlsq:
+.L_16_blocks_ok_178:
 	vbroadcastf64x2	0(%rdi),%zmm30
 	vpxorq	768(%rsp),%zmm14,%zmm8
 	vmovdqu64	0(%rsp),%zmm1
@@ -26144,13 +26144,13 @@ ossl_aes_gcm_encrypt_avx512:
 	vmovdqa64	%zmm4,1408(%rsp)
 	vmovdqa64	%zmm5,1472(%rsp)
 	cmpb	$240,%r15b
-	jae	.L_16_blocks_overflow_eDmdehdnndfjdxl
+	jae	.L_16_blocks_overflow_179
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_eDmdehdnndfjdxl
-.L_16_blocks_overflow_eDmdehdnndfjdxl:
+	jmp	.L_16_blocks_ok_179
+.L_16_blocks_overflow_179:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -26161,7 +26161,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_eDmdehdnndfjdxl:
+.L_16_blocks_ok_179:
 	vbroadcastf64x2	0(%rdi),%zmm30
 	vmovdqa64	1024(%rsp),%zmm8
 	vmovdqu64	256(%rsp),%zmm1
@@ -26337,13 +26337,13 @@ ossl_aes_gcm_encrypt_avx512:
 	vmovdqa64	%zmm4,896(%rsp)
 	vmovdqa64	%zmm5,960(%rsp)
 	cmpb	$240,%r15b
-	jae	.L_16_blocks_overflow_ctordfBgipjklwx
+	jae	.L_16_blocks_overflow_180
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_ctordfBgipjklwx
-.L_16_blocks_overflow_ctordfBgipjklwx:
+	jmp	.L_16_blocks_ok_180
+.L_16_blocks_overflow_180:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -26354,7 +26354,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_ctordfBgipjklwx:
+.L_16_blocks_ok_180:
 	vbroadcastf64x2	0(%rdi),%zmm30
 	vmovdqa64	1280(%rsp),%zmm8
 	vmovdqu64	512(%rsp),%zmm1
@@ -26560,16 +26560,16 @@ ossl_aes_gcm_encrypt_avx512:
 	addq	$768,%r11
 	subq	$768,%r8
 	cmpq	$768,%r8
-	jae	.L_encrypt_big_nblocks_uygCycEksAzDBkF
+	jae	.L_encrypt_big_nblocks_172
 
-.L_no_more_big_nblocks_uygCycEksAzDBkF:
+.L_no_more_big_nblocks_172:
 
 	cmpq	$512,%r8
-	jae	.L_encrypt_32_blocks_uygCycEksAzDBkF
+	jae	.L_encrypt_32_blocks_172
 
 	cmpq	$256,%r8
-	jae	.L_encrypt_16_blocks_uygCycEksAzDBkF
-.L_encrypt_0_blocks_ghash_32_uygCycEksAzDBkF:
+	jae	.L_encrypt_16_blocks_172
+.L_encrypt_0_blocks_ghash_32_172:
 	movl	%r8d,%r10d
 	andl	$~15,%r10d
 	movl	$256,%ebx
@@ -26612,61 +26612,61 @@ ossl_aes_gcm_encrypt_avx512:
 	movl	%r8d,%r10d
 	addl	$15,%r10d
 	shrl	$4,%r10d
-	je	.L_last_num_blocks_is_0_zapDrCqlGeDwujs
+	je	.L_last_num_blocks_is_0_181
 
 	cmpl	$8,%r10d
-	je	.L_last_num_blocks_is_8_zapDrCqlGeDwujs
-	jb	.L_last_num_blocks_is_7_1_zapDrCqlGeDwujs
+	je	.L_last_num_blocks_is_8_181
+	jb	.L_last_num_blocks_is_7_1_181
 
 
 	cmpl	$12,%r10d
-	je	.L_last_num_blocks_is_12_zapDrCqlGeDwujs
-	jb	.L_last_num_blocks_is_11_9_zapDrCqlGeDwujs
+	je	.L_last_num_blocks_is_12_181
+	jb	.L_last_num_blocks_is_11_9_181
 
 
 	cmpl	$15,%r10d
-	je	.L_last_num_blocks_is_15_zapDrCqlGeDwujs
-	ja	.L_last_num_blocks_is_16_zapDrCqlGeDwujs
+	je	.L_last_num_blocks_is_15_181
+	ja	.L_last_num_blocks_is_16_181
 	cmpl	$14,%r10d
-	je	.L_last_num_blocks_is_14_zapDrCqlGeDwujs
-	jmp	.L_last_num_blocks_is_13_zapDrCqlGeDwujs
+	je	.L_last_num_blocks_is_14_181
+	jmp	.L_last_num_blocks_is_13_181
 
-.L_last_num_blocks_is_11_9_zapDrCqlGeDwujs:
+.L_last_num_blocks_is_11_9_181:
 
 	cmpl	$10,%r10d
-	je	.L_last_num_blocks_is_10_zapDrCqlGeDwujs
-	ja	.L_last_num_blocks_is_11_zapDrCqlGeDwujs
-	jmp	.L_last_num_blocks_is_9_zapDrCqlGeDwujs
+	je	.L_last_num_blocks_is_10_181
+	ja	.L_last_num_blocks_is_11_181
+	jmp	.L_last_num_blocks_is_9_181
 
-.L_last_num_blocks_is_7_1_zapDrCqlGeDwujs:
+.L_last_num_blocks_is_7_1_181:
 	cmpl	$4,%r10d
-	je	.L_last_num_blocks_is_4_zapDrCqlGeDwujs
-	jb	.L_last_num_blocks_is_3_1_zapDrCqlGeDwujs
+	je	.L_last_num_blocks_is_4_181
+	jb	.L_last_num_blocks_is_3_1_181
 
 	cmpl	$6,%r10d
-	ja	.L_last_num_blocks_is_7_zapDrCqlGeDwujs
-	je	.L_last_num_blocks_is_6_zapDrCqlGeDwujs
-	jmp	.L_last_num_blocks_is_5_zapDrCqlGeDwujs
+	ja	.L_last_num_blocks_is_7_181
+	je	.L_last_num_blocks_is_6_181
+	jmp	.L_last_num_blocks_is_5_181
 
-.L_last_num_blocks_is_3_1_zapDrCqlGeDwujs:
+.L_last_num_blocks_is_3_1_181:
 
 	cmpl	$2,%r10d
-	ja	.L_last_num_blocks_is_3_zapDrCqlGeDwujs
-	je	.L_last_num_blocks_is_2_zapDrCqlGeDwujs
-.L_last_num_blocks_is_1_zapDrCqlGeDwujs:
+	ja	.L_last_num_blocks_is_3_181
+	je	.L_last_num_blocks_is_2_181
+.L_last_num_blocks_is_1_181:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$255,%r15d
-	jae	.L_16_blocks_overflow_eBrrlGxwGudslqk
+	jae	.L_16_blocks_overflow_182
 	vpaddd	%xmm28,%xmm2,%xmm0
-	jmp	.L_16_blocks_ok_eBrrlGxwGudslqk
+	jmp	.L_16_blocks_ok_182
 
-.L_16_blocks_overflow_eBrrlGxwGudslqk:
+.L_16_blocks_overflow_182:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%xmm29,%xmm0,%xmm0
-.L_16_blocks_ok_eBrrlGxwGudslqk:
+.L_16_blocks_ok_182:
 
 
 
@@ -26754,7 +26754,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_DCiisayfwhlqFEj
+	jl	.L_small_initial_partial_block_183
 
 
 
@@ -26798,8 +26798,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_DCiisayfwhlqFEj
-.L_small_initial_partial_block_DCiisayfwhlqFEj:
+	jmp	.L_small_initial_compute_done_183
+.L_small_initial_partial_block_183:
 
 
 
@@ -26851,24 +26851,24 @@ ossl_aes_gcm_encrypt_avx512:
 
 	vpxorq	%xmm7,%xmm14,%xmm14
 
-	jmp	.L_after_reduction_DCiisayfwhlqFEj
-.L_small_initial_compute_done_DCiisayfwhlqFEj:
-.L_after_reduction_DCiisayfwhlqFEj:
-	jmp	.L_last_blocks_done_zapDrCqlGeDwujs
-.L_last_num_blocks_is_2_zapDrCqlGeDwujs:
+	jmp	.L_after_reduction_183
+.L_small_initial_compute_done_183:
+.L_after_reduction_183:
+	jmp	.L_last_blocks_done_181
+.L_last_num_blocks_is_2_181:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$254,%r15d
-	jae	.L_16_blocks_overflow_boElArsFmFpsBzn
+	jae	.L_16_blocks_overflow_184
 	vpaddd	%ymm28,%ymm2,%ymm0
-	jmp	.L_16_blocks_ok_boElArsFmFpsBzn
+	jmp	.L_16_blocks_ok_184
 
-.L_16_blocks_overflow_boElArsFmFpsBzn:
+.L_16_blocks_overflow_184:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%ymm29,%ymm0,%ymm0
-.L_16_blocks_ok_boElArsFmFpsBzn:
+.L_16_blocks_ok_184:
 
 
 
@@ -26957,7 +26957,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_uGmdcvGhfhxGEkm
+	jl	.L_small_initial_partial_block_185
 
 
 
@@ -27001,8 +27001,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_uGmdcvGhfhxGEkm
-.L_small_initial_partial_block_uGmdcvGhfhxGEkm:
+	jmp	.L_small_initial_compute_done_185
+.L_small_initial_partial_block_185:
 
 
 
@@ -27049,27 +27049,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_uGmdcvGhfhxGEkm:
+.L_small_initial_compute_done_185:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_uGmdcvGhfhxGEkm
+	je	.L_after_reduction_185
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_uGmdcvGhfhxGEkm:
-	jmp	.L_last_blocks_done_zapDrCqlGeDwujs
-.L_last_num_blocks_is_3_zapDrCqlGeDwujs:
+.L_after_reduction_185:
+	jmp	.L_last_blocks_done_181
+.L_last_num_blocks_is_3_181:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$253,%r15d
-	jae	.L_16_blocks_overflow_hnuhjslkpcyykfc
+	jae	.L_16_blocks_overflow_186
 	vpaddd	%zmm28,%zmm2,%zmm0
-	jmp	.L_16_blocks_ok_hnuhjslkpcyykfc
+	jmp	.L_16_blocks_ok_186
 
-.L_16_blocks_overflow_hnuhjslkpcyykfc:
+.L_16_blocks_overflow_186:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%zmm29,%zmm0,%zmm0
-.L_16_blocks_ok_hnuhjslkpcyykfc:
+.L_16_blocks_ok_186:
 
 
 
@@ -27158,7 +27158,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_bkarAbmevFBdxib
+	jl	.L_small_initial_partial_block_187
 
 
 
@@ -27203,8 +27203,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_bkarAbmevFBdxib
-.L_small_initial_partial_block_bkarAbmevFBdxib:
+	jmp	.L_small_initial_compute_done_187
+.L_small_initial_partial_block_187:
 
 
 
@@ -27251,27 +27251,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_bkarAbmevFBdxib:
+.L_small_initial_compute_done_187:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_bkarAbmevFBdxib
+	je	.L_after_reduction_187
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_bkarAbmevFBdxib:
-	jmp	.L_last_blocks_done_zapDrCqlGeDwujs
-.L_last_num_blocks_is_4_zapDrCqlGeDwujs:
+.L_after_reduction_187:
+	jmp	.L_last_blocks_done_181
+.L_last_num_blocks_is_4_181:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$252,%r15d
-	jae	.L_16_blocks_overflow_mGciyElrdaGuDAy
+	jae	.L_16_blocks_overflow_188
 	vpaddd	%zmm28,%zmm2,%zmm0
-	jmp	.L_16_blocks_ok_mGciyElrdaGuDAy
+	jmp	.L_16_blocks_ok_188
 
-.L_16_blocks_overflow_mGciyElrdaGuDAy:
+.L_16_blocks_overflow_188:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%zmm29,%zmm0,%zmm0
-.L_16_blocks_ok_mGciyElrdaGuDAy:
+.L_16_blocks_ok_188:
 
 
 
@@ -27360,7 +27360,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_iFqEcEkAyEEDlky
+	jl	.L_small_initial_partial_block_189
 
 
 
@@ -27405,8 +27405,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_iFqEcEkAyEEDlky
-.L_small_initial_partial_block_iFqEcEkAyEEDlky:
+	jmp	.L_small_initial_compute_done_189
+.L_small_initial_partial_block_189:
 
 
 
@@ -27454,32 +27454,32 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_iFqEcEkAyEEDlky:
+.L_small_initial_compute_done_189:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_iFqEcEkAyEEDlky
+	je	.L_after_reduction_189
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_iFqEcEkAyEEDlky:
-	jmp	.L_last_blocks_done_zapDrCqlGeDwujs
-.L_last_num_blocks_is_5_zapDrCqlGeDwujs:
+.L_after_reduction_189:
+	jmp	.L_last_blocks_done_181
+.L_last_num_blocks_is_5_181:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$251,%r15d
-	jae	.L_16_blocks_overflow_BqwffalsGwtvFym
+	jae	.L_16_blocks_overflow_190
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%xmm27,%xmm0,%xmm3
-	jmp	.L_16_blocks_ok_BqwffalsGwtvFym
+	jmp	.L_16_blocks_ok_190
 
-.L_16_blocks_overflow_BqwffalsGwtvFym:
+.L_16_blocks_overflow_190:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%xmm29,%xmm3,%xmm3
-.L_16_blocks_ok_BqwffalsGwtvFym:
+.L_16_blocks_ok_190:
 
 
 
@@ -27585,7 +27585,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_mGAiBbyaGqFtnxt
+	jl	.L_small_initial_partial_block_191
 
 
 
@@ -27636,8 +27636,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_mGAiBbyaGqFtnxt
-.L_small_initial_partial_block_mGAiBbyaGqFtnxt:
+	jmp	.L_small_initial_compute_done_191
+.L_small_initial_partial_block_191:
 
 
 
@@ -27685,32 +27685,32 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_mGAiBbyaGqFtnxt:
+.L_small_initial_compute_done_191:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_mGAiBbyaGqFtnxt
+	je	.L_after_reduction_191
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_mGAiBbyaGqFtnxt:
-	jmp	.L_last_blocks_done_zapDrCqlGeDwujs
-.L_last_num_blocks_is_6_zapDrCqlGeDwujs:
+.L_after_reduction_191:
+	jmp	.L_last_blocks_done_181
+.L_last_num_blocks_is_6_181:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$250,%r15d
-	jae	.L_16_blocks_overflow_cvsBibEvwApizyD
+	jae	.L_16_blocks_overflow_192
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%ymm27,%ymm0,%ymm3
-	jmp	.L_16_blocks_ok_cvsBibEvwApizyD
+	jmp	.L_16_blocks_ok_192
 
-.L_16_blocks_overflow_cvsBibEvwApizyD:
+.L_16_blocks_overflow_192:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%ymm29,%ymm3,%ymm3
-.L_16_blocks_ok_cvsBibEvwApizyD:
+.L_16_blocks_ok_192:
 
 
 
@@ -27816,7 +27816,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_rvrobaurAdpqekq
+	jl	.L_small_initial_partial_block_193
 
 
 
@@ -27867,8 +27867,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_rvrobaurAdpqekq
-.L_small_initial_partial_block_rvrobaurAdpqekq:
+	jmp	.L_small_initial_compute_done_193
+.L_small_initial_partial_block_193:
 
 
 
@@ -27922,32 +27922,32 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_rvrobaurAdpqekq:
+.L_small_initial_compute_done_193:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_rvrobaurAdpqekq
+	je	.L_after_reduction_193
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_rvrobaurAdpqekq:
-	jmp	.L_last_blocks_done_zapDrCqlGeDwujs
-.L_last_num_blocks_is_7_zapDrCqlGeDwujs:
+.L_after_reduction_193:
+	jmp	.L_last_blocks_done_181
+.L_last_num_blocks_is_7_181:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$249,%r15d
-	jae	.L_16_blocks_overflow_lrEmanbkqciEzug
+	jae	.L_16_blocks_overflow_194
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
-	jmp	.L_16_blocks_ok_lrEmanbkqciEzug
+	jmp	.L_16_blocks_ok_194
 
-.L_16_blocks_overflow_lrEmanbkqciEzug:
+.L_16_blocks_overflow_194:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
-.L_16_blocks_ok_lrEmanbkqciEzug:
+.L_16_blocks_ok_194:
 
 
 
@@ -28053,7 +28053,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_gptpjGuFylcEspm
+	jl	.L_small_initial_partial_block_195
 
 
 
@@ -28105,8 +28105,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_gptpjGuFylcEspm
-.L_small_initial_partial_block_gptpjGuFylcEspm:
+	jmp	.L_small_initial_compute_done_195
+.L_small_initial_partial_block_195:
 
 
 
@@ -28160,32 +28160,32 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_gptpjGuFylcEspm:
+.L_small_initial_compute_done_195:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_gptpjGuFylcEspm
+	je	.L_after_reduction_195
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_gptpjGuFylcEspm:
-	jmp	.L_last_blocks_done_zapDrCqlGeDwujs
-.L_last_num_blocks_is_8_zapDrCqlGeDwujs:
+.L_after_reduction_195:
+	jmp	.L_last_blocks_done_181
+.L_last_num_blocks_is_8_181:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$248,%r15d
-	jae	.L_16_blocks_overflow_rektidpvoecghBr
+	jae	.L_16_blocks_overflow_196
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
-	jmp	.L_16_blocks_ok_rektidpvoecghBr
+	jmp	.L_16_blocks_ok_196
 
-.L_16_blocks_overflow_rektidpvoecghBr:
+.L_16_blocks_overflow_196:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
-.L_16_blocks_ok_rektidpvoecghBr:
+.L_16_blocks_ok_196:
 
 
 
@@ -28291,7 +28291,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_FzyfwyDAgetDkFC
+	jl	.L_small_initial_partial_block_197
 
 
 
@@ -28345,8 +28345,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_FzyfwyDAgetDkFC
-.L_small_initial_partial_block_FzyfwyDAgetDkFC:
+	jmp	.L_small_initial_compute_done_197
+.L_small_initial_partial_block_197:
 
 
 
@@ -28401,26 +28401,26 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_FzyfwyDAgetDkFC:
+.L_small_initial_compute_done_197:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_FzyfwyDAgetDkFC
+	je	.L_after_reduction_197
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_FzyfwyDAgetDkFC:
-	jmp	.L_last_blocks_done_zapDrCqlGeDwujs
-.L_last_num_blocks_is_9_zapDrCqlGeDwujs:
+.L_after_reduction_197:
+	jmp	.L_last_blocks_done_181
+.L_last_num_blocks_is_9_181:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$247,%r15d
-	jae	.L_16_blocks_overflow_wzknnrzsBjBGjhq
+	jae	.L_16_blocks_overflow_198
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%xmm27,%xmm3,%xmm4
-	jmp	.L_16_blocks_ok_wzknnrzsBjBGjhq
+	jmp	.L_16_blocks_ok_198
 
-.L_16_blocks_overflow_wzknnrzsBjBGjhq:
+.L_16_blocks_overflow_198:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -28429,7 +28429,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%xmm29,%xmm4,%xmm4
-.L_16_blocks_ok_wzknnrzsBjBGjhq:
+.L_16_blocks_ok_198:
 
 
 
@@ -28552,7 +28552,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_uuCxnyuAymhshmh
+	jl	.L_small_initial_partial_block_199
 
 
 
@@ -28612,8 +28612,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_uuCxnyuAymhshmh
-.L_small_initial_partial_block_uuCxnyuAymhshmh:
+	jmp	.L_small_initial_compute_done_199
+.L_small_initial_partial_block_199:
 
 
 
@@ -28670,26 +28670,26 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_uuCxnyuAymhshmh:
+.L_small_initial_compute_done_199:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_uuCxnyuAymhshmh
+	je	.L_after_reduction_199
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_uuCxnyuAymhshmh:
-	jmp	.L_last_blocks_done_zapDrCqlGeDwujs
-.L_last_num_blocks_is_10_zapDrCqlGeDwujs:
+.L_after_reduction_199:
+	jmp	.L_last_blocks_done_181
+.L_last_num_blocks_is_10_181:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$246,%r15d
-	jae	.L_16_blocks_overflow_dkFvwwnBGvqtCdq
+	jae	.L_16_blocks_overflow_200
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%ymm27,%ymm3,%ymm4
-	jmp	.L_16_blocks_ok_dkFvwwnBGvqtCdq
+	jmp	.L_16_blocks_ok_200
 
-.L_16_blocks_overflow_dkFvwwnBGvqtCdq:
+.L_16_blocks_overflow_200:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -28698,7 +28698,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%ymm29,%ymm4,%ymm4
-.L_16_blocks_ok_dkFvwwnBGvqtCdq:
+.L_16_blocks_ok_200:
 
 
 
@@ -28821,7 +28821,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_EpfusirBooivaaw
+	jl	.L_small_initial_partial_block_201
 
 
 
@@ -28881,8 +28881,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_EpfusirBooivaaw
-.L_small_initial_partial_block_EpfusirBooivaaw:
+	jmp	.L_small_initial_compute_done_201
+.L_small_initial_partial_block_201:
 
 
 
@@ -28945,26 +28945,26 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_EpfusirBooivaaw:
+.L_small_initial_compute_done_201:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_EpfusirBooivaaw
+	je	.L_after_reduction_201
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_EpfusirBooivaaw:
-	jmp	.L_last_blocks_done_zapDrCqlGeDwujs
-.L_last_num_blocks_is_11_zapDrCqlGeDwujs:
+.L_after_reduction_201:
+	jmp	.L_last_blocks_done_181
+.L_last_num_blocks_is_11_181:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$245,%r15d
-	jae	.L_16_blocks_overflow_jdaCqtmbomEFrxq
+	jae	.L_16_blocks_overflow_202
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
-	jmp	.L_16_blocks_ok_jdaCqtmbomEFrxq
+	jmp	.L_16_blocks_ok_202
 
-.L_16_blocks_overflow_jdaCqtmbomEFrxq:
+.L_16_blocks_overflow_202:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -28973,7 +28973,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
-.L_16_blocks_ok_jdaCqtmbomEFrxq:
+.L_16_blocks_ok_202:
 
 
 
@@ -29096,7 +29096,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_BEfqcturFnzEtBh
+	jl	.L_small_initial_partial_block_203
 
 
 
@@ -29157,8 +29157,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_BEfqcturFnzEtBh
-.L_small_initial_partial_block_BEfqcturFnzEtBh:
+	jmp	.L_small_initial_compute_done_203
+.L_small_initial_partial_block_203:
 
 
 
@@ -29221,26 +29221,26 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_BEfqcturFnzEtBh:
+.L_small_initial_compute_done_203:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_BEfqcturFnzEtBh
+	je	.L_after_reduction_203
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_BEfqcturFnzEtBh:
-	jmp	.L_last_blocks_done_zapDrCqlGeDwujs
-.L_last_num_blocks_is_12_zapDrCqlGeDwujs:
+.L_after_reduction_203:
+	jmp	.L_last_blocks_done_181
+.L_last_num_blocks_is_12_181:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$244,%r15d
-	jae	.L_16_blocks_overflow_FybgoadpoAGCust
+	jae	.L_16_blocks_overflow_204
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
-	jmp	.L_16_blocks_ok_FybgoadpoAGCust
+	jmp	.L_16_blocks_ok_204
 
-.L_16_blocks_overflow_FybgoadpoAGCust:
+.L_16_blocks_overflow_204:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -29249,7 +29249,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
-.L_16_blocks_ok_FybgoadpoAGCust:
+.L_16_blocks_ok_204:
 
 
 
@@ -29372,7 +29372,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_aadsmDBEsjtpjsm
+	jl	.L_small_initial_partial_block_205
 
 
 
@@ -29431,8 +29431,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_aadsmDBEsjtpjsm
-.L_small_initial_partial_block_aadsmDBEsjtpjsm:
+	jmp	.L_small_initial_compute_done_205
+.L_small_initial_partial_block_205:
 
 
 
@@ -29496,27 +29496,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_aadsmDBEsjtpjsm:
+.L_small_initial_compute_done_205:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_aadsmDBEsjtpjsm
+	je	.L_after_reduction_205
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_aadsmDBEsjtpjsm:
-	jmp	.L_last_blocks_done_zapDrCqlGeDwujs
-.L_last_num_blocks_is_13_zapDrCqlGeDwujs:
+.L_after_reduction_205:
+	jmp	.L_last_blocks_done_181
+.L_last_num_blocks_is_13_181:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$243,%r15d
-	jae	.L_16_blocks_overflow_gniltrjqvioaxpx
+	jae	.L_16_blocks_overflow_206
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%xmm27,%xmm4,%xmm5
-	jmp	.L_16_blocks_ok_gniltrjqvioaxpx
+	jmp	.L_16_blocks_ok_206
 
-.L_16_blocks_overflow_gniltrjqvioaxpx:
+.L_16_blocks_overflow_206:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -29527,7 +29527,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%xmm29,%xmm5,%xmm5
-.L_16_blocks_ok_gniltrjqvioaxpx:
+.L_16_blocks_ok_206:
 
 
 
@@ -29667,7 +29667,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_EgmArahsjsEtkiw
+	jl	.L_small_initial_partial_block_207
 
 
 
@@ -29732,8 +29732,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_EgmArahsjsEtkiw
-.L_small_initial_partial_block_EgmArahsjsEtkiw:
+	jmp	.L_small_initial_compute_done_207
+.L_small_initial_partial_block_207:
 
 
 
@@ -29795,27 +29795,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_EgmArahsjsEtkiw:
+.L_small_initial_compute_done_207:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_EgmArahsjsEtkiw
+	je	.L_after_reduction_207
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_EgmArahsjsEtkiw:
-	jmp	.L_last_blocks_done_zapDrCqlGeDwujs
-.L_last_num_blocks_is_14_zapDrCqlGeDwujs:
+.L_after_reduction_207:
+	jmp	.L_last_blocks_done_181
+.L_last_num_blocks_is_14_181:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$242,%r15d
-	jae	.L_16_blocks_overflow_fdlbmjovyDaEsFg
+	jae	.L_16_blocks_overflow_208
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%ymm27,%ymm4,%ymm5
-	jmp	.L_16_blocks_ok_fdlbmjovyDaEsFg
+	jmp	.L_16_blocks_ok_208
 
-.L_16_blocks_overflow_fdlbmjovyDaEsFg:
+.L_16_blocks_overflow_208:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -29826,7 +29826,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%ymm29,%ymm5,%ymm5
-.L_16_blocks_ok_fdlbmjovyDaEsFg:
+.L_16_blocks_ok_208:
 
 
 
@@ -29966,7 +29966,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_ddCzAGelmohdblc
+	jl	.L_small_initial_partial_block_209
 
 
 
@@ -30031,8 +30031,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_ddCzAGelmohdblc
-.L_small_initial_partial_block_ddCzAGelmohdblc:
+	jmp	.L_small_initial_compute_done_209
+.L_small_initial_partial_block_209:
 
 
 
@@ -30100,27 +30100,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_ddCzAGelmohdblc:
+.L_small_initial_compute_done_209:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_ddCzAGelmohdblc
+	je	.L_after_reduction_209
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_ddCzAGelmohdblc:
-	jmp	.L_last_blocks_done_zapDrCqlGeDwujs
-.L_last_num_blocks_is_15_zapDrCqlGeDwujs:
+.L_after_reduction_209:
+	jmp	.L_last_blocks_done_181
+.L_last_num_blocks_is_15_181:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$241,%r15d
-	jae	.L_16_blocks_overflow_drkvxzqfmdkgyai
+	jae	.L_16_blocks_overflow_210
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_drkvxzqfmdkgyai
+	jmp	.L_16_blocks_ok_210
 
-.L_16_blocks_overflow_drkvxzqfmdkgyai:
+.L_16_blocks_overflow_210:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -30131,7 +30131,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_drkvxzqfmdkgyai:
+.L_16_blocks_ok_210:
 
 
 
@@ -30271,7 +30271,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_aacuyFuwxngnrox
+	jl	.L_small_initial_partial_block_211
 
 
 
@@ -30337,8 +30337,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_aacuyFuwxngnrox
-.L_small_initial_partial_block_aacuyFuwxngnrox:
+	jmp	.L_small_initial_compute_done_211
+.L_small_initial_partial_block_211:
 
 
 
@@ -30406,27 +30406,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_aacuyFuwxngnrox:
+.L_small_initial_compute_done_211:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_aacuyFuwxngnrox
+	je	.L_after_reduction_211
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_aacuyFuwxngnrox:
-	jmp	.L_last_blocks_done_zapDrCqlGeDwujs
-.L_last_num_blocks_is_16_zapDrCqlGeDwujs:
+.L_after_reduction_211:
+	jmp	.L_last_blocks_done_181
+.L_last_num_blocks_is_16_181:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$240,%r15d
-	jae	.L_16_blocks_overflow_dtsxckkEomAhtpr
+	jae	.L_16_blocks_overflow_212
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_dtsxckkEomAhtpr
+	jmp	.L_16_blocks_ok_212
 
-.L_16_blocks_overflow_dtsxckkEomAhtpr:
+.L_16_blocks_overflow_212:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -30437,7 +30437,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_dtsxckkEomAhtpr:
+.L_16_blocks_ok_212:
 
 
 
@@ -30574,7 +30574,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm5,%zmm21
 	vextracti32x4	$3,%zmm21,%xmm7
 	subq	$16 * (16 - 1),%r8
-.L_small_initial_partial_block_lrdDmswCfvdpABc:
+.L_small_initial_partial_block_213:
 
 
 
@@ -30643,11 +30643,11 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_lrdDmswCfvdpABc:
+.L_small_initial_compute_done_213:
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_lrdDmswCfvdpABc:
-	jmp	.L_last_blocks_done_zapDrCqlGeDwujs
-.L_last_num_blocks_is_0_zapDrCqlGeDwujs:
+.L_after_reduction_213:
+	jmp	.L_last_blocks_done_181
+.L_last_num_blocks_is_0_181:
 	vmovdqa64	1024(%rsp),%zmm13
 	vmovdqu64	0(%rsp,%rbx,1),%zmm12
 	vpclmulqdq	$0x11,%zmm12,%zmm13,%zmm0
@@ -30708,18 +30708,18 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm24,%xmm3,%xmm14
 
-.L_last_blocks_done_zapDrCqlGeDwujs:
+.L_last_blocks_done_181:
 	vpshufb	%xmm29,%xmm2,%xmm2
-	jmp	.L_ghash_done_uygCycEksAzDBkF
-.L_encrypt_32_blocks_uygCycEksAzDBkF:
+	jmp	.L_ghash_done_172
+.L_encrypt_32_blocks_172:
 	cmpb	$240,%r15b
-	jae	.L_16_blocks_overflow_dcqChtdkakixsDa
+	jae	.L_16_blocks_overflow_214
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_dcqChtdkakixsDa
-.L_16_blocks_overflow_dcqChtdkakixsDa:
+	jmp	.L_16_blocks_ok_214
+.L_16_blocks_overflow_214:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -30730,7 +30730,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_dcqChtdkakixsDa:
+.L_16_blocks_ok_214:
 	vbroadcastf64x2	0(%rdi),%zmm30
 	vpxorq	768(%rsp),%zmm14,%zmm8
 	vmovdqu64	0(%rsp),%zmm1
@@ -30906,13 +30906,13 @@ ossl_aes_gcm_encrypt_avx512:
 	vmovdqa64	%zmm4,1408(%rsp)
 	vmovdqa64	%zmm5,1472(%rsp)
 	cmpb	$240,%r15b
-	jae	.L_16_blocks_overflow_sBqizodrGodaDod
+	jae	.L_16_blocks_overflow_215
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_sBqizodrGodaDod
-.L_16_blocks_overflow_sBqizodrGodaDod:
+	jmp	.L_16_blocks_ok_215
+.L_16_blocks_overflow_215:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -30923,7 +30923,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_sBqizodrGodaDod:
+.L_16_blocks_ok_215:
 	vbroadcastf64x2	0(%rdi),%zmm30
 	vmovdqa64	1024(%rsp),%zmm8
 	vmovdqu64	256(%rsp),%zmm1
@@ -31167,61 +31167,61 @@ ossl_aes_gcm_encrypt_avx512:
 	movl	%r8d,%r10d
 	addl	$15,%r10d
 	shrl	$4,%r10d
-	je	.L_last_num_blocks_is_0_cnotAvDezoxjigs
+	je	.L_last_num_blocks_is_0_216
 
 	cmpl	$8,%r10d
-	je	.L_last_num_blocks_is_8_cnotAvDezoxjigs
-	jb	.L_last_num_blocks_is_7_1_cnotAvDezoxjigs
+	je	.L_last_num_blocks_is_8_216
+	jb	.L_last_num_blocks_is_7_1_216
 
 
 	cmpl	$12,%r10d
-	je	.L_last_num_blocks_is_12_cnotAvDezoxjigs
-	jb	.L_last_num_blocks_is_11_9_cnotAvDezoxjigs
+	je	.L_last_num_blocks_is_12_216
+	jb	.L_last_num_blocks_is_11_9_216
 
 
 	cmpl	$15,%r10d
-	je	.L_last_num_blocks_is_15_cnotAvDezoxjigs
-	ja	.L_last_num_blocks_is_16_cnotAvDezoxjigs
+	je	.L_last_num_blocks_is_15_216
+	ja	.L_last_num_blocks_is_16_216
 	cmpl	$14,%r10d
-	je	.L_last_num_blocks_is_14_cnotAvDezoxjigs
-	jmp	.L_last_num_blocks_is_13_cnotAvDezoxjigs
+	je	.L_last_num_blocks_is_14_216
+	jmp	.L_last_num_blocks_is_13_216
 
-.L_last_num_blocks_is_11_9_cnotAvDezoxjigs:
+.L_last_num_blocks_is_11_9_216:
 
 	cmpl	$10,%r10d
-	je	.L_last_num_blocks_is_10_cnotAvDezoxjigs
-	ja	.L_last_num_blocks_is_11_cnotAvDezoxjigs
-	jmp	.L_last_num_blocks_is_9_cnotAvDezoxjigs
+	je	.L_last_num_blocks_is_10_216
+	ja	.L_last_num_blocks_is_11_216
+	jmp	.L_last_num_blocks_is_9_216
 
-.L_last_num_blocks_is_7_1_cnotAvDezoxjigs:
+.L_last_num_blocks_is_7_1_216:
 	cmpl	$4,%r10d
-	je	.L_last_num_blocks_is_4_cnotAvDezoxjigs
-	jb	.L_last_num_blocks_is_3_1_cnotAvDezoxjigs
+	je	.L_last_num_blocks_is_4_216
+	jb	.L_last_num_blocks_is_3_1_216
 
 	cmpl	$6,%r10d
-	ja	.L_last_num_blocks_is_7_cnotAvDezoxjigs
-	je	.L_last_num_blocks_is_6_cnotAvDezoxjigs
-	jmp	.L_last_num_blocks_is_5_cnotAvDezoxjigs
+	ja	.L_last_num_blocks_is_7_216
+	je	.L_last_num_blocks_is_6_216
+	jmp	.L_last_num_blocks_is_5_216
 
-.L_last_num_blocks_is_3_1_cnotAvDezoxjigs:
+.L_last_num_blocks_is_3_1_216:
 
 	cmpl	$2,%r10d
-	ja	.L_last_num_blocks_is_3_cnotAvDezoxjigs
-	je	.L_last_num_blocks_is_2_cnotAvDezoxjigs
-.L_last_num_blocks_is_1_cnotAvDezoxjigs:
+	ja	.L_last_num_blocks_is_3_216
+	je	.L_last_num_blocks_is_2_216
+.L_last_num_blocks_is_1_216:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$255,%r15d
-	jae	.L_16_blocks_overflow_htskiACAAaxxhqa
+	jae	.L_16_blocks_overflow_217
 	vpaddd	%xmm28,%xmm2,%xmm0
-	jmp	.L_16_blocks_ok_htskiACAAaxxhqa
+	jmp	.L_16_blocks_ok_217
 
-.L_16_blocks_overflow_htskiACAAaxxhqa:
+.L_16_blocks_overflow_217:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%xmm29,%xmm0,%xmm0
-.L_16_blocks_ok_htskiACAAaxxhqa:
+.L_16_blocks_ok_217:
 
 
 
@@ -31309,7 +31309,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_Dzckelnvflzikhy
+	jl	.L_small_initial_partial_block_218
 
 
 
@@ -31353,8 +31353,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_Dzckelnvflzikhy
-.L_small_initial_partial_block_Dzckelnvflzikhy:
+	jmp	.L_small_initial_compute_done_218
+.L_small_initial_partial_block_218:
 
 
 
@@ -31406,24 +31406,24 @@ ossl_aes_gcm_encrypt_avx512:
 
 	vpxorq	%xmm7,%xmm14,%xmm14
 
-	jmp	.L_after_reduction_Dzckelnvflzikhy
-.L_small_initial_compute_done_Dzckelnvflzikhy:
-.L_after_reduction_Dzckelnvflzikhy:
-	jmp	.L_last_blocks_done_cnotAvDezoxjigs
-.L_last_num_blocks_is_2_cnotAvDezoxjigs:
+	jmp	.L_after_reduction_218
+.L_small_initial_compute_done_218:
+.L_after_reduction_218:
+	jmp	.L_last_blocks_done_216
+.L_last_num_blocks_is_2_216:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$254,%r15d
-	jae	.L_16_blocks_overflow_zFdkvgFvpvEihoA
+	jae	.L_16_blocks_overflow_219
 	vpaddd	%ymm28,%ymm2,%ymm0
-	jmp	.L_16_blocks_ok_zFdkvgFvpvEihoA
+	jmp	.L_16_blocks_ok_219
 
-.L_16_blocks_overflow_zFdkvgFvpvEihoA:
+.L_16_blocks_overflow_219:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%ymm29,%ymm0,%ymm0
-.L_16_blocks_ok_zFdkvgFvpvEihoA:
+.L_16_blocks_ok_219:
 
 
 
@@ -31512,7 +31512,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_GCmvgEyliqDAEvt
+	jl	.L_small_initial_partial_block_220
 
 
 
@@ -31556,8 +31556,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_GCmvgEyliqDAEvt
-.L_small_initial_partial_block_GCmvgEyliqDAEvt:
+	jmp	.L_small_initial_compute_done_220
+.L_small_initial_partial_block_220:
 
 
 
@@ -31604,27 +31604,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_GCmvgEyliqDAEvt:
+.L_small_initial_compute_done_220:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_GCmvgEyliqDAEvt
+	je	.L_after_reduction_220
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_GCmvgEyliqDAEvt:
-	jmp	.L_last_blocks_done_cnotAvDezoxjigs
-.L_last_num_blocks_is_3_cnotAvDezoxjigs:
+.L_after_reduction_220:
+	jmp	.L_last_blocks_done_216
+.L_last_num_blocks_is_3_216:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$253,%r15d
-	jae	.L_16_blocks_overflow_deDxkArrzuGpDzc
+	jae	.L_16_blocks_overflow_221
 	vpaddd	%zmm28,%zmm2,%zmm0
-	jmp	.L_16_blocks_ok_deDxkArrzuGpDzc
+	jmp	.L_16_blocks_ok_221
 
-.L_16_blocks_overflow_deDxkArrzuGpDzc:
+.L_16_blocks_overflow_221:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%zmm29,%zmm0,%zmm0
-.L_16_blocks_ok_deDxkArrzuGpDzc:
+.L_16_blocks_ok_221:
 
 
 
@@ -31713,7 +31713,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_kkimaDgwybfuryc
+	jl	.L_small_initial_partial_block_222
 
 
 
@@ -31758,8 +31758,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_kkimaDgwybfuryc
-.L_small_initial_partial_block_kkimaDgwybfuryc:
+	jmp	.L_small_initial_compute_done_222
+.L_small_initial_partial_block_222:
 
 
 
@@ -31806,27 +31806,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_kkimaDgwybfuryc:
+.L_small_initial_compute_done_222:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_kkimaDgwybfuryc
+	je	.L_after_reduction_222
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_kkimaDgwybfuryc:
-	jmp	.L_last_blocks_done_cnotAvDezoxjigs
-.L_last_num_blocks_is_4_cnotAvDezoxjigs:
+.L_after_reduction_222:
+	jmp	.L_last_blocks_done_216
+.L_last_num_blocks_is_4_216:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$252,%r15d
-	jae	.L_16_blocks_overflow_wrqFbibnjnyxecw
+	jae	.L_16_blocks_overflow_223
 	vpaddd	%zmm28,%zmm2,%zmm0
-	jmp	.L_16_blocks_ok_wrqFbibnjnyxecw
+	jmp	.L_16_blocks_ok_223
 
-.L_16_blocks_overflow_wrqFbibnjnyxecw:
+.L_16_blocks_overflow_223:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%zmm29,%zmm0,%zmm0
-.L_16_blocks_ok_wrqFbibnjnyxecw:
+.L_16_blocks_ok_223:
 
 
 
@@ -31915,7 +31915,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_kEBfmknsibjblCs
+	jl	.L_small_initial_partial_block_224
 
 
 
@@ -31960,8 +31960,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_kEBfmknsibjblCs
-.L_small_initial_partial_block_kEBfmknsibjblCs:
+	jmp	.L_small_initial_compute_done_224
+.L_small_initial_partial_block_224:
 
 
 
@@ -32009,32 +32009,32 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_kEBfmknsibjblCs:
+.L_small_initial_compute_done_224:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_kEBfmknsibjblCs
+	je	.L_after_reduction_224
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_kEBfmknsibjblCs:
-	jmp	.L_last_blocks_done_cnotAvDezoxjigs
-.L_last_num_blocks_is_5_cnotAvDezoxjigs:
+.L_after_reduction_224:
+	jmp	.L_last_blocks_done_216
+.L_last_num_blocks_is_5_216:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$251,%r15d
-	jae	.L_16_blocks_overflow_AwaEBfkistBhcBa
+	jae	.L_16_blocks_overflow_225
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%xmm27,%xmm0,%xmm3
-	jmp	.L_16_blocks_ok_AwaEBfkistBhcBa
+	jmp	.L_16_blocks_ok_225
 
-.L_16_blocks_overflow_AwaEBfkistBhcBa:
+.L_16_blocks_overflow_225:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%xmm29,%xmm3,%xmm3
-.L_16_blocks_ok_AwaEBfkistBhcBa:
+.L_16_blocks_ok_225:
 
 
 
@@ -32140,7 +32140,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_hzrpribEeFjbrFs
+	jl	.L_small_initial_partial_block_226
 
 
 
@@ -32191,8 +32191,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_hzrpribEeFjbrFs
-.L_small_initial_partial_block_hzrpribEeFjbrFs:
+	jmp	.L_small_initial_compute_done_226
+.L_small_initial_partial_block_226:
 
 
 
@@ -32240,32 +32240,32 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_hzrpribEeFjbrFs:
+.L_small_initial_compute_done_226:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_hzrpribEeFjbrFs
+	je	.L_after_reduction_226
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_hzrpribEeFjbrFs:
-	jmp	.L_last_blocks_done_cnotAvDezoxjigs
-.L_last_num_blocks_is_6_cnotAvDezoxjigs:
+.L_after_reduction_226:
+	jmp	.L_last_blocks_done_216
+.L_last_num_blocks_is_6_216:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$250,%r15d
-	jae	.L_16_blocks_overflow_GGxhnmBfyllGysD
+	jae	.L_16_blocks_overflow_227
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%ymm27,%ymm0,%ymm3
-	jmp	.L_16_blocks_ok_GGxhnmBfyllGysD
+	jmp	.L_16_blocks_ok_227
 
-.L_16_blocks_overflow_GGxhnmBfyllGysD:
+.L_16_blocks_overflow_227:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%ymm29,%ymm3,%ymm3
-.L_16_blocks_ok_GGxhnmBfyllGysD:
+.L_16_blocks_ok_227:
 
 
 
@@ -32371,7 +32371,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_fpxwBxDypsmmjmC
+	jl	.L_small_initial_partial_block_228
 
 
 
@@ -32422,8 +32422,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_fpxwBxDypsmmjmC
-.L_small_initial_partial_block_fpxwBxDypsmmjmC:
+	jmp	.L_small_initial_compute_done_228
+.L_small_initial_partial_block_228:
 
 
 
@@ -32477,32 +32477,32 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_fpxwBxDypsmmjmC:
+.L_small_initial_compute_done_228:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_fpxwBxDypsmmjmC
+	je	.L_after_reduction_228
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_fpxwBxDypsmmjmC:
-	jmp	.L_last_blocks_done_cnotAvDezoxjigs
-.L_last_num_blocks_is_7_cnotAvDezoxjigs:
+.L_after_reduction_228:
+	jmp	.L_last_blocks_done_216
+.L_last_num_blocks_is_7_216:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$249,%r15d
-	jae	.L_16_blocks_overflow_kmFvpfCqnmAhxnz
+	jae	.L_16_blocks_overflow_229
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
-	jmp	.L_16_blocks_ok_kmFvpfCqnmAhxnz
+	jmp	.L_16_blocks_ok_229
 
-.L_16_blocks_overflow_kmFvpfCqnmAhxnz:
+.L_16_blocks_overflow_229:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
-.L_16_blocks_ok_kmFvpfCqnmAhxnz:
+.L_16_blocks_ok_229:
 
 
 
@@ -32608,7 +32608,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_mldfmCfiBCvsdyB
+	jl	.L_small_initial_partial_block_230
 
 
 
@@ -32660,8 +32660,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_mldfmCfiBCvsdyB
-.L_small_initial_partial_block_mldfmCfiBCvsdyB:
+	jmp	.L_small_initial_compute_done_230
+.L_small_initial_partial_block_230:
 
 
 
@@ -32715,32 +32715,32 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_mldfmCfiBCvsdyB:
+.L_small_initial_compute_done_230:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_mldfmCfiBCvsdyB
+	je	.L_after_reduction_230
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_mldfmCfiBCvsdyB:
-	jmp	.L_last_blocks_done_cnotAvDezoxjigs
-.L_last_num_blocks_is_8_cnotAvDezoxjigs:
+.L_after_reduction_230:
+	jmp	.L_last_blocks_done_216
+.L_last_num_blocks_is_8_216:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$248,%r15d
-	jae	.L_16_blocks_overflow_puCqbsmGcjwovvm
+	jae	.L_16_blocks_overflow_231
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
-	jmp	.L_16_blocks_ok_puCqbsmGcjwovvm
+	jmp	.L_16_blocks_ok_231
 
-.L_16_blocks_overflow_puCqbsmGcjwovvm:
+.L_16_blocks_overflow_231:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
-.L_16_blocks_ok_puCqbsmGcjwovvm:
+.L_16_blocks_ok_231:
 
 
 
@@ -32846,7 +32846,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_BuBhgbzeCxtvztl
+	jl	.L_small_initial_partial_block_232
 
 
 
@@ -32900,8 +32900,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_BuBhgbzeCxtvztl
-.L_small_initial_partial_block_BuBhgbzeCxtvztl:
+	jmp	.L_small_initial_compute_done_232
+.L_small_initial_partial_block_232:
 
 
 
@@ -32956,26 +32956,26 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_BuBhgbzeCxtvztl:
+.L_small_initial_compute_done_232:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_BuBhgbzeCxtvztl
+	je	.L_after_reduction_232
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_BuBhgbzeCxtvztl:
-	jmp	.L_last_blocks_done_cnotAvDezoxjigs
-.L_last_num_blocks_is_9_cnotAvDezoxjigs:
+.L_after_reduction_232:
+	jmp	.L_last_blocks_done_216
+.L_last_num_blocks_is_9_216:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$247,%r15d
-	jae	.L_16_blocks_overflow_oBeszEykxAgipDm
+	jae	.L_16_blocks_overflow_233
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%xmm27,%xmm3,%xmm4
-	jmp	.L_16_blocks_ok_oBeszEykxAgipDm
+	jmp	.L_16_blocks_ok_233
 
-.L_16_blocks_overflow_oBeszEykxAgipDm:
+.L_16_blocks_overflow_233:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -32984,7 +32984,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%xmm29,%xmm4,%xmm4
-.L_16_blocks_ok_oBeszEykxAgipDm:
+.L_16_blocks_ok_233:
 
 
 
@@ -33107,7 +33107,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_vCdsdzmsuvrgnEf
+	jl	.L_small_initial_partial_block_234
 
 
 
@@ -33167,8 +33167,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_vCdsdzmsuvrgnEf
-.L_small_initial_partial_block_vCdsdzmsuvrgnEf:
+	jmp	.L_small_initial_compute_done_234
+.L_small_initial_partial_block_234:
 
 
 
@@ -33225,26 +33225,26 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_vCdsdzmsuvrgnEf:
+.L_small_initial_compute_done_234:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_vCdsdzmsuvrgnEf
+	je	.L_after_reduction_234
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_vCdsdzmsuvrgnEf:
-	jmp	.L_last_blocks_done_cnotAvDezoxjigs
-.L_last_num_blocks_is_10_cnotAvDezoxjigs:
+.L_after_reduction_234:
+	jmp	.L_last_blocks_done_216
+.L_last_num_blocks_is_10_216:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$246,%r15d
-	jae	.L_16_blocks_overflow_tghhfCfEptjzGeA
+	jae	.L_16_blocks_overflow_235
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%ymm27,%ymm3,%ymm4
-	jmp	.L_16_blocks_ok_tghhfCfEptjzGeA
+	jmp	.L_16_blocks_ok_235
 
-.L_16_blocks_overflow_tghhfCfEptjzGeA:
+.L_16_blocks_overflow_235:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -33253,7 +33253,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%ymm29,%ymm4,%ymm4
-.L_16_blocks_ok_tghhfCfEptjzGeA:
+.L_16_blocks_ok_235:
 
 
 
@@ -33376,7 +33376,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_ulBByciknkGeDhm
+	jl	.L_small_initial_partial_block_236
 
 
 
@@ -33436,8 +33436,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_ulBByciknkGeDhm
-.L_small_initial_partial_block_ulBByciknkGeDhm:
+	jmp	.L_small_initial_compute_done_236
+.L_small_initial_partial_block_236:
 
 
 
@@ -33500,26 +33500,26 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_ulBByciknkGeDhm:
+.L_small_initial_compute_done_236:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_ulBByciknkGeDhm
+	je	.L_after_reduction_236
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_ulBByciknkGeDhm:
-	jmp	.L_last_blocks_done_cnotAvDezoxjigs
-.L_last_num_blocks_is_11_cnotAvDezoxjigs:
+.L_after_reduction_236:
+	jmp	.L_last_blocks_done_216
+.L_last_num_blocks_is_11_216:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$245,%r15d
-	jae	.L_16_blocks_overflow_CnsBfalgAmfeqjo
+	jae	.L_16_blocks_overflow_237
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
-	jmp	.L_16_blocks_ok_CnsBfalgAmfeqjo
+	jmp	.L_16_blocks_ok_237
 
-.L_16_blocks_overflow_CnsBfalgAmfeqjo:
+.L_16_blocks_overflow_237:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -33528,7 +33528,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
-.L_16_blocks_ok_CnsBfalgAmfeqjo:
+.L_16_blocks_ok_237:
 
 
 
@@ -33651,7 +33651,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_yFteDdorEApqaAw
+	jl	.L_small_initial_partial_block_238
 
 
 
@@ -33712,8 +33712,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_yFteDdorEApqaAw
-.L_small_initial_partial_block_yFteDdorEApqaAw:
+	jmp	.L_small_initial_compute_done_238
+.L_small_initial_partial_block_238:
 
 
 
@@ -33776,26 +33776,26 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_yFteDdorEApqaAw:
+.L_small_initial_compute_done_238:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_yFteDdorEApqaAw
+	je	.L_after_reduction_238
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_yFteDdorEApqaAw:
-	jmp	.L_last_blocks_done_cnotAvDezoxjigs
-.L_last_num_blocks_is_12_cnotAvDezoxjigs:
+.L_after_reduction_238:
+	jmp	.L_last_blocks_done_216
+.L_last_num_blocks_is_12_216:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$244,%r15d
-	jae	.L_16_blocks_overflow_hmhBbgAoADzsvri
+	jae	.L_16_blocks_overflow_239
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
-	jmp	.L_16_blocks_ok_hmhBbgAoADzsvri
+	jmp	.L_16_blocks_ok_239
 
-.L_16_blocks_overflow_hmhBbgAoADzsvri:
+.L_16_blocks_overflow_239:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -33804,7 +33804,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
-.L_16_blocks_ok_hmhBbgAoADzsvri:
+.L_16_blocks_ok_239:
 
 
 
@@ -33927,7 +33927,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_bvmyoADytaCgboB
+	jl	.L_small_initial_partial_block_240
 
 
 
@@ -33986,8 +33986,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_bvmyoADytaCgboB
-.L_small_initial_partial_block_bvmyoADytaCgboB:
+	jmp	.L_small_initial_compute_done_240
+.L_small_initial_partial_block_240:
 
 
 
@@ -34051,27 +34051,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_bvmyoADytaCgboB:
+.L_small_initial_compute_done_240:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_bvmyoADytaCgboB
+	je	.L_after_reduction_240
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_bvmyoADytaCgboB:
-	jmp	.L_last_blocks_done_cnotAvDezoxjigs
-.L_last_num_blocks_is_13_cnotAvDezoxjigs:
+.L_after_reduction_240:
+	jmp	.L_last_blocks_done_216
+.L_last_num_blocks_is_13_216:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$243,%r15d
-	jae	.L_16_blocks_overflow_xsAbcofzmblltnA
+	jae	.L_16_blocks_overflow_241
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%xmm27,%xmm4,%xmm5
-	jmp	.L_16_blocks_ok_xsAbcofzmblltnA
+	jmp	.L_16_blocks_ok_241
 
-.L_16_blocks_overflow_xsAbcofzmblltnA:
+.L_16_blocks_overflow_241:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -34082,7 +34082,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%xmm29,%xmm5,%xmm5
-.L_16_blocks_ok_xsAbcofzmblltnA:
+.L_16_blocks_ok_241:
 
 
 
@@ -34222,7 +34222,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_etulFCuzhxwzsBG
+	jl	.L_small_initial_partial_block_242
 
 
 
@@ -34287,8 +34287,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_etulFCuzhxwzsBG
-.L_small_initial_partial_block_etulFCuzhxwzsBG:
+	jmp	.L_small_initial_compute_done_242
+.L_small_initial_partial_block_242:
 
 
 
@@ -34350,27 +34350,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_etulFCuzhxwzsBG:
+.L_small_initial_compute_done_242:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_etulFCuzhxwzsBG
+	je	.L_after_reduction_242
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_etulFCuzhxwzsBG:
-	jmp	.L_last_blocks_done_cnotAvDezoxjigs
-.L_last_num_blocks_is_14_cnotAvDezoxjigs:
+.L_after_reduction_242:
+	jmp	.L_last_blocks_done_216
+.L_last_num_blocks_is_14_216:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$242,%r15d
-	jae	.L_16_blocks_overflow_jyqbptEasFbiiwh
+	jae	.L_16_blocks_overflow_243
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%ymm27,%ymm4,%ymm5
-	jmp	.L_16_blocks_ok_jyqbptEasFbiiwh
+	jmp	.L_16_blocks_ok_243
 
-.L_16_blocks_overflow_jyqbptEasFbiiwh:
+.L_16_blocks_overflow_243:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -34381,7 +34381,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%ymm29,%ymm5,%ymm5
-.L_16_blocks_ok_jyqbptEasFbiiwh:
+.L_16_blocks_ok_243:
 
 
 
@@ -34521,7 +34521,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_jrwceinDDafuscx
+	jl	.L_small_initial_partial_block_244
 
 
 
@@ -34586,8 +34586,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_jrwceinDDafuscx
-.L_small_initial_partial_block_jrwceinDDafuscx:
+	jmp	.L_small_initial_compute_done_244
+.L_small_initial_partial_block_244:
 
 
 
@@ -34655,27 +34655,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_jrwceinDDafuscx:
+.L_small_initial_compute_done_244:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_jrwceinDDafuscx
+	je	.L_after_reduction_244
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_jrwceinDDafuscx:
-	jmp	.L_last_blocks_done_cnotAvDezoxjigs
-.L_last_num_blocks_is_15_cnotAvDezoxjigs:
+.L_after_reduction_244:
+	jmp	.L_last_blocks_done_216
+.L_last_num_blocks_is_15_216:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$241,%r15d
-	jae	.L_16_blocks_overflow_yvBkssgbquurjyn
+	jae	.L_16_blocks_overflow_245
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_yvBkssgbquurjyn
+	jmp	.L_16_blocks_ok_245
 
-.L_16_blocks_overflow_yvBkssgbquurjyn:
+.L_16_blocks_overflow_245:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -34686,7 +34686,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_yvBkssgbquurjyn:
+.L_16_blocks_ok_245:
 
 
 
@@ -34826,7 +34826,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_kmGwlvnpgjwwziv
+	jl	.L_small_initial_partial_block_246
 
 
 
@@ -34892,8 +34892,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_kmGwlvnpgjwwziv
-.L_small_initial_partial_block_kmGwlvnpgjwwziv:
+	jmp	.L_small_initial_compute_done_246
+.L_small_initial_partial_block_246:
 
 
 
@@ -34961,27 +34961,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_kmGwlvnpgjwwziv:
+.L_small_initial_compute_done_246:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_kmGwlvnpgjwwziv
+	je	.L_after_reduction_246
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_kmGwlvnpgjwwziv:
-	jmp	.L_last_blocks_done_cnotAvDezoxjigs
-.L_last_num_blocks_is_16_cnotAvDezoxjigs:
+.L_after_reduction_246:
+	jmp	.L_last_blocks_done_216
+.L_last_num_blocks_is_16_216:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$240,%r15d
-	jae	.L_16_blocks_overflow_zxBrcnFjqfdsdBn
+	jae	.L_16_blocks_overflow_247
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_zxBrcnFjqfdsdBn
+	jmp	.L_16_blocks_ok_247
 
-.L_16_blocks_overflow_zxBrcnFjqfdsdBn:
+.L_16_blocks_overflow_247:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -34992,7 +34992,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_zxBrcnFjqfdsdBn:
+.L_16_blocks_ok_247:
 
 
 
@@ -35129,7 +35129,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm5,%zmm21
 	vextracti32x4	$3,%zmm21,%xmm7
 	subq	$16 * (16 - 1),%r8
-.L_small_initial_partial_block_kjgGssgycykwBfF:
+.L_small_initial_partial_block_248:
 
 
 
@@ -35198,11 +35198,11 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_kjgGssgycykwBfF:
+.L_small_initial_compute_done_248:
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_kjgGssgycykwBfF:
-	jmp	.L_last_blocks_done_cnotAvDezoxjigs
-.L_last_num_blocks_is_0_cnotAvDezoxjigs:
+.L_after_reduction_248:
+	jmp	.L_last_blocks_done_216
+.L_last_num_blocks_is_0_216:
 	vmovdqa64	768(%rsp),%zmm13
 	vpxorq	%zmm14,%zmm13,%zmm13
 	vmovdqu64	0(%rsp,%rbx,1),%zmm12
@@ -35264,18 +35264,18 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm24,%xmm3,%xmm14
 
-.L_last_blocks_done_cnotAvDezoxjigs:
+.L_last_blocks_done_216:
 	vpshufb	%xmm29,%xmm2,%xmm2
-	jmp	.L_ghash_done_uygCycEksAzDBkF
-.L_encrypt_16_blocks_uygCycEksAzDBkF:
+	jmp	.L_ghash_done_172
+.L_encrypt_16_blocks_172:
 	cmpb	$240,%r15b
-	jae	.L_16_blocks_overflow_DDfzEzluofbymmu
+	jae	.L_16_blocks_overflow_249
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_DDfzEzluofbymmu
-.L_16_blocks_overflow_DDfzEzluofbymmu:
+	jmp	.L_16_blocks_ok_249
+.L_16_blocks_overflow_249:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -35286,7 +35286,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_DDfzEzluofbymmu:
+.L_16_blocks_ok_249:
 	vbroadcastf64x2	0(%rdi),%zmm30
 	vpxorq	768(%rsp),%zmm14,%zmm8
 	vmovdqu64	0(%rsp),%zmm1
@@ -35499,61 +35499,61 @@ ossl_aes_gcm_encrypt_avx512:
 	movl	%r8d,%r10d
 	addl	$15,%r10d
 	shrl	$4,%r10d
-	je	.L_last_num_blocks_is_0_bgrAtBjonnloqvd
+	je	.L_last_num_blocks_is_0_250
 
 	cmpl	$8,%r10d
-	je	.L_last_num_blocks_is_8_bgrAtBjonnloqvd
-	jb	.L_last_num_blocks_is_7_1_bgrAtBjonnloqvd
+	je	.L_last_num_blocks_is_8_250
+	jb	.L_last_num_blocks_is_7_1_250
 
 
 	cmpl	$12,%r10d
-	je	.L_last_num_blocks_is_12_bgrAtBjonnloqvd
-	jb	.L_last_num_blocks_is_11_9_bgrAtBjonnloqvd
+	je	.L_last_num_blocks_is_12_250
+	jb	.L_last_num_blocks_is_11_9_250
 
 
 	cmpl	$15,%r10d
-	je	.L_last_num_blocks_is_15_bgrAtBjonnloqvd
-	ja	.L_last_num_blocks_is_16_bgrAtBjonnloqvd
+	je	.L_last_num_blocks_is_15_250
+	ja	.L_last_num_blocks_is_16_250
 	cmpl	$14,%r10d
-	je	.L_last_num_blocks_is_14_bgrAtBjonnloqvd
-	jmp	.L_last_num_blocks_is_13_bgrAtBjonnloqvd
+	je	.L_last_num_blocks_is_14_250
+	jmp	.L_last_num_blocks_is_13_250
 
-.L_last_num_blocks_is_11_9_bgrAtBjonnloqvd:
+.L_last_num_blocks_is_11_9_250:
 
 	cmpl	$10,%r10d
-	je	.L_last_num_blocks_is_10_bgrAtBjonnloqvd
-	ja	.L_last_num_blocks_is_11_bgrAtBjonnloqvd
-	jmp	.L_last_num_blocks_is_9_bgrAtBjonnloqvd
+	je	.L_last_num_blocks_is_10_250
+	ja	.L_last_num_blocks_is_11_250
+	jmp	.L_last_num_blocks_is_9_250
 
-.L_last_num_blocks_is_7_1_bgrAtBjonnloqvd:
+.L_last_num_blocks_is_7_1_250:
 	cmpl	$4,%r10d
-	je	.L_last_num_blocks_is_4_bgrAtBjonnloqvd
-	jb	.L_last_num_blocks_is_3_1_bgrAtBjonnloqvd
+	je	.L_last_num_blocks_is_4_250
+	jb	.L_last_num_blocks_is_3_1_250
 
 	cmpl	$6,%r10d
-	ja	.L_last_num_blocks_is_7_bgrAtBjonnloqvd
-	je	.L_last_num_blocks_is_6_bgrAtBjonnloqvd
-	jmp	.L_last_num_blocks_is_5_bgrAtBjonnloqvd
+	ja	.L_last_num_blocks_is_7_250
+	je	.L_last_num_blocks_is_6_250
+	jmp	.L_last_num_blocks_is_5_250
 
-.L_last_num_blocks_is_3_1_bgrAtBjonnloqvd:
+.L_last_num_blocks_is_3_1_250:
 
 	cmpl	$2,%r10d
-	ja	.L_last_num_blocks_is_3_bgrAtBjonnloqvd
-	je	.L_last_num_blocks_is_2_bgrAtBjonnloqvd
-.L_last_num_blocks_is_1_bgrAtBjonnloqvd:
+	ja	.L_last_num_blocks_is_3_250
+	je	.L_last_num_blocks_is_2_250
+.L_last_num_blocks_is_1_250:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$255,%r15d
-	jae	.L_16_blocks_overflow_BpnEqnwfaujGcxw
+	jae	.L_16_blocks_overflow_251
 	vpaddd	%xmm28,%xmm2,%xmm0
-	jmp	.L_16_blocks_ok_BpnEqnwfaujGcxw
+	jmp	.L_16_blocks_ok_251
 
-.L_16_blocks_overflow_BpnEqnwfaujGcxw:
+.L_16_blocks_overflow_251:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%xmm29,%xmm0,%xmm0
-.L_16_blocks_ok_BpnEqnwfaujGcxw:
+.L_16_blocks_ok_251:
 
 
 
@@ -35664,7 +35664,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_onApBxrihCpDyuv
+	jl	.L_small_initial_partial_block_252
 
 
 
@@ -35706,8 +35706,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_onApBxrihCpDyuv
-.L_small_initial_partial_block_onApBxrihCpDyuv:
+	jmp	.L_small_initial_compute_done_252
+.L_small_initial_partial_block_252:
 
 
 
@@ -35731,24 +35731,24 @@ ossl_aes_gcm_encrypt_avx512:
 
 	vpxorq	%xmm7,%xmm14,%xmm14
 
-	jmp	.L_after_reduction_onApBxrihCpDyuv
-.L_small_initial_compute_done_onApBxrihCpDyuv:
-.L_after_reduction_onApBxrihCpDyuv:
-	jmp	.L_last_blocks_done_bgrAtBjonnloqvd
-.L_last_num_blocks_is_2_bgrAtBjonnloqvd:
+	jmp	.L_after_reduction_252
+.L_small_initial_compute_done_252:
+.L_after_reduction_252:
+	jmp	.L_last_blocks_done_250
+.L_last_num_blocks_is_2_250:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$254,%r15d
-	jae	.L_16_blocks_overflow_yGzfqvCnxdtlkml
+	jae	.L_16_blocks_overflow_253
 	vpaddd	%ymm28,%ymm2,%ymm0
-	jmp	.L_16_blocks_ok_yGzfqvCnxdtlkml
+	jmp	.L_16_blocks_ok_253
 
-.L_16_blocks_overflow_yGzfqvCnxdtlkml:
+.L_16_blocks_overflow_253:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%ymm29,%ymm0,%ymm0
-.L_16_blocks_ok_yGzfqvCnxdtlkml:
+.L_16_blocks_ok_253:
 
 
 
@@ -35860,7 +35860,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_laDvpatEibgvrif
+	jl	.L_small_initial_partial_block_254
 
 
 
@@ -35902,8 +35902,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_laDvpatEibgvrif
-.L_small_initial_partial_block_laDvpatEibgvrif:
+	jmp	.L_small_initial_compute_done_254
+.L_small_initial_partial_block_254:
 
 
 
@@ -35948,27 +35948,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_laDvpatEibgvrif:
+.L_small_initial_compute_done_254:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_laDvpatEibgvrif
+	je	.L_after_reduction_254
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_laDvpatEibgvrif:
-	jmp	.L_last_blocks_done_bgrAtBjonnloqvd
-.L_last_num_blocks_is_3_bgrAtBjonnloqvd:
+.L_after_reduction_254:
+	jmp	.L_last_blocks_done_250
+.L_last_num_blocks_is_3_250:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$253,%r15d
-	jae	.L_16_blocks_overflow_zEmomnpkxghGxvv
+	jae	.L_16_blocks_overflow_255
 	vpaddd	%zmm28,%zmm2,%zmm0
-	jmp	.L_16_blocks_ok_zEmomnpkxghGxvv
+	jmp	.L_16_blocks_ok_255
 
-.L_16_blocks_overflow_zEmomnpkxghGxvv:
+.L_16_blocks_overflow_255:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%zmm29,%zmm0,%zmm0
-.L_16_blocks_ok_zEmomnpkxghGxvv:
+.L_16_blocks_ok_255:
 
 
 
@@ -36080,7 +36080,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_CxvnsjnikvCumBt
+	jl	.L_small_initial_partial_block_256
 
 
 
@@ -36123,8 +36123,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_CxvnsjnikvCumBt
-.L_small_initial_partial_block_CxvnsjnikvCumBt:
+	jmp	.L_small_initial_compute_done_256
+.L_small_initial_partial_block_256:
 
 
 
@@ -36169,27 +36169,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_CxvnsjnikvCumBt:
+.L_small_initial_compute_done_256:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_CxvnsjnikvCumBt
+	je	.L_after_reduction_256
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_CxvnsjnikvCumBt:
-	jmp	.L_last_blocks_done_bgrAtBjonnloqvd
-.L_last_num_blocks_is_4_bgrAtBjonnloqvd:
+.L_after_reduction_256:
+	jmp	.L_last_blocks_done_250
+.L_last_num_blocks_is_4_250:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$252,%r15d
-	jae	.L_16_blocks_overflow_lnwsAFekGAytyvl
+	jae	.L_16_blocks_overflow_257
 	vpaddd	%zmm28,%zmm2,%zmm0
-	jmp	.L_16_blocks_ok_lnwsAFekGAytyvl
+	jmp	.L_16_blocks_ok_257
 
-.L_16_blocks_overflow_lnwsAFekGAytyvl:
+.L_16_blocks_overflow_257:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%zmm29,%zmm0,%zmm0
-.L_16_blocks_ok_lnwsAFekGAytyvl:
+.L_16_blocks_ok_257:
 
 
 
@@ -36301,7 +36301,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_DuEowGxxDqfDchE
+	jl	.L_small_initial_partial_block_258
 
 
 
@@ -36343,8 +36343,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_DuEowGxxDqfDchE
-.L_small_initial_partial_block_DuEowGxxDqfDchE:
+	jmp	.L_small_initial_compute_done_258
+.L_small_initial_partial_block_258:
 
 
 
@@ -36390,32 +36390,32 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_DuEowGxxDqfDchE:
+.L_small_initial_compute_done_258:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_DuEowGxxDqfDchE
+	je	.L_after_reduction_258
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_DuEowGxxDqfDchE:
-	jmp	.L_last_blocks_done_bgrAtBjonnloqvd
-.L_last_num_blocks_is_5_bgrAtBjonnloqvd:
+.L_after_reduction_258:
+	jmp	.L_last_blocks_done_250
+.L_last_num_blocks_is_5_250:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$251,%r15d
-	jae	.L_16_blocks_overflow_mwEtErqidqvqpGF
+	jae	.L_16_blocks_overflow_259
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%xmm27,%xmm0,%xmm3
-	jmp	.L_16_blocks_ok_mwEtErqidqvqpGF
+	jmp	.L_16_blocks_ok_259
 
-.L_16_blocks_overflow_mwEtErqidqvqpGF:
+.L_16_blocks_overflow_259:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%xmm29,%xmm3,%xmm3
-.L_16_blocks_ok_mwEtErqidqvqpGF:
+.L_16_blocks_ok_259:
 
 
 
@@ -36544,7 +36544,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_dBmpdFzlyhizqih
+	jl	.L_small_initial_partial_block_260
 
 
 
@@ -36596,8 +36596,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_dBmpdFzlyhizqih
-.L_small_initial_partial_block_dBmpdFzlyhizqih:
+	jmp	.L_small_initial_compute_done_260
+.L_small_initial_partial_block_260:
 
 
 
@@ -36642,32 +36642,32 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_dBmpdFzlyhizqih:
+.L_small_initial_compute_done_260:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_dBmpdFzlyhizqih
+	je	.L_after_reduction_260
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_dBmpdFzlyhizqih:
-	jmp	.L_last_blocks_done_bgrAtBjonnloqvd
-.L_last_num_blocks_is_6_bgrAtBjonnloqvd:
+.L_after_reduction_260:
+	jmp	.L_last_blocks_done_250
+.L_last_num_blocks_is_6_250:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$250,%r15d
-	jae	.L_16_blocks_overflow_mwxgbklgswkuqsa
+	jae	.L_16_blocks_overflow_261
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%ymm27,%ymm0,%ymm3
-	jmp	.L_16_blocks_ok_mwxgbklgswkuqsa
+	jmp	.L_16_blocks_ok_261
 
-.L_16_blocks_overflow_mwxgbklgswkuqsa:
+.L_16_blocks_overflow_261:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%ymm29,%ymm3,%ymm3
-.L_16_blocks_ok_mwxgbklgswkuqsa:
+.L_16_blocks_ok_261:
 
 
 
@@ -36796,7 +36796,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_cDmmbofklwlFmfm
+	jl	.L_small_initial_partial_block_262
 
 
 
@@ -36848,8 +36848,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_cDmmbofklwlFmfm
-.L_small_initial_partial_block_cDmmbofklwlFmfm:
+	jmp	.L_small_initial_compute_done_262
+.L_small_initial_partial_block_262:
 
 
 
@@ -36904,32 +36904,32 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_cDmmbofklwlFmfm:
+.L_small_initial_compute_done_262:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_cDmmbofklwlFmfm
+	je	.L_after_reduction_262
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_cDmmbofklwlFmfm:
-	jmp	.L_last_blocks_done_bgrAtBjonnloqvd
-.L_last_num_blocks_is_7_bgrAtBjonnloqvd:
+.L_after_reduction_262:
+	jmp	.L_last_blocks_done_250
+.L_last_num_blocks_is_7_250:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$249,%r15d
-	jae	.L_16_blocks_overflow_apjydFuxojAaohg
+	jae	.L_16_blocks_overflow_263
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
-	jmp	.L_16_blocks_ok_apjydFuxojAaohg
+	jmp	.L_16_blocks_ok_263
 
-.L_16_blocks_overflow_apjydFuxojAaohg:
+.L_16_blocks_overflow_263:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
-.L_16_blocks_ok_apjydFuxojAaohg:
+.L_16_blocks_ok_263:
 
 
 
@@ -37058,7 +37058,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_fACAycudcpGjduv
+	jl	.L_small_initial_partial_block_264
 
 
 
@@ -37111,8 +37111,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_fACAycudcpGjduv
-.L_small_initial_partial_block_fACAycudcpGjduv:
+	jmp	.L_small_initial_compute_done_264
+.L_small_initial_partial_block_264:
 
 
 
@@ -37167,32 +37167,32 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_fACAycudcpGjduv:
+.L_small_initial_compute_done_264:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_fACAycudcpGjduv
+	je	.L_after_reduction_264
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_fACAycudcpGjduv:
-	jmp	.L_last_blocks_done_bgrAtBjonnloqvd
-.L_last_num_blocks_is_8_bgrAtBjonnloqvd:
+.L_after_reduction_264:
+	jmp	.L_last_blocks_done_250
+.L_last_num_blocks_is_8_250:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$248,%r15d
-	jae	.L_16_blocks_overflow_FynazCysgzxlwbF
+	jae	.L_16_blocks_overflow_265
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
-	jmp	.L_16_blocks_ok_FynazCysgzxlwbF
+	jmp	.L_16_blocks_ok_265
 
-.L_16_blocks_overflow_FynazCysgzxlwbF:
+.L_16_blocks_overflow_265:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
-.L_16_blocks_ok_FynazCysgzxlwbF:
+.L_16_blocks_ok_265:
 
 
 
@@ -37321,7 +37321,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_tiGlcfEtAplCkCh
+	jl	.L_small_initial_partial_block_266
 
 
 
@@ -37372,8 +37372,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_tiGlcfEtAplCkCh
-.L_small_initial_partial_block_tiGlcfEtAplCkCh:
+	jmp	.L_small_initial_compute_done_266
+.L_small_initial_partial_block_266:
 
 
 
@@ -37429,26 +37429,26 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_tiGlcfEtAplCkCh:
+.L_small_initial_compute_done_266:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_tiGlcfEtAplCkCh
+	je	.L_after_reduction_266
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_tiGlcfEtAplCkCh:
-	jmp	.L_last_blocks_done_bgrAtBjonnloqvd
-.L_last_num_blocks_is_9_bgrAtBjonnloqvd:
+.L_after_reduction_266:
+	jmp	.L_last_blocks_done_250
+.L_last_num_blocks_is_9_250:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$247,%r15d
-	jae	.L_16_blocks_overflow_DgfacAafzlforja
+	jae	.L_16_blocks_overflow_267
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%xmm27,%xmm3,%xmm4
-	jmp	.L_16_blocks_ok_DgfacAafzlforja
+	jmp	.L_16_blocks_ok_267
 
-.L_16_blocks_overflow_DgfacAafzlforja:
+.L_16_blocks_overflow_267:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -37457,7 +37457,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%xmm29,%xmm4,%xmm4
-.L_16_blocks_ok_DgfacAafzlforja:
+.L_16_blocks_ok_267:
 
 
 
@@ -37603,7 +37603,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_qtAGbEhizluraBo
+	jl	.L_small_initial_partial_block_268
 
 
 
@@ -37664,8 +37664,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_qtAGbEhizluraBo
-.L_small_initial_partial_block_qtAGbEhizluraBo:
+	jmp	.L_small_initial_compute_done_268
+.L_small_initial_partial_block_268:
 
 
 
@@ -37719,26 +37719,26 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_qtAGbEhizluraBo:
+.L_small_initial_compute_done_268:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_qtAGbEhizluraBo
+	je	.L_after_reduction_268
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_qtAGbEhizluraBo:
-	jmp	.L_last_blocks_done_bgrAtBjonnloqvd
-.L_last_num_blocks_is_10_bgrAtBjonnloqvd:
+.L_after_reduction_268:
+	jmp	.L_last_blocks_done_250
+.L_last_num_blocks_is_10_250:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$246,%r15d
-	jae	.L_16_blocks_overflow_BxvrAsDbwlfAxeo
+	jae	.L_16_blocks_overflow_269
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%ymm27,%ymm3,%ymm4
-	jmp	.L_16_blocks_ok_BxvrAsDbwlfAxeo
+	jmp	.L_16_blocks_ok_269
 
-.L_16_blocks_overflow_BxvrAsDbwlfAxeo:
+.L_16_blocks_overflow_269:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -37747,7 +37747,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%ymm29,%ymm4,%ymm4
-.L_16_blocks_ok_BxvrAsDbwlfAxeo:
+.L_16_blocks_ok_269:
 
 
 
@@ -37893,7 +37893,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_lnztwkChDbAhqFc
+	jl	.L_small_initial_partial_block_270
 
 
 
@@ -37954,8 +37954,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_lnztwkChDbAhqFc
-.L_small_initial_partial_block_lnztwkChDbAhqFc:
+	jmp	.L_small_initial_compute_done_270
+.L_small_initial_partial_block_270:
 
 
 
@@ -38019,26 +38019,26 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_lnztwkChDbAhqFc:
+.L_small_initial_compute_done_270:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_lnztwkChDbAhqFc
+	je	.L_after_reduction_270
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_lnztwkChDbAhqFc:
-	jmp	.L_last_blocks_done_bgrAtBjonnloqvd
-.L_last_num_blocks_is_11_bgrAtBjonnloqvd:
+.L_after_reduction_270:
+	jmp	.L_last_blocks_done_250
+.L_last_num_blocks_is_11_250:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$245,%r15d
-	jae	.L_16_blocks_overflow_utBEuotxgeclgru
+	jae	.L_16_blocks_overflow_271
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
-	jmp	.L_16_blocks_ok_utBEuotxgeclgru
+	jmp	.L_16_blocks_ok_271
 
-.L_16_blocks_overflow_utBEuotxgeclgru:
+.L_16_blocks_overflow_271:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -38047,7 +38047,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
-.L_16_blocks_ok_utBEuotxgeclgru:
+.L_16_blocks_ok_271:
 
 
 
@@ -38193,7 +38193,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_oykrfAmonkmtkcy
+	jl	.L_small_initial_partial_block_272
 
 
 
@@ -38255,8 +38255,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_oykrfAmonkmtkcy
-.L_small_initial_partial_block_oykrfAmonkmtkcy:
+	jmp	.L_small_initial_compute_done_272
+.L_small_initial_partial_block_272:
 
 
 
@@ -38320,26 +38320,26 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_oykrfAmonkmtkcy:
+.L_small_initial_compute_done_272:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_oykrfAmonkmtkcy
+	je	.L_after_reduction_272
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_oykrfAmonkmtkcy:
-	jmp	.L_last_blocks_done_bgrAtBjonnloqvd
-.L_last_num_blocks_is_12_bgrAtBjonnloqvd:
+.L_after_reduction_272:
+	jmp	.L_last_blocks_done_250
+.L_last_num_blocks_is_12_250:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$244,%r15d
-	jae	.L_16_blocks_overflow_vldCgkGqtkyyrmG
+	jae	.L_16_blocks_overflow_273
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
-	jmp	.L_16_blocks_ok_vldCgkGqtkyyrmG
+	jmp	.L_16_blocks_ok_273
 
-.L_16_blocks_overflow_vldCgkGqtkyyrmG:
+.L_16_blocks_overflow_273:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -38348,7 +38348,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
-.L_16_blocks_ok_vldCgkGqtkyyrmG:
+.L_16_blocks_ok_273:
 
 
 
@@ -38494,7 +38494,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_rxlrcdudinyeczo
+	jl	.L_small_initial_partial_block_274
 
 
 
@@ -38550,8 +38550,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_rxlrcdudinyeczo
-.L_small_initial_partial_block_rxlrcdudinyeczo:
+	jmp	.L_small_initial_compute_done_274
+.L_small_initial_partial_block_274:
 
 
 
@@ -38616,27 +38616,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_rxlrcdudinyeczo:
+.L_small_initial_compute_done_274:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_rxlrcdudinyeczo
+	je	.L_after_reduction_274
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_rxlrcdudinyeczo:
-	jmp	.L_last_blocks_done_bgrAtBjonnloqvd
-.L_last_num_blocks_is_13_bgrAtBjonnloqvd:
+.L_after_reduction_274:
+	jmp	.L_last_blocks_done_250
+.L_last_num_blocks_is_13_250:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$243,%r15d
-	jae	.L_16_blocks_overflow_nhvdBGpupuEjtFD
+	jae	.L_16_blocks_overflow_275
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%xmm27,%xmm4,%xmm5
-	jmp	.L_16_blocks_ok_nhvdBGpupuEjtFD
+	jmp	.L_16_blocks_ok_275
 
-.L_16_blocks_overflow_nhvdBGpupuEjtFD:
+.L_16_blocks_overflow_275:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -38647,7 +38647,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%xmm29,%xmm5,%xmm5
-.L_16_blocks_ok_nhvdBGpupuEjtFD:
+.L_16_blocks_ok_275:
 
 
 
@@ -38810,7 +38810,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_tugGfarEdfzmEnD
+	jl	.L_small_initial_partial_block_276
 
 
 
@@ -38876,8 +38876,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_tugGfarEdfzmEnD
-.L_small_initial_partial_block_tugGfarEdfzmEnD:
+	jmp	.L_small_initial_compute_done_276
+.L_small_initial_partial_block_276:
 
 
 
@@ -38936,27 +38936,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_tugGfarEdfzmEnD:
+.L_small_initial_compute_done_276:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_tugGfarEdfzmEnD
+	je	.L_after_reduction_276
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_tugGfarEdfzmEnD:
-	jmp	.L_last_blocks_done_bgrAtBjonnloqvd
-.L_last_num_blocks_is_14_bgrAtBjonnloqvd:
+.L_after_reduction_276:
+	jmp	.L_last_blocks_done_250
+.L_last_num_blocks_is_14_250:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$242,%r15d
-	jae	.L_16_blocks_overflow_otannEccCmkkwjx
+	jae	.L_16_blocks_overflow_277
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%ymm27,%ymm4,%ymm5
-	jmp	.L_16_blocks_ok_otannEccCmkkwjx
+	jmp	.L_16_blocks_ok_277
 
-.L_16_blocks_overflow_otannEccCmkkwjx:
+.L_16_blocks_overflow_277:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -38967,7 +38967,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%ymm29,%ymm5,%ymm5
-.L_16_blocks_ok_otannEccCmkkwjx:
+.L_16_blocks_ok_277:
 
 
 
@@ -39130,7 +39130,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_xkcntsunsgvwybk
+	jl	.L_small_initial_partial_block_278
 
 
 
@@ -39196,8 +39196,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_xkcntsunsgvwybk
-.L_small_initial_partial_block_xkcntsunsgvwybk:
+	jmp	.L_small_initial_compute_done_278
+.L_small_initial_partial_block_278:
 
 
 
@@ -39266,27 +39266,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_xkcntsunsgvwybk:
+.L_small_initial_compute_done_278:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_xkcntsunsgvwybk
+	je	.L_after_reduction_278
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_xkcntsunsgvwybk:
-	jmp	.L_last_blocks_done_bgrAtBjonnloqvd
-.L_last_num_blocks_is_15_bgrAtBjonnloqvd:
+.L_after_reduction_278:
+	jmp	.L_last_blocks_done_250
+.L_last_num_blocks_is_15_250:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$241,%r15d
-	jae	.L_16_blocks_overflow_ktdFEnuklrCzyEA
+	jae	.L_16_blocks_overflow_279
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_ktdFEnuklrCzyEA
+	jmp	.L_16_blocks_ok_279
 
-.L_16_blocks_overflow_ktdFEnuklrCzyEA:
+.L_16_blocks_overflow_279:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -39297,7 +39297,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_ktdFEnuklrCzyEA:
+.L_16_blocks_ok_279:
 
 
 
@@ -39460,7 +39460,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_sfjEjsnidDtfBkg
+	jl	.L_small_initial_partial_block_280
 
 
 
@@ -39527,8 +39527,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_sfjEjsnidDtfBkg
-.L_small_initial_partial_block_sfjEjsnidDtfBkg:
+	jmp	.L_small_initial_compute_done_280
+.L_small_initial_partial_block_280:
 
 
 
@@ -39597,27 +39597,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_sfjEjsnidDtfBkg:
+.L_small_initial_compute_done_280:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_sfjEjsnidDtfBkg
+	je	.L_after_reduction_280
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_sfjEjsnidDtfBkg:
-	jmp	.L_last_blocks_done_bgrAtBjonnloqvd
-.L_last_num_blocks_is_16_bgrAtBjonnloqvd:
+.L_after_reduction_280:
+	jmp	.L_last_blocks_done_250
+.L_last_num_blocks_is_16_250:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$240,%r15d
-	jae	.L_16_blocks_overflow_poiBxjbqqxpCDtl
+	jae	.L_16_blocks_overflow_281
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_poiBxjbqqxpCDtl
+	jmp	.L_16_blocks_ok_281
 
-.L_16_blocks_overflow_poiBxjbqqxpCDtl:
+.L_16_blocks_overflow_281:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -39628,7 +39628,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_poiBxjbqqxpCDtl:
+.L_16_blocks_ok_281:
 
 
 
@@ -39788,7 +39788,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm5,%zmm21
 	vextracti32x4	$3,%zmm21,%xmm7
 	subq	$16 * (16 - 1),%r8
-.L_small_initial_partial_block_sgGijbccfGmjliF:
+.L_small_initial_partial_block_282:
 
 
 
@@ -39858,11 +39858,11 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_sgGijbccfGmjliF:
+.L_small_initial_compute_done_282:
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_sgGijbccfGmjliF:
-	jmp	.L_last_blocks_done_bgrAtBjonnloqvd
-.L_last_num_blocks_is_0_bgrAtBjonnloqvd:
+.L_after_reduction_282:
+	jmp	.L_last_blocks_done_250
+.L_last_num_blocks_is_0_250:
 	vmovdqa64	1280(%rsp),%zmm13
 	vmovdqu64	512(%rsp),%zmm12
 	vpclmulqdq	$0x11,%zmm12,%zmm13,%zmm0
@@ -39923,18 +39923,18 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm24,%xmm3,%xmm14
 
-.L_last_blocks_done_bgrAtBjonnloqvd:
+.L_last_blocks_done_250:
 	vpshufb	%xmm29,%xmm2,%xmm2
-	jmp	.L_ghash_done_uygCycEksAzDBkF
+	jmp	.L_ghash_done_172
 
-.L_message_below_32_blocks_uygCycEksAzDBkF:
+.L_message_below_32_blocks_172:
 
 
 	subq	$256,%r8
 	addq	$256,%r11
 	movl	%r8d,%r10d
 	testq	%r14,%r14
-	jnz	.L_skip_hkeys_precomputation_tfeFvpjBjvvGmzC
+	jnz	.L_skip_hkeys_precomputation_283
 	vmovdqu64	640(%rsp),%zmm3
 
 
@@ -40062,7 +40062,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpternlogq	$0x96,%zmm7,%zmm6,%zmm5
 
 	vmovdqu64	%zmm5,256(%rsp)
-.L_skip_hkeys_precomputation_tfeFvpjBjvvGmzC:
+.L_skip_hkeys_precomputation_283:
 	movq	$1,%r14
 	andl	$~15,%r10d
 	movl	$512,%ebx
@@ -40070,61 +40070,61 @@ ossl_aes_gcm_encrypt_avx512:
 	movl	%r8d,%r10d
 	addl	$15,%r10d
 	shrl	$4,%r10d
-	je	.L_last_num_blocks_is_0_aChEemefGGhwnFB
+	je	.L_last_num_blocks_is_0_284
 
 	cmpl	$8,%r10d
-	je	.L_last_num_blocks_is_8_aChEemefGGhwnFB
-	jb	.L_last_num_blocks_is_7_1_aChEemefGGhwnFB
+	je	.L_last_num_blocks_is_8_284
+	jb	.L_last_num_blocks_is_7_1_284
 
 
 	cmpl	$12,%r10d
-	je	.L_last_num_blocks_is_12_aChEemefGGhwnFB
-	jb	.L_last_num_blocks_is_11_9_aChEemefGGhwnFB
+	je	.L_last_num_blocks_is_12_284
+	jb	.L_last_num_blocks_is_11_9_284
 
 
 	cmpl	$15,%r10d
-	je	.L_last_num_blocks_is_15_aChEemefGGhwnFB
-	ja	.L_last_num_blocks_is_16_aChEemefGGhwnFB
+	je	.L_last_num_blocks_is_15_284
+	ja	.L_last_num_blocks_is_16_284
 	cmpl	$14,%r10d
-	je	.L_last_num_blocks_is_14_aChEemefGGhwnFB
-	jmp	.L_last_num_blocks_is_13_aChEemefGGhwnFB
+	je	.L_last_num_blocks_is_14_284
+	jmp	.L_last_num_blocks_is_13_284
 
-.L_last_num_blocks_is_11_9_aChEemefGGhwnFB:
+.L_last_num_blocks_is_11_9_284:
 
 	cmpl	$10,%r10d
-	je	.L_last_num_blocks_is_10_aChEemefGGhwnFB
-	ja	.L_last_num_blocks_is_11_aChEemefGGhwnFB
-	jmp	.L_last_num_blocks_is_9_aChEemefGGhwnFB
+	je	.L_last_num_blocks_is_10_284
+	ja	.L_last_num_blocks_is_11_284
+	jmp	.L_last_num_blocks_is_9_284
 
-.L_last_num_blocks_is_7_1_aChEemefGGhwnFB:
+.L_last_num_blocks_is_7_1_284:
 	cmpl	$4,%r10d
-	je	.L_last_num_blocks_is_4_aChEemefGGhwnFB
-	jb	.L_last_num_blocks_is_3_1_aChEemefGGhwnFB
+	je	.L_last_num_blocks_is_4_284
+	jb	.L_last_num_blocks_is_3_1_284
 
 	cmpl	$6,%r10d
-	ja	.L_last_num_blocks_is_7_aChEemefGGhwnFB
-	je	.L_last_num_blocks_is_6_aChEemefGGhwnFB
-	jmp	.L_last_num_blocks_is_5_aChEemefGGhwnFB
+	ja	.L_last_num_blocks_is_7_284
+	je	.L_last_num_blocks_is_6_284
+	jmp	.L_last_num_blocks_is_5_284
 
-.L_last_num_blocks_is_3_1_aChEemefGGhwnFB:
+.L_last_num_blocks_is_3_1_284:
 
 	cmpl	$2,%r10d
-	ja	.L_last_num_blocks_is_3_aChEemefGGhwnFB
-	je	.L_last_num_blocks_is_2_aChEemefGGhwnFB
-.L_last_num_blocks_is_1_aChEemefGGhwnFB:
+	ja	.L_last_num_blocks_is_3_284
+	je	.L_last_num_blocks_is_2_284
+.L_last_num_blocks_is_1_284:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$255,%r15d
-	jae	.L_16_blocks_overflow_Eyxpwkuvqxnvfvr
+	jae	.L_16_blocks_overflow_285
 	vpaddd	%xmm28,%xmm2,%xmm0
-	jmp	.L_16_blocks_ok_Eyxpwkuvqxnvfvr
+	jmp	.L_16_blocks_ok_285
 
-.L_16_blocks_overflow_Eyxpwkuvqxnvfvr:
+.L_16_blocks_overflow_285:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%xmm29,%xmm0,%xmm0
-.L_16_blocks_ok_Eyxpwkuvqxnvfvr:
+.L_16_blocks_ok_285:
 
 
 
@@ -40212,7 +40212,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_GGgbnjurwngbFko
+	jl	.L_small_initial_partial_block_286
 
 
 
@@ -40256,8 +40256,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_GGgbnjurwngbFko
-.L_small_initial_partial_block_GGgbnjurwngbFko:
+	jmp	.L_small_initial_compute_done_286
+.L_small_initial_partial_block_286:
 
 
 
@@ -40309,24 +40309,24 @@ ossl_aes_gcm_encrypt_avx512:
 
 	vpxorq	%xmm7,%xmm14,%xmm14
 
-	jmp	.L_after_reduction_GGgbnjurwngbFko
-.L_small_initial_compute_done_GGgbnjurwngbFko:
-.L_after_reduction_GGgbnjurwngbFko:
-	jmp	.L_last_blocks_done_aChEemefGGhwnFB
-.L_last_num_blocks_is_2_aChEemefGGhwnFB:
+	jmp	.L_after_reduction_286
+.L_small_initial_compute_done_286:
+.L_after_reduction_286:
+	jmp	.L_last_blocks_done_284
+.L_last_num_blocks_is_2_284:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$254,%r15d
-	jae	.L_16_blocks_overflow_EusrqBquAteadEm
+	jae	.L_16_blocks_overflow_287
 	vpaddd	%ymm28,%ymm2,%ymm0
-	jmp	.L_16_blocks_ok_EusrqBquAteadEm
+	jmp	.L_16_blocks_ok_287
 
-.L_16_blocks_overflow_EusrqBquAteadEm:
+.L_16_blocks_overflow_287:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%ymm29,%ymm0,%ymm0
-.L_16_blocks_ok_EusrqBquAteadEm:
+.L_16_blocks_ok_287:
 
 
 
@@ -40415,7 +40415,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_hDrirwBnrvGDysx
+	jl	.L_small_initial_partial_block_288
 
 
 
@@ -40459,8 +40459,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_hDrirwBnrvGDysx
-.L_small_initial_partial_block_hDrirwBnrvGDysx:
+	jmp	.L_small_initial_compute_done_288
+.L_small_initial_partial_block_288:
 
 
 
@@ -40507,27 +40507,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_hDrirwBnrvGDysx:
+.L_small_initial_compute_done_288:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_hDrirwBnrvGDysx
+	je	.L_after_reduction_288
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_hDrirwBnrvGDysx:
-	jmp	.L_last_blocks_done_aChEemefGGhwnFB
-.L_last_num_blocks_is_3_aChEemefGGhwnFB:
+.L_after_reduction_288:
+	jmp	.L_last_blocks_done_284
+.L_last_num_blocks_is_3_284:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$253,%r15d
-	jae	.L_16_blocks_overflow_guywFoFdfCezrwc
+	jae	.L_16_blocks_overflow_289
 	vpaddd	%zmm28,%zmm2,%zmm0
-	jmp	.L_16_blocks_ok_guywFoFdfCezrwc
+	jmp	.L_16_blocks_ok_289
 
-.L_16_blocks_overflow_guywFoFdfCezrwc:
+.L_16_blocks_overflow_289:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%zmm29,%zmm0,%zmm0
-.L_16_blocks_ok_guywFoFdfCezrwc:
+.L_16_blocks_ok_289:
 
 
 
@@ -40616,7 +40616,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_ffxzspaGDmEydrm
+	jl	.L_small_initial_partial_block_290
 
 
 
@@ -40661,8 +40661,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_ffxzspaGDmEydrm
-.L_small_initial_partial_block_ffxzspaGDmEydrm:
+	jmp	.L_small_initial_compute_done_290
+.L_small_initial_partial_block_290:
 
 
 
@@ -40709,27 +40709,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_ffxzspaGDmEydrm:
+.L_small_initial_compute_done_290:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_ffxzspaGDmEydrm
+	je	.L_after_reduction_290
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_ffxzspaGDmEydrm:
-	jmp	.L_last_blocks_done_aChEemefGGhwnFB
-.L_last_num_blocks_is_4_aChEemefGGhwnFB:
+.L_after_reduction_290:
+	jmp	.L_last_blocks_done_284
+.L_last_num_blocks_is_4_284:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$252,%r15d
-	jae	.L_16_blocks_overflow_qElnjeuodkBCttv
+	jae	.L_16_blocks_overflow_291
 	vpaddd	%zmm28,%zmm2,%zmm0
-	jmp	.L_16_blocks_ok_qElnjeuodkBCttv
+	jmp	.L_16_blocks_ok_291
 
-.L_16_blocks_overflow_qElnjeuodkBCttv:
+.L_16_blocks_overflow_291:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%zmm29,%zmm0,%zmm0
-.L_16_blocks_ok_qElnjeuodkBCttv:
+.L_16_blocks_ok_291:
 
 
 
@@ -40818,7 +40818,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_enzoBzByjGeevwt
+	jl	.L_small_initial_partial_block_292
 
 
 
@@ -40863,8 +40863,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_enzoBzByjGeevwt
-.L_small_initial_partial_block_enzoBzByjGeevwt:
+	jmp	.L_small_initial_compute_done_292
+.L_small_initial_partial_block_292:
 
 
 
@@ -40912,32 +40912,32 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_enzoBzByjGeevwt:
+.L_small_initial_compute_done_292:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_enzoBzByjGeevwt
+	je	.L_after_reduction_292
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_enzoBzByjGeevwt:
-	jmp	.L_last_blocks_done_aChEemefGGhwnFB
-.L_last_num_blocks_is_5_aChEemefGGhwnFB:
+.L_after_reduction_292:
+	jmp	.L_last_blocks_done_284
+.L_last_num_blocks_is_5_284:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$251,%r15d
-	jae	.L_16_blocks_overflow_wyjdlAqvFxphibG
+	jae	.L_16_blocks_overflow_293
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%xmm27,%xmm0,%xmm3
-	jmp	.L_16_blocks_ok_wyjdlAqvFxphibG
+	jmp	.L_16_blocks_ok_293
 
-.L_16_blocks_overflow_wyjdlAqvFxphibG:
+.L_16_blocks_overflow_293:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%xmm29,%xmm3,%xmm3
-.L_16_blocks_ok_wyjdlAqvFxphibG:
+.L_16_blocks_ok_293:
 
 
 
@@ -41043,7 +41043,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_gumqDmoesupgjAe
+	jl	.L_small_initial_partial_block_294
 
 
 
@@ -41094,8 +41094,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_gumqDmoesupgjAe
-.L_small_initial_partial_block_gumqDmoesupgjAe:
+	jmp	.L_small_initial_compute_done_294
+.L_small_initial_partial_block_294:
 
 
 
@@ -41143,32 +41143,32 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_gumqDmoesupgjAe:
+.L_small_initial_compute_done_294:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_gumqDmoesupgjAe
+	je	.L_after_reduction_294
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_gumqDmoesupgjAe:
-	jmp	.L_last_blocks_done_aChEemefGGhwnFB
-.L_last_num_blocks_is_6_aChEemefGGhwnFB:
+.L_after_reduction_294:
+	jmp	.L_last_blocks_done_284
+.L_last_num_blocks_is_6_284:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$250,%r15d
-	jae	.L_16_blocks_overflow_zkialEdmBzdbytD
+	jae	.L_16_blocks_overflow_295
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%ymm27,%ymm0,%ymm3
-	jmp	.L_16_blocks_ok_zkialEdmBzdbytD
+	jmp	.L_16_blocks_ok_295
 
-.L_16_blocks_overflow_zkialEdmBzdbytD:
+.L_16_blocks_overflow_295:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%ymm29,%ymm3,%ymm3
-.L_16_blocks_ok_zkialEdmBzdbytD:
+.L_16_blocks_ok_295:
 
 
 
@@ -41274,7 +41274,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_iyirevfEdBcuEnu
+	jl	.L_small_initial_partial_block_296
 
 
 
@@ -41325,8 +41325,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_iyirevfEdBcuEnu
-.L_small_initial_partial_block_iyirevfEdBcuEnu:
+	jmp	.L_small_initial_compute_done_296
+.L_small_initial_partial_block_296:
 
 
 
@@ -41380,32 +41380,32 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_iyirevfEdBcuEnu:
+.L_small_initial_compute_done_296:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_iyirevfEdBcuEnu
+	je	.L_after_reduction_296
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_iyirevfEdBcuEnu:
-	jmp	.L_last_blocks_done_aChEemefGGhwnFB
-.L_last_num_blocks_is_7_aChEemefGGhwnFB:
+.L_after_reduction_296:
+	jmp	.L_last_blocks_done_284
+.L_last_num_blocks_is_7_284:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$249,%r15d
-	jae	.L_16_blocks_overflow_uogkvfpffDvcwkj
+	jae	.L_16_blocks_overflow_297
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
-	jmp	.L_16_blocks_ok_uogkvfpffDvcwkj
+	jmp	.L_16_blocks_ok_297
 
-.L_16_blocks_overflow_uogkvfpffDvcwkj:
+.L_16_blocks_overflow_297:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
-.L_16_blocks_ok_uogkvfpffDvcwkj:
+.L_16_blocks_ok_297:
 
 
 
@@ -41511,7 +41511,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_cxouotnlpalgxmB
+	jl	.L_small_initial_partial_block_298
 
 
 
@@ -41563,8 +41563,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_cxouotnlpalgxmB
-.L_small_initial_partial_block_cxouotnlpalgxmB:
+	jmp	.L_small_initial_compute_done_298
+.L_small_initial_partial_block_298:
 
 
 
@@ -41618,32 +41618,32 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_cxouotnlpalgxmB:
+.L_small_initial_compute_done_298:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_cxouotnlpalgxmB
+	je	.L_after_reduction_298
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_cxouotnlpalgxmB:
-	jmp	.L_last_blocks_done_aChEemefGGhwnFB
-.L_last_num_blocks_is_8_aChEemefGGhwnFB:
+.L_after_reduction_298:
+	jmp	.L_last_blocks_done_284
+.L_last_num_blocks_is_8_284:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$248,%r15d
-	jae	.L_16_blocks_overflow_DvwlGgkmfBGEyGc
+	jae	.L_16_blocks_overflow_299
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
-	jmp	.L_16_blocks_ok_DvwlGgkmfBGEyGc
+	jmp	.L_16_blocks_ok_299
 
-.L_16_blocks_overflow_DvwlGgkmfBGEyGc:
+.L_16_blocks_overflow_299:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
-.L_16_blocks_ok_DvwlGgkmfBGEyGc:
+.L_16_blocks_ok_299:
 
 
 
@@ -41749,7 +41749,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_EqsEaucdawdajlq
+	jl	.L_small_initial_partial_block_300
 
 
 
@@ -41803,8 +41803,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_EqsEaucdawdajlq
-.L_small_initial_partial_block_EqsEaucdawdajlq:
+	jmp	.L_small_initial_compute_done_300
+.L_small_initial_partial_block_300:
 
 
 
@@ -41859,26 +41859,26 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_EqsEaucdawdajlq:
+.L_small_initial_compute_done_300:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_EqsEaucdawdajlq
+	je	.L_after_reduction_300
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_EqsEaucdawdajlq:
-	jmp	.L_last_blocks_done_aChEemefGGhwnFB
-.L_last_num_blocks_is_9_aChEemefGGhwnFB:
+.L_after_reduction_300:
+	jmp	.L_last_blocks_done_284
+.L_last_num_blocks_is_9_284:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$247,%r15d
-	jae	.L_16_blocks_overflow_msogFyEhEitGsdf
+	jae	.L_16_blocks_overflow_301
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%xmm27,%xmm3,%xmm4
-	jmp	.L_16_blocks_ok_msogFyEhEitGsdf
+	jmp	.L_16_blocks_ok_301
 
-.L_16_blocks_overflow_msogFyEhEitGsdf:
+.L_16_blocks_overflow_301:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -41887,7 +41887,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%xmm29,%xmm4,%xmm4
-.L_16_blocks_ok_msogFyEhEitGsdf:
+.L_16_blocks_ok_301:
 
 
 
@@ -42010,7 +42010,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_sapjknpxtioDDAG
+	jl	.L_small_initial_partial_block_302
 
 
 
@@ -42070,8 +42070,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_sapjknpxtioDDAG
-.L_small_initial_partial_block_sapjknpxtioDDAG:
+	jmp	.L_small_initial_compute_done_302
+.L_small_initial_partial_block_302:
 
 
 
@@ -42128,26 +42128,26 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_sapjknpxtioDDAG:
+.L_small_initial_compute_done_302:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_sapjknpxtioDDAG
+	je	.L_after_reduction_302
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_sapjknpxtioDDAG:
-	jmp	.L_last_blocks_done_aChEemefGGhwnFB
-.L_last_num_blocks_is_10_aChEemefGGhwnFB:
+.L_after_reduction_302:
+	jmp	.L_last_blocks_done_284
+.L_last_num_blocks_is_10_284:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$246,%r15d
-	jae	.L_16_blocks_overflow_BncDDCdFiFfirCh
+	jae	.L_16_blocks_overflow_303
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%ymm27,%ymm3,%ymm4
-	jmp	.L_16_blocks_ok_BncDDCdFiFfirCh
+	jmp	.L_16_blocks_ok_303
 
-.L_16_blocks_overflow_BncDDCdFiFfirCh:
+.L_16_blocks_overflow_303:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -42156,7 +42156,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%ymm29,%ymm4,%ymm4
-.L_16_blocks_ok_BncDDCdFiFfirCh:
+.L_16_blocks_ok_303:
 
 
 
@@ -42279,7 +42279,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_gwCjqnwjusEyDGE
+	jl	.L_small_initial_partial_block_304
 
 
 
@@ -42339,8 +42339,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_gwCjqnwjusEyDGE
-.L_small_initial_partial_block_gwCjqnwjusEyDGE:
+	jmp	.L_small_initial_compute_done_304
+.L_small_initial_partial_block_304:
 
 
 
@@ -42403,26 +42403,26 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_gwCjqnwjusEyDGE:
+.L_small_initial_compute_done_304:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_gwCjqnwjusEyDGE
+	je	.L_after_reduction_304
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_gwCjqnwjusEyDGE:
-	jmp	.L_last_blocks_done_aChEemefGGhwnFB
-.L_last_num_blocks_is_11_aChEemefGGhwnFB:
+.L_after_reduction_304:
+	jmp	.L_last_blocks_done_284
+.L_last_num_blocks_is_11_284:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$245,%r15d
-	jae	.L_16_blocks_overflow_eavDybzxFpBAoxE
+	jae	.L_16_blocks_overflow_305
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
-	jmp	.L_16_blocks_ok_eavDybzxFpBAoxE
+	jmp	.L_16_blocks_ok_305
 
-.L_16_blocks_overflow_eavDybzxFpBAoxE:
+.L_16_blocks_overflow_305:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -42431,7 +42431,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
-.L_16_blocks_ok_eavDybzxFpBAoxE:
+.L_16_blocks_ok_305:
 
 
 
@@ -42554,7 +42554,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_zxCknzfsjGCqDxu
+	jl	.L_small_initial_partial_block_306
 
 
 
@@ -42615,8 +42615,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_zxCknzfsjGCqDxu
-.L_small_initial_partial_block_zxCknzfsjGCqDxu:
+	jmp	.L_small_initial_compute_done_306
+.L_small_initial_partial_block_306:
 
 
 
@@ -42679,26 +42679,26 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_zxCknzfsjGCqDxu:
+.L_small_initial_compute_done_306:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_zxCknzfsjGCqDxu
+	je	.L_after_reduction_306
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_zxCknzfsjGCqDxu:
-	jmp	.L_last_blocks_done_aChEemefGGhwnFB
-.L_last_num_blocks_is_12_aChEemefGGhwnFB:
+.L_after_reduction_306:
+	jmp	.L_last_blocks_done_284
+.L_last_num_blocks_is_12_284:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$244,%r15d
-	jae	.L_16_blocks_overflow_jfAFEisxEvlqocA
+	jae	.L_16_blocks_overflow_307
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
-	jmp	.L_16_blocks_ok_jfAFEisxEvlqocA
+	jmp	.L_16_blocks_ok_307
 
-.L_16_blocks_overflow_jfAFEisxEvlqocA:
+.L_16_blocks_overflow_307:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -42707,7 +42707,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
-.L_16_blocks_ok_jfAFEisxEvlqocA:
+.L_16_blocks_ok_307:
 
 
 
@@ -42830,7 +42830,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_fpcnnreFjEbphei
+	jl	.L_small_initial_partial_block_308
 
 
 
@@ -42889,8 +42889,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_fpcnnreFjEbphei
-.L_small_initial_partial_block_fpcnnreFjEbphei:
+	jmp	.L_small_initial_compute_done_308
+.L_small_initial_partial_block_308:
 
 
 
@@ -42954,27 +42954,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_fpcnnreFjEbphei:
+.L_small_initial_compute_done_308:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_fpcnnreFjEbphei
+	je	.L_after_reduction_308
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_fpcnnreFjEbphei:
-	jmp	.L_last_blocks_done_aChEemefGGhwnFB
-.L_last_num_blocks_is_13_aChEemefGGhwnFB:
+.L_after_reduction_308:
+	jmp	.L_last_blocks_done_284
+.L_last_num_blocks_is_13_284:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$243,%r15d
-	jae	.L_16_blocks_overflow_cijuDFfpzqAxzar
+	jae	.L_16_blocks_overflow_309
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%xmm27,%xmm4,%xmm5
-	jmp	.L_16_blocks_ok_cijuDFfpzqAxzar
+	jmp	.L_16_blocks_ok_309
 
-.L_16_blocks_overflow_cijuDFfpzqAxzar:
+.L_16_blocks_overflow_309:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -42985,7 +42985,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%xmm29,%xmm5,%xmm5
-.L_16_blocks_ok_cijuDFfpzqAxzar:
+.L_16_blocks_ok_309:
 
 
 
@@ -43125,7 +43125,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_BFkDdDDwljbGtGn
+	jl	.L_small_initial_partial_block_310
 
 
 
@@ -43190,8 +43190,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_BFkDdDDwljbGtGn
-.L_small_initial_partial_block_BFkDdDDwljbGtGn:
+	jmp	.L_small_initial_compute_done_310
+.L_small_initial_partial_block_310:
 
 
 
@@ -43253,27 +43253,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_BFkDdDDwljbGtGn:
+.L_small_initial_compute_done_310:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_BFkDdDDwljbGtGn
+	je	.L_after_reduction_310
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_BFkDdDDwljbGtGn:
-	jmp	.L_last_blocks_done_aChEemefGGhwnFB
-.L_last_num_blocks_is_14_aChEemefGGhwnFB:
+.L_after_reduction_310:
+	jmp	.L_last_blocks_done_284
+.L_last_num_blocks_is_14_284:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$242,%r15d
-	jae	.L_16_blocks_overflow_khcwhnBjmqtzmcs
+	jae	.L_16_blocks_overflow_311
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%ymm27,%ymm4,%ymm5
-	jmp	.L_16_blocks_ok_khcwhnBjmqtzmcs
+	jmp	.L_16_blocks_ok_311
 
-.L_16_blocks_overflow_khcwhnBjmqtzmcs:
+.L_16_blocks_overflow_311:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -43284,7 +43284,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%ymm29,%ymm5,%ymm5
-.L_16_blocks_ok_khcwhnBjmqtzmcs:
+.L_16_blocks_ok_311:
 
 
 
@@ -43424,7 +43424,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_vDdylefrsvsqjBq
+	jl	.L_small_initial_partial_block_312
 
 
 
@@ -43489,8 +43489,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_vDdylefrsvsqjBq
-.L_small_initial_partial_block_vDdylefrsvsqjBq:
+	jmp	.L_small_initial_compute_done_312
+.L_small_initial_partial_block_312:
 
 
 
@@ -43558,27 +43558,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_vDdylefrsvsqjBq:
+.L_small_initial_compute_done_312:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_vDdylefrsvsqjBq
+	je	.L_after_reduction_312
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_vDdylefrsvsqjBq:
-	jmp	.L_last_blocks_done_aChEemefGGhwnFB
-.L_last_num_blocks_is_15_aChEemefGGhwnFB:
+.L_after_reduction_312:
+	jmp	.L_last_blocks_done_284
+.L_last_num_blocks_is_15_284:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$241,%r15d
-	jae	.L_16_blocks_overflow_exBgwvimxEqfqBv
+	jae	.L_16_blocks_overflow_313
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_exBgwvimxEqfqBv
+	jmp	.L_16_blocks_ok_313
 
-.L_16_blocks_overflow_exBgwvimxEqfqBv:
+.L_16_blocks_overflow_313:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -43589,7 +43589,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_exBgwvimxEqfqBv:
+.L_16_blocks_ok_313:
 
 
 
@@ -43729,7 +43729,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_msDGmhxdmqnmvpn
+	jl	.L_small_initial_partial_block_314
 
 
 
@@ -43795,8 +43795,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_msDGmhxdmqnmvpn
-.L_small_initial_partial_block_msDGmhxdmqnmvpn:
+	jmp	.L_small_initial_compute_done_314
+.L_small_initial_partial_block_314:
 
 
 
@@ -43864,27 +43864,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_msDGmhxdmqnmvpn:
+.L_small_initial_compute_done_314:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_msDGmhxdmqnmvpn
+	je	.L_after_reduction_314
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_msDGmhxdmqnmvpn:
-	jmp	.L_last_blocks_done_aChEemefGGhwnFB
-.L_last_num_blocks_is_16_aChEemefGGhwnFB:
+.L_after_reduction_314:
+	jmp	.L_last_blocks_done_284
+.L_last_num_blocks_is_16_284:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$240,%r15d
-	jae	.L_16_blocks_overflow_eEfAkeacFCedvzl
+	jae	.L_16_blocks_overflow_315
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_eEfAkeacFCedvzl
+	jmp	.L_16_blocks_ok_315
 
-.L_16_blocks_overflow_eEfAkeacFCedvzl:
+.L_16_blocks_overflow_315:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -43895,7 +43895,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_eEfAkeacFCedvzl:
+.L_16_blocks_ok_315:
 
 
 
@@ -44032,7 +44032,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm5,%zmm21
 	vextracti32x4	$3,%zmm21,%xmm7
 	subq	$16 * (16 - 1),%r8
-.L_small_initial_partial_block_jgeuqhctmzuFheu:
+.L_small_initial_partial_block_316:
 
 
 
@@ -44101,11 +44101,11 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_jgeuqhctmzuFheu:
+.L_small_initial_compute_done_316:
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_jgeuqhctmzuFheu:
-	jmp	.L_last_blocks_done_aChEemefGGhwnFB
-.L_last_num_blocks_is_0_aChEemefGGhwnFB:
+.L_after_reduction_316:
+	jmp	.L_last_blocks_done_284
+.L_last_num_blocks_is_0_284:
 	vmovdqa64	768(%rsp),%zmm13
 	vpxorq	%zmm14,%zmm13,%zmm13
 	vmovdqu64	0(%rsp,%rbx,1),%zmm12
@@ -44167,65 +44167,65 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm24,%xmm3,%xmm14
 
-.L_last_blocks_done_aChEemefGGhwnFB:
+.L_last_blocks_done_284:
 	vpshufb	%xmm29,%xmm2,%xmm2
-	jmp	.L_ghash_done_uygCycEksAzDBkF
+	jmp	.L_ghash_done_172
 
-.L_message_below_equal_16_blocks_uygCycEksAzDBkF:
+.L_message_below_equal_16_blocks_172:
 
 
 	movl	%r8d,%r12d
 	addl	$15,%r12d
 	shrl	$4,%r12d
 	cmpq	$8,%r12
-	je	.L_small_initial_num_blocks_is_8_EvedxoaiihwrrcE
-	jl	.L_small_initial_num_blocks_is_7_1_EvedxoaiihwrrcE
+	je	.L_small_initial_num_blocks_is_8_317
+	jl	.L_small_initial_num_blocks_is_7_1_317
 
 
 	cmpq	$12,%r12
-	je	.L_small_initial_num_blocks_is_12_EvedxoaiihwrrcE
-	jl	.L_small_initial_num_blocks_is_11_9_EvedxoaiihwrrcE
+	je	.L_small_initial_num_blocks_is_12_317
+	jl	.L_small_initial_num_blocks_is_11_9_317
 
 
 	cmpq	$16,%r12
-	je	.L_small_initial_num_blocks_is_16_EvedxoaiihwrrcE
+	je	.L_small_initial_num_blocks_is_16_317
 	cmpq	$15,%r12
-	je	.L_small_initial_num_blocks_is_15_EvedxoaiihwrrcE
+	je	.L_small_initial_num_blocks_is_15_317
 	cmpq	$14,%r12
-	je	.L_small_initial_num_blocks_is_14_EvedxoaiihwrrcE
-	jmp	.L_small_initial_num_blocks_is_13_EvedxoaiihwrrcE
+	je	.L_small_initial_num_blocks_is_14_317
+	jmp	.L_small_initial_num_blocks_is_13_317
 
-.L_small_initial_num_blocks_is_11_9_EvedxoaiihwrrcE:
+.L_small_initial_num_blocks_is_11_9_317:
 
 	cmpq	$11,%r12
-	je	.L_small_initial_num_blocks_is_11_EvedxoaiihwrrcE
+	je	.L_small_initial_num_blocks_is_11_317
 	cmpq	$10,%r12
-	je	.L_small_initial_num_blocks_is_10_EvedxoaiihwrrcE
-	jmp	.L_small_initial_num_blocks_is_9_EvedxoaiihwrrcE
+	je	.L_small_initial_num_blocks_is_10_317
+	jmp	.L_small_initial_num_blocks_is_9_317
 
-.L_small_initial_num_blocks_is_7_1_EvedxoaiihwrrcE:
+.L_small_initial_num_blocks_is_7_1_317:
 	cmpq	$4,%r12
-	je	.L_small_initial_num_blocks_is_4_EvedxoaiihwrrcE
-	jl	.L_small_initial_num_blocks_is_3_1_EvedxoaiihwrrcE
+	je	.L_small_initial_num_blocks_is_4_317
+	jl	.L_small_initial_num_blocks_is_3_1_317
 
 	cmpq	$7,%r12
-	je	.L_small_initial_num_blocks_is_7_EvedxoaiihwrrcE
+	je	.L_small_initial_num_blocks_is_7_317
 	cmpq	$6,%r12
-	je	.L_small_initial_num_blocks_is_6_EvedxoaiihwrrcE
-	jmp	.L_small_initial_num_blocks_is_5_EvedxoaiihwrrcE
+	je	.L_small_initial_num_blocks_is_6_317
+	jmp	.L_small_initial_num_blocks_is_5_317
 
-.L_small_initial_num_blocks_is_3_1_EvedxoaiihwrrcE:
+.L_small_initial_num_blocks_is_3_1_317:
 
 	cmpq	$3,%r12
-	je	.L_small_initial_num_blocks_is_3_EvedxoaiihwrrcE
+	je	.L_small_initial_num_blocks_is_3_317
 	cmpq	$2,%r12
-	je	.L_small_initial_num_blocks_is_2_EvedxoaiihwrrcE
+	je	.L_small_initial_num_blocks_is_2_317
 
 
 
 
 
-.L_small_initial_num_blocks_is_1_EvedxoaiihwrrcE:
+.L_small_initial_num_blocks_is_1_317:
 	vmovdqa64	SHUF_MASK(%rip),%xmm29
 	vpaddd	ONE(%rip),%xmm2,%xmm0
 	leaq	byte64_len_to_mask_table(%rip),%r10
@@ -44270,7 +44270,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_ErCGEpxtitsmnky
+	jl	.L_small_initial_partial_block_318
 
 
 
@@ -44312,8 +44312,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_ErCGEpxtitsmnky
-.L_small_initial_partial_block_ErCGEpxtitsmnky:
+	jmp	.L_small_initial_compute_done_318
+.L_small_initial_partial_block_318:
 
 
 
@@ -44337,11 +44337,11 @@ ossl_aes_gcm_encrypt_avx512:
 
 	vpxorq	%xmm13,%xmm14,%xmm14
 
-	jmp	.L_after_reduction_ErCGEpxtitsmnky
-.L_small_initial_compute_done_ErCGEpxtitsmnky:
-.L_after_reduction_ErCGEpxtitsmnky:
-	jmp	.L_small_initial_blocks_encrypted_EvedxoaiihwrrcE
-.L_small_initial_num_blocks_is_2_EvedxoaiihwrrcE:
+	jmp	.L_after_reduction_318
+.L_small_initial_compute_done_318:
+.L_after_reduction_318:
+	jmp	.L_small_initial_blocks_encrypted_317
+.L_small_initial_num_blocks_is_2_317:
 	vmovdqa64	SHUF_MASK(%rip),%ymm29
 	vshufi64x2	$0,%ymm2,%ymm2,%ymm0
 	vpaddd	ddq_add_1234(%rip),%ymm0,%ymm0
@@ -44388,7 +44388,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_uifmqfFatbcjlwb
+	jl	.L_small_initial_partial_block_319
 
 
 
@@ -44430,8 +44430,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_uifmqfFatbcjlwb
-.L_small_initial_partial_block_uifmqfFatbcjlwb:
+	jmp	.L_small_initial_compute_done_319
+.L_small_initial_partial_block_319:
 
 
 
@@ -44476,14 +44476,14 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_uifmqfFatbcjlwb:
+.L_small_initial_compute_done_319:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_uifmqfFatbcjlwb
+	je	.L_after_reduction_319
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_uifmqfFatbcjlwb:
-	jmp	.L_small_initial_blocks_encrypted_EvedxoaiihwrrcE
-.L_small_initial_num_blocks_is_3_EvedxoaiihwrrcE:
+.L_after_reduction_319:
+	jmp	.L_small_initial_blocks_encrypted_317
+.L_small_initial_num_blocks_is_3_317:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -44530,7 +44530,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_qaklvgujdsvtCdD
+	jl	.L_small_initial_partial_block_320
 
 
 
@@ -44573,8 +44573,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_qaklvgujdsvtCdD
-.L_small_initial_partial_block_qaklvgujdsvtCdD:
+	jmp	.L_small_initial_compute_done_320
+.L_small_initial_partial_block_320:
 
 
 
@@ -44619,14 +44619,14 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_qaklvgujdsvtCdD:
+.L_small_initial_compute_done_320:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_qaklvgujdsvtCdD
+	je	.L_after_reduction_320
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_qaklvgujdsvtCdD:
-	jmp	.L_small_initial_blocks_encrypted_EvedxoaiihwrrcE
-.L_small_initial_num_blocks_is_4_EvedxoaiihwrrcE:
+.L_after_reduction_320:
+	jmp	.L_small_initial_blocks_encrypted_317
+.L_small_initial_num_blocks_is_4_317:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -44673,7 +44673,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_FFmmcojDDcGGpaw
+	jl	.L_small_initial_partial_block_321
 
 
 
@@ -44715,8 +44715,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_FFmmcojDDcGGpaw
-.L_small_initial_partial_block_FFmmcojDDcGGpaw:
+	jmp	.L_small_initial_compute_done_321
+.L_small_initial_partial_block_321:
 
 
 
@@ -44762,14 +44762,14 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_FFmmcojDDcGGpaw:
+.L_small_initial_compute_done_321:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_FFmmcojDDcGGpaw
+	je	.L_after_reduction_321
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_FFmmcojDDcGGpaw:
-	jmp	.L_small_initial_blocks_encrypted_EvedxoaiihwrrcE
-.L_small_initial_num_blocks_is_5_EvedxoaiihwrrcE:
+.L_after_reduction_321:
+	jmp	.L_small_initial_blocks_encrypted_317
+.L_small_initial_num_blocks_is_5_317:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -44836,7 +44836,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_vwmcucnqdDfhsuE
+	jl	.L_small_initial_partial_block_322
 
 
 
@@ -44888,8 +44888,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_vwmcucnqdDfhsuE
-.L_small_initial_partial_block_vwmcucnqdDfhsuE:
+	jmp	.L_small_initial_compute_done_322
+.L_small_initial_partial_block_322:
 
 
 
@@ -44934,14 +44934,14 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_vwmcucnqdDfhsuE:
+.L_small_initial_compute_done_322:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_vwmcucnqdDfhsuE
+	je	.L_after_reduction_322
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_vwmcucnqdDfhsuE:
-	jmp	.L_small_initial_blocks_encrypted_EvedxoaiihwrrcE
-.L_small_initial_num_blocks_is_6_EvedxoaiihwrrcE:
+.L_after_reduction_322:
+	jmp	.L_small_initial_blocks_encrypted_317
+.L_small_initial_num_blocks_is_6_317:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -45008,7 +45008,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_cpaemktswxjwjnC
+	jl	.L_small_initial_partial_block_323
 
 
 
@@ -45060,8 +45060,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_cpaemktswxjwjnC
-.L_small_initial_partial_block_cpaemktswxjwjnC:
+	jmp	.L_small_initial_compute_done_323
+.L_small_initial_partial_block_323:
 
 
 
@@ -45116,14 +45116,14 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_cpaemktswxjwjnC:
+.L_small_initial_compute_done_323:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_cpaemktswxjwjnC
+	je	.L_after_reduction_323
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_cpaemktswxjwjnC:
-	jmp	.L_small_initial_blocks_encrypted_EvedxoaiihwrrcE
-.L_small_initial_num_blocks_is_7_EvedxoaiihwrrcE:
+.L_after_reduction_323:
+	jmp	.L_small_initial_blocks_encrypted_317
+.L_small_initial_num_blocks_is_7_317:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -45190,7 +45190,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_wkpgstjroklpiwk
+	jl	.L_small_initial_partial_block_324
 
 
 
@@ -45243,8 +45243,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_wkpgstjroklpiwk
-.L_small_initial_partial_block_wkpgstjroklpiwk:
+	jmp	.L_small_initial_compute_done_324
+.L_small_initial_partial_block_324:
 
 
 
@@ -45299,14 +45299,14 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_wkpgstjroklpiwk:
+.L_small_initial_compute_done_324:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_wkpgstjroklpiwk
+	je	.L_after_reduction_324
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_wkpgstjroklpiwk:
-	jmp	.L_small_initial_blocks_encrypted_EvedxoaiihwrrcE
-.L_small_initial_num_blocks_is_8_EvedxoaiihwrrcE:
+.L_after_reduction_324:
+	jmp	.L_small_initial_blocks_encrypted_317
+.L_small_initial_num_blocks_is_8_317:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -45373,7 +45373,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_qpsGkqfsjEAzvvp
+	jl	.L_small_initial_partial_block_325
 
 
 
@@ -45424,8 +45424,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_qpsGkqfsjEAzvvp
-.L_small_initial_partial_block_qpsGkqfsjEAzvvp:
+	jmp	.L_small_initial_compute_done_325
+.L_small_initial_partial_block_325:
 
 
 
@@ -45481,14 +45481,14 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_qpsGkqfsjEAzvvp:
+.L_small_initial_compute_done_325:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_qpsGkqfsjEAzvvp
+	je	.L_after_reduction_325
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_qpsGkqfsjEAzvvp:
-	jmp	.L_small_initial_blocks_encrypted_EvedxoaiihwrrcE
-.L_small_initial_num_blocks_is_9_EvedxoaiihwrrcE:
+.L_after_reduction_325:
+	jmp	.L_small_initial_blocks_encrypted_317
+.L_small_initial_num_blocks_is_9_317:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -45574,7 +45574,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_cxdfBeqyydznCEu
+	jl	.L_small_initial_partial_block_326
 
 
 
@@ -45635,8 +45635,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_cxdfBeqyydznCEu
-.L_small_initial_partial_block_cxdfBeqyydznCEu:
+	jmp	.L_small_initial_compute_done_326
+.L_small_initial_partial_block_326:
 
 
 
@@ -45690,14 +45690,14 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_cxdfBeqyydznCEu:
+.L_small_initial_compute_done_326:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_cxdfBeqyydznCEu
+	je	.L_after_reduction_326
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_cxdfBeqyydznCEu:
-	jmp	.L_small_initial_blocks_encrypted_EvedxoaiihwrrcE
-.L_small_initial_num_blocks_is_10_EvedxoaiihwrrcE:
+.L_after_reduction_326:
+	jmp	.L_small_initial_blocks_encrypted_317
+.L_small_initial_num_blocks_is_10_317:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -45783,7 +45783,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_AsiBxkDAnGixicy
+	jl	.L_small_initial_partial_block_327
 
 
 
@@ -45844,8 +45844,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_AsiBxkDAnGixicy
-.L_small_initial_partial_block_AsiBxkDAnGixicy:
+	jmp	.L_small_initial_compute_done_327
+.L_small_initial_partial_block_327:
 
 
 
@@ -45909,14 +45909,14 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_AsiBxkDAnGixicy:
+.L_small_initial_compute_done_327:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_AsiBxkDAnGixicy
+	je	.L_after_reduction_327
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_AsiBxkDAnGixicy:
-	jmp	.L_small_initial_blocks_encrypted_EvedxoaiihwrrcE
-.L_small_initial_num_blocks_is_11_EvedxoaiihwrrcE:
+.L_after_reduction_327:
+	jmp	.L_small_initial_blocks_encrypted_317
+.L_small_initial_num_blocks_is_11_317:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -46002,7 +46002,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_AjytgsjyDjfroqq
+	jl	.L_small_initial_partial_block_328
 
 
 
@@ -46064,8 +46064,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_AjytgsjyDjfroqq
-.L_small_initial_partial_block_AjytgsjyDjfroqq:
+	jmp	.L_small_initial_compute_done_328
+.L_small_initial_partial_block_328:
 
 
 
@@ -46129,14 +46129,14 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_AjytgsjyDjfroqq:
+.L_small_initial_compute_done_328:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_AjytgsjyDjfroqq
+	je	.L_after_reduction_328
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_AjytgsjyDjfroqq:
-	jmp	.L_small_initial_blocks_encrypted_EvedxoaiihwrrcE
-.L_small_initial_num_blocks_is_12_EvedxoaiihwrrcE:
+.L_after_reduction_328:
+	jmp	.L_small_initial_blocks_encrypted_317
+.L_small_initial_num_blocks_is_12_317:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -46222,7 +46222,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_DrBDwbilgutamCE
+	jl	.L_small_initial_partial_block_329
 
 
 
@@ -46278,8 +46278,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_DrBDwbilgutamCE
-.L_small_initial_partial_block_DrBDwbilgutamCE:
+	jmp	.L_small_initial_compute_done_329
+.L_small_initial_partial_block_329:
 
 
 
@@ -46344,14 +46344,14 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_DrBDwbilgutamCE:
+.L_small_initial_compute_done_329:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_DrBDwbilgutamCE
+	je	.L_after_reduction_329
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_DrBDwbilgutamCE:
-	jmp	.L_small_initial_blocks_encrypted_EvedxoaiihwrrcE
-.L_small_initial_num_blocks_is_13_EvedxoaiihwrrcE:
+.L_after_reduction_329:
+	jmp	.L_small_initial_blocks_encrypted_317
+.L_small_initial_num_blocks_is_13_317:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -46456,7 +46456,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_znDfwthApEtiyDq
+	jl	.L_small_initial_partial_block_330
 
 
 
@@ -46522,8 +46522,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_znDfwthApEtiyDq
-.L_small_initial_partial_block_znDfwthApEtiyDq:
+	jmp	.L_small_initial_compute_done_330
+.L_small_initial_partial_block_330:
 
 
 
@@ -46582,14 +46582,14 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_znDfwthApEtiyDq:
+.L_small_initial_compute_done_330:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_znDfwthApEtiyDq
+	je	.L_after_reduction_330
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_znDfwthApEtiyDq:
-	jmp	.L_small_initial_blocks_encrypted_EvedxoaiihwrrcE
-.L_small_initial_num_blocks_is_14_EvedxoaiihwrrcE:
+.L_after_reduction_330:
+	jmp	.L_small_initial_blocks_encrypted_317
+.L_small_initial_num_blocks_is_14_317:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -46694,7 +46694,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_kqeuFxFeDxGkpoA
+	jl	.L_small_initial_partial_block_331
 
 
 
@@ -46760,8 +46760,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_kqeuFxFeDxGkpoA
-.L_small_initial_partial_block_kqeuFxFeDxGkpoA:
+	jmp	.L_small_initial_compute_done_331
+.L_small_initial_partial_block_331:
 
 
 
@@ -46830,14 +46830,14 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_kqeuFxFeDxGkpoA:
+.L_small_initial_compute_done_331:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_kqeuFxFeDxGkpoA
+	je	.L_after_reduction_331
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_kqeuFxFeDxGkpoA:
-	jmp	.L_small_initial_blocks_encrypted_EvedxoaiihwrrcE
-.L_small_initial_num_blocks_is_15_EvedxoaiihwrrcE:
+.L_after_reduction_331:
+	jmp	.L_small_initial_blocks_encrypted_317
+.L_small_initial_num_blocks_is_15_317:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -46942,7 +46942,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_zovxxEfazoFbeex
+	jl	.L_small_initial_partial_block_332
 
 
 
@@ -47009,8 +47009,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_zovxxEfazoFbeex
-.L_small_initial_partial_block_zovxxEfazoFbeex:
+	jmp	.L_small_initial_compute_done_332
+.L_small_initial_partial_block_332:
 
 
 
@@ -47079,14 +47079,14 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_zovxxEfazoFbeex:
+.L_small_initial_compute_done_332:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_zovxxEfazoFbeex
+	je	.L_after_reduction_332
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_zovxxEfazoFbeex:
-	jmp	.L_small_initial_blocks_encrypted_EvedxoaiihwrrcE
-.L_small_initial_num_blocks_is_16_EvedxoaiihwrrcE:
+.L_after_reduction_332:
+	jmp	.L_small_initial_blocks_encrypted_317
+.L_small_initial_num_blocks_is_16_317:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -47188,7 +47188,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm5,%zmm11
 	vextracti32x4	$3,%zmm11,%xmm13
 	subq	$16 * (16 - 1),%r8
-.L_small_initial_partial_block_nDtiFpkergzzhGo:
+.L_small_initial_partial_block_333:
 
 
 
@@ -47258,25 +47258,25 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_nDtiFpkergzzhGo:
+.L_small_initial_compute_done_333:
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_nDtiFpkergzzhGo:
-.L_small_initial_blocks_encrypted_EvedxoaiihwrrcE:
-.L_ghash_done_uygCycEksAzDBkF:
+.L_after_reduction_333:
+.L_small_initial_blocks_encrypted_317:
+.L_ghash_done_172:
 	vmovdqu64	%xmm2,0(%rsi)
 	vmovdqu64	%xmm14,64(%rsi)
-.L_enc_dec_done_uygCycEksAzDBkF:
+.L_enc_dec_done_172:
 	jmp	.Lexit_gcm_encrypt
 .align	32
 .Laes_gcm_encrypt_256_avx512:
 	orq	%r8,%r8
-	je	.L_enc_dec_done_iygyqoBzBDrEGDx
+	je	.L_enc_dec_done_334
 	xorq	%r14,%r14
 	vmovdqu64	64(%rsi),%xmm14
 
 	movq	(%rdx),%r11
 	orq	%r11,%r11
-	je	.L_partial_block_done_zqvgkDsEbegulfh
+	je	.L_partial_block_done_335
 	movl	$16,%r10d
 	leaq	byte_len_to_mask_table(%rip),%r12
 	cmpq	%r10,%r8
@@ -47298,9 +47298,9 @@ ossl_aes_gcm_encrypt_avx512:
 
 	leaq	(%r8,%r11,1),%r13
 	subq	$16,%r13
-	jge	.L_no_extra_mask_zqvgkDsEbegulfh
+	jge	.L_no_extra_mask_335
 	subq	%r13,%r12
-.L_no_extra_mask_zqvgkDsEbegulfh:
+.L_no_extra_mask_335:
 
 
 
@@ -47310,7 +47310,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%xmm5,%xmm3,%xmm3
 	vpxorq	%xmm3,%xmm14,%xmm14
 	cmpq	$0,%r13
-	jl	.L_partial_incomplete_zqvgkDsEbegulfh
+	jl	.L_partial_incomplete_335
 
 	vpclmulqdq	$0x11,%xmm4,%xmm14,%xmm7
 	vpclmulqdq	$0x00,%xmm4,%xmm14,%xmm10
@@ -47345,13 +47345,13 @@ ossl_aes_gcm_encrypt_avx512:
 	movq	%r11,%r12
 	movq	$16,%r11
 	subq	%r12,%r11
-	jmp	.L_enc_dec_done_zqvgkDsEbegulfh
+	jmp	.L_enc_dec_done_335
 
-.L_partial_incomplete_zqvgkDsEbegulfh:
+.L_partial_incomplete_335:
 	addq	%r8,(%rdx)
 	movq	%r8,%r11
 
-.L_enc_dec_done_zqvgkDsEbegulfh:
+.L_enc_dec_done_335:
 
 
 	leaq	byte_len_to_mask_table(%rip),%r12
@@ -47362,12 +47362,12 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%xmm5,%xmm3,%xmm3
 	movq	%r9,%r12
 	vmovdqu8	%xmm3,(%r12){%k1}
-.L_partial_block_done_zqvgkDsEbegulfh:
+.L_partial_block_done_335:
 	vmovdqu64	0(%rsi),%xmm2
 	subq	%r11,%r8
-	je	.L_enc_dec_done_iygyqoBzBDrEGDx
+	je	.L_enc_dec_done_334
 	cmpq	$256,%r8
-	jbe	.L_message_below_equal_16_blocks_iygyqoBzBDrEGDx
+	jbe	.L_message_below_equal_16_blocks_334
 
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vmovdqa64	ddq_addbe_4444(%rip),%zmm27
@@ -47387,13 +47387,13 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpb	$240,%r15b
-	jae	.L_next_16_overflow_aBaodoDalGDlscs
+	jae	.L_next_16_overflow_336
 	vpaddd	%zmm28,%zmm2,%zmm7
 	vpaddd	%zmm27,%zmm7,%zmm10
 	vpaddd	%zmm27,%zmm10,%zmm11
 	vpaddd	%zmm27,%zmm11,%zmm12
-	jmp	.L_next_16_ok_aBaodoDalGDlscs
-.L_next_16_overflow_aBaodoDalGDlscs:
+	jmp	.L_next_16_ok_336
+.L_next_16_overflow_336:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vmovdqa64	ddq_add_4444(%rip),%zmm12
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm7
@@ -47404,7 +47404,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm10,%zmm10
 	vpshufb	%zmm29,%zmm11,%zmm11
 	vpshufb	%zmm29,%zmm12,%zmm12
-.L_next_16_ok_aBaodoDalGDlscs:
+.L_next_16_ok_336:
 	vshufi64x2	$255,%zmm12,%zmm12,%zmm2
 	addb	$16,%r15b
 
@@ -47512,7 +47512,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vmovdqa64	%zmm11,896(%rsp)
 	vmovdqa64	%zmm12,960(%rsp)
 	testq	%r14,%r14
-	jnz	.L_skip_hkeys_precomputation_nACbkenyBhACdaq
+	jnz	.L_skip_hkeys_precomputation_337
 
 	vmovdqu64	288(%rsi),%zmm0
 	vmovdqu64	%zmm0,704(%rsp)
@@ -47528,20 +47528,20 @@ ossl_aes_gcm_encrypt_avx512:
 
 	vmovdqu64	96(%rsi),%zmm5
 	vmovdqu64	%zmm5,512(%rsp)
-.L_skip_hkeys_precomputation_nACbkenyBhACdaq:
+.L_skip_hkeys_precomputation_337:
 	cmpq	$512,%r8
-	jb	.L_message_below_32_blocks_iygyqoBzBDrEGDx
+	jb	.L_message_below_32_blocks_334
 
 
 
 	cmpb	$240,%r15b
-	jae	.L_next_16_overflow_CamFmzClAsuGlCt
+	jae	.L_next_16_overflow_338
 	vpaddd	%zmm28,%zmm2,%zmm7
 	vpaddd	%zmm27,%zmm7,%zmm10
 	vpaddd	%zmm27,%zmm10,%zmm11
 	vpaddd	%zmm27,%zmm11,%zmm12
-	jmp	.L_next_16_ok_CamFmzClAsuGlCt
-.L_next_16_overflow_CamFmzClAsuGlCt:
+	jmp	.L_next_16_ok_338
+.L_next_16_overflow_338:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vmovdqa64	ddq_add_4444(%rip),%zmm12
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm7
@@ -47552,7 +47552,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm10,%zmm10
 	vpshufb	%zmm29,%zmm11,%zmm11
 	vpshufb	%zmm29,%zmm12,%zmm12
-.L_next_16_ok_CamFmzClAsuGlCt:
+.L_next_16_ok_338:
 	vshufi64x2	$255,%zmm12,%zmm12,%zmm2
 	addb	$16,%r15b
 
@@ -47660,7 +47660,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vmovdqa64	%zmm11,1152(%rsp)
 	vmovdqa64	%zmm12,1216(%rsp)
 	testq	%r14,%r14
-	jnz	.L_skip_hkeys_precomputation_BFugbEtChDDskcj
+	jnz	.L_skip_hkeys_precomputation_339
 	vmovdqu64	640(%rsp),%zmm3
 
 
@@ -47908,22 +47908,22 @@ ossl_aes_gcm_encrypt_avx512:
 	vpternlogq	$0x96,%zmm7,%zmm6,%zmm5
 
 	vmovdqu64	%zmm5,0(%rsp)
-.L_skip_hkeys_precomputation_BFugbEtChDDskcj:
+.L_skip_hkeys_precomputation_339:
 	movq	$1,%r14
 	addq	$512,%r11
 	subq	$512,%r8
 
 	cmpq	$768,%r8
-	jb	.L_no_more_big_nblocks_iygyqoBzBDrEGDx
-.L_encrypt_big_nblocks_iygyqoBzBDrEGDx:
+	jb	.L_no_more_big_nblocks_334
+.L_encrypt_big_nblocks_334:
 	cmpb	$240,%r15b
-	jae	.L_16_blocks_overflow_mgxaEdDpcutwwFl
+	jae	.L_16_blocks_overflow_340
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_mgxaEdDpcutwwFl
-.L_16_blocks_overflow_mgxaEdDpcutwwFl:
+	jmp	.L_16_blocks_ok_340
+.L_16_blocks_overflow_340:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -47934,7 +47934,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_mgxaEdDpcutwwFl:
+.L_16_blocks_ok_340:
 	vbroadcastf64x2	0(%rdi),%zmm30
 	vpxorq	768(%rsp),%zmm14,%zmm8
 	vmovdqu64	0(%rsp),%zmm1
@@ -48122,13 +48122,13 @@ ossl_aes_gcm_encrypt_avx512:
 	vmovdqa64	%zmm4,1408(%rsp)
 	vmovdqa64	%zmm5,1472(%rsp)
 	cmpb	$240,%r15b
-	jae	.L_16_blocks_overflow_uvCdiswBAmoeClq
+	jae	.L_16_blocks_overflow_341
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_uvCdiswBAmoeClq
-.L_16_blocks_overflow_uvCdiswBAmoeClq:
+	jmp	.L_16_blocks_ok_341
+.L_16_blocks_overflow_341:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -48139,7 +48139,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_uvCdiswBAmoeClq:
+.L_16_blocks_ok_341:
 	vbroadcastf64x2	0(%rdi),%zmm30
 	vmovdqa64	1024(%rsp),%zmm8
 	vmovdqu64	256(%rsp),%zmm1
@@ -48327,13 +48327,13 @@ ossl_aes_gcm_encrypt_avx512:
 	vmovdqa64	%zmm4,896(%rsp)
 	vmovdqa64	%zmm5,960(%rsp)
 	cmpb	$240,%r15b
-	jae	.L_16_blocks_overflow_aGacoydrhrbkAcx
+	jae	.L_16_blocks_overflow_342
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_aGacoydrhrbkAcx
-.L_16_blocks_overflow_aGacoydrhrbkAcx:
+	jmp	.L_16_blocks_ok_342
+.L_16_blocks_overflow_342:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -48344,7 +48344,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_aGacoydrhrbkAcx:
+.L_16_blocks_ok_342:
 	vbroadcastf64x2	0(%rdi),%zmm30
 	vmovdqa64	1280(%rsp),%zmm8
 	vmovdqu64	512(%rsp),%zmm1
@@ -48562,16 +48562,16 @@ ossl_aes_gcm_encrypt_avx512:
 	addq	$768,%r11
 	subq	$768,%r8
 	cmpq	$768,%r8
-	jae	.L_encrypt_big_nblocks_iygyqoBzBDrEGDx
+	jae	.L_encrypt_big_nblocks_334
 
-.L_no_more_big_nblocks_iygyqoBzBDrEGDx:
+.L_no_more_big_nblocks_334:
 
 	cmpq	$512,%r8
-	jae	.L_encrypt_32_blocks_iygyqoBzBDrEGDx
+	jae	.L_encrypt_32_blocks_334
 
 	cmpq	$256,%r8
-	jae	.L_encrypt_16_blocks_iygyqoBzBDrEGDx
-.L_encrypt_0_blocks_ghash_32_iygyqoBzBDrEGDx:
+	jae	.L_encrypt_16_blocks_334
+.L_encrypt_0_blocks_ghash_32_334:
 	movl	%r8d,%r10d
 	andl	$~15,%r10d
 	movl	$256,%ebx
@@ -48614,61 +48614,61 @@ ossl_aes_gcm_encrypt_avx512:
 	movl	%r8d,%r10d
 	addl	$15,%r10d
 	shrl	$4,%r10d
-	je	.L_last_num_blocks_is_0_aCrznswshDckglE
+	je	.L_last_num_blocks_is_0_343
 
 	cmpl	$8,%r10d
-	je	.L_last_num_blocks_is_8_aCrznswshDckglE
-	jb	.L_last_num_blocks_is_7_1_aCrznswshDckglE
+	je	.L_last_num_blocks_is_8_343
+	jb	.L_last_num_blocks_is_7_1_343
 
 
 	cmpl	$12,%r10d
-	je	.L_last_num_blocks_is_12_aCrznswshDckglE
-	jb	.L_last_num_blocks_is_11_9_aCrznswshDckglE
+	je	.L_last_num_blocks_is_12_343
+	jb	.L_last_num_blocks_is_11_9_343
 
 
 	cmpl	$15,%r10d
-	je	.L_last_num_blocks_is_15_aCrznswshDckglE
-	ja	.L_last_num_blocks_is_16_aCrznswshDckglE
+	je	.L_last_num_blocks_is_15_343
+	ja	.L_last_num_blocks_is_16_343
 	cmpl	$14,%r10d
-	je	.L_last_num_blocks_is_14_aCrznswshDckglE
-	jmp	.L_last_num_blocks_is_13_aCrznswshDckglE
+	je	.L_last_num_blocks_is_14_343
+	jmp	.L_last_num_blocks_is_13_343
 
-.L_last_num_blocks_is_11_9_aCrznswshDckglE:
+.L_last_num_blocks_is_11_9_343:
 
 	cmpl	$10,%r10d
-	je	.L_last_num_blocks_is_10_aCrznswshDckglE
-	ja	.L_last_num_blocks_is_11_aCrznswshDckglE
-	jmp	.L_last_num_blocks_is_9_aCrznswshDckglE
+	je	.L_last_num_blocks_is_10_343
+	ja	.L_last_num_blocks_is_11_343
+	jmp	.L_last_num_blocks_is_9_343
 
-.L_last_num_blocks_is_7_1_aCrznswshDckglE:
+.L_last_num_blocks_is_7_1_343:
 	cmpl	$4,%r10d
-	je	.L_last_num_blocks_is_4_aCrznswshDckglE
-	jb	.L_last_num_blocks_is_3_1_aCrznswshDckglE
+	je	.L_last_num_blocks_is_4_343
+	jb	.L_last_num_blocks_is_3_1_343
 
 	cmpl	$6,%r10d
-	ja	.L_last_num_blocks_is_7_aCrznswshDckglE
-	je	.L_last_num_blocks_is_6_aCrznswshDckglE
-	jmp	.L_last_num_blocks_is_5_aCrznswshDckglE
+	ja	.L_last_num_blocks_is_7_343
+	je	.L_last_num_blocks_is_6_343
+	jmp	.L_last_num_blocks_is_5_343
 
-.L_last_num_blocks_is_3_1_aCrznswshDckglE:
+.L_last_num_blocks_is_3_1_343:
 
 	cmpl	$2,%r10d
-	ja	.L_last_num_blocks_is_3_aCrznswshDckglE
-	je	.L_last_num_blocks_is_2_aCrznswshDckglE
-.L_last_num_blocks_is_1_aCrznswshDckglE:
+	ja	.L_last_num_blocks_is_3_343
+	je	.L_last_num_blocks_is_2_343
+.L_last_num_blocks_is_1_343:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$255,%r15d
-	jae	.L_16_blocks_overflow_imDloyfGzcwFyko
+	jae	.L_16_blocks_overflow_344
 	vpaddd	%xmm28,%xmm2,%xmm0
-	jmp	.L_16_blocks_ok_imDloyfGzcwFyko
+	jmp	.L_16_blocks_ok_344
 
-.L_16_blocks_overflow_imDloyfGzcwFyko:
+.L_16_blocks_overflow_344:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%xmm29,%xmm0,%xmm0
-.L_16_blocks_ok_imDloyfGzcwFyko:
+.L_16_blocks_ok_344:
 
 
 
@@ -48760,7 +48760,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_anxblbdqmokbGEi
+	jl	.L_small_initial_partial_block_345
 
 
 
@@ -48804,8 +48804,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_anxblbdqmokbGEi
-.L_small_initial_partial_block_anxblbdqmokbGEi:
+	jmp	.L_small_initial_compute_done_345
+.L_small_initial_partial_block_345:
 
 
 
@@ -48857,24 +48857,24 @@ ossl_aes_gcm_encrypt_avx512:
 
 	vpxorq	%xmm7,%xmm14,%xmm14
 
-	jmp	.L_after_reduction_anxblbdqmokbGEi
-.L_small_initial_compute_done_anxblbdqmokbGEi:
-.L_after_reduction_anxblbdqmokbGEi:
-	jmp	.L_last_blocks_done_aCrznswshDckglE
-.L_last_num_blocks_is_2_aCrznswshDckglE:
+	jmp	.L_after_reduction_345
+.L_small_initial_compute_done_345:
+.L_after_reduction_345:
+	jmp	.L_last_blocks_done_343
+.L_last_num_blocks_is_2_343:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$254,%r15d
-	jae	.L_16_blocks_overflow_ddwAjklcmGuEyvo
+	jae	.L_16_blocks_overflow_346
 	vpaddd	%ymm28,%ymm2,%ymm0
-	jmp	.L_16_blocks_ok_ddwAjklcmGuEyvo
+	jmp	.L_16_blocks_ok_346
 
-.L_16_blocks_overflow_ddwAjklcmGuEyvo:
+.L_16_blocks_overflow_346:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%ymm29,%ymm0,%ymm0
-.L_16_blocks_ok_ddwAjklcmGuEyvo:
+.L_16_blocks_ok_346:
 
 
 
@@ -48967,7 +48967,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_vaAdhFryBdFjhsf
+	jl	.L_small_initial_partial_block_347
 
 
 
@@ -49011,8 +49011,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_vaAdhFryBdFjhsf
-.L_small_initial_partial_block_vaAdhFryBdFjhsf:
+	jmp	.L_small_initial_compute_done_347
+.L_small_initial_partial_block_347:
 
 
 
@@ -49059,27 +49059,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_vaAdhFryBdFjhsf:
+.L_small_initial_compute_done_347:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_vaAdhFryBdFjhsf
+	je	.L_after_reduction_347
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_vaAdhFryBdFjhsf:
-	jmp	.L_last_blocks_done_aCrznswshDckglE
-.L_last_num_blocks_is_3_aCrznswshDckglE:
+.L_after_reduction_347:
+	jmp	.L_last_blocks_done_343
+.L_last_num_blocks_is_3_343:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$253,%r15d
-	jae	.L_16_blocks_overflow_yrCpcDaqqfralaq
+	jae	.L_16_blocks_overflow_348
 	vpaddd	%zmm28,%zmm2,%zmm0
-	jmp	.L_16_blocks_ok_yrCpcDaqqfralaq
+	jmp	.L_16_blocks_ok_348
 
-.L_16_blocks_overflow_yrCpcDaqqfralaq:
+.L_16_blocks_overflow_348:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%zmm29,%zmm0,%zmm0
-.L_16_blocks_ok_yrCpcDaqqfralaq:
+.L_16_blocks_ok_348:
 
 
 
@@ -49172,7 +49172,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_CDsECFbohACFrrl
+	jl	.L_small_initial_partial_block_349
 
 
 
@@ -49217,8 +49217,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_CDsECFbohACFrrl
-.L_small_initial_partial_block_CDsECFbohACFrrl:
+	jmp	.L_small_initial_compute_done_349
+.L_small_initial_partial_block_349:
 
 
 
@@ -49265,27 +49265,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_CDsECFbohACFrrl:
+.L_small_initial_compute_done_349:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_CDsECFbohACFrrl
+	je	.L_after_reduction_349
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_CDsECFbohACFrrl:
-	jmp	.L_last_blocks_done_aCrznswshDckglE
-.L_last_num_blocks_is_4_aCrznswshDckglE:
+.L_after_reduction_349:
+	jmp	.L_last_blocks_done_343
+.L_last_num_blocks_is_4_343:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$252,%r15d
-	jae	.L_16_blocks_overflow_sgiuliygzmneAFv
+	jae	.L_16_blocks_overflow_350
 	vpaddd	%zmm28,%zmm2,%zmm0
-	jmp	.L_16_blocks_ok_sgiuliygzmneAFv
+	jmp	.L_16_blocks_ok_350
 
-.L_16_blocks_overflow_sgiuliygzmneAFv:
+.L_16_blocks_overflow_350:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%zmm29,%zmm0,%zmm0
-.L_16_blocks_ok_sgiuliygzmneAFv:
+.L_16_blocks_ok_350:
 
 
 
@@ -49378,7 +49378,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_utqasCzEFDDjwFr
+	jl	.L_small_initial_partial_block_351
 
 
 
@@ -49423,8 +49423,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_utqasCzEFDDjwFr
-.L_small_initial_partial_block_utqasCzEFDDjwFr:
+	jmp	.L_small_initial_compute_done_351
+.L_small_initial_partial_block_351:
 
 
 
@@ -49472,32 +49472,32 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_utqasCzEFDDjwFr:
+.L_small_initial_compute_done_351:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_utqasCzEFDDjwFr
+	je	.L_after_reduction_351
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_utqasCzEFDDjwFr:
-	jmp	.L_last_blocks_done_aCrznswshDckglE
-.L_last_num_blocks_is_5_aCrznswshDckglE:
+.L_after_reduction_351:
+	jmp	.L_last_blocks_done_343
+.L_last_num_blocks_is_5_343:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$251,%r15d
-	jae	.L_16_blocks_overflow_iFvhEAiemvnphyy
+	jae	.L_16_blocks_overflow_352
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%xmm27,%xmm0,%xmm3
-	jmp	.L_16_blocks_ok_iFvhEAiemvnphyy
+	jmp	.L_16_blocks_ok_352
 
-.L_16_blocks_overflow_iFvhEAiemvnphyy:
+.L_16_blocks_overflow_352:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%xmm29,%xmm3,%xmm3
-.L_16_blocks_ok_iFvhEAiemvnphyy:
+.L_16_blocks_ok_352:
 
 
 
@@ -49609,7 +49609,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_pGjiilmmfwDafnh
+	jl	.L_small_initial_partial_block_353
 
 
 
@@ -49660,8 +49660,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_pGjiilmmfwDafnh
-.L_small_initial_partial_block_pGjiilmmfwDafnh:
+	jmp	.L_small_initial_compute_done_353
+.L_small_initial_partial_block_353:
 
 
 
@@ -49709,32 +49709,32 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_pGjiilmmfwDafnh:
+.L_small_initial_compute_done_353:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_pGjiilmmfwDafnh
+	je	.L_after_reduction_353
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_pGjiilmmfwDafnh:
-	jmp	.L_last_blocks_done_aCrznswshDckglE
-.L_last_num_blocks_is_6_aCrznswshDckglE:
+.L_after_reduction_353:
+	jmp	.L_last_blocks_done_343
+.L_last_num_blocks_is_6_343:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$250,%r15d
-	jae	.L_16_blocks_overflow_hiCAnCAyuwhiEGn
+	jae	.L_16_blocks_overflow_354
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%ymm27,%ymm0,%ymm3
-	jmp	.L_16_blocks_ok_hiCAnCAyuwhiEGn
+	jmp	.L_16_blocks_ok_354
 
-.L_16_blocks_overflow_hiCAnCAyuwhiEGn:
+.L_16_blocks_overflow_354:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%ymm29,%ymm3,%ymm3
-.L_16_blocks_ok_hiCAnCAyuwhiEGn:
+.L_16_blocks_ok_354:
 
 
 
@@ -49846,7 +49846,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_EfCfnarADotlzkj
+	jl	.L_small_initial_partial_block_355
 
 
 
@@ -49897,8 +49897,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_EfCfnarADotlzkj
-.L_small_initial_partial_block_EfCfnarADotlzkj:
+	jmp	.L_small_initial_compute_done_355
+.L_small_initial_partial_block_355:
 
 
 
@@ -49952,32 +49952,32 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_EfCfnarADotlzkj:
+.L_small_initial_compute_done_355:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_EfCfnarADotlzkj
+	je	.L_after_reduction_355
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_EfCfnarADotlzkj:
-	jmp	.L_last_blocks_done_aCrznswshDckglE
-.L_last_num_blocks_is_7_aCrznswshDckglE:
+.L_after_reduction_355:
+	jmp	.L_last_blocks_done_343
+.L_last_num_blocks_is_7_343:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$249,%r15d
-	jae	.L_16_blocks_overflow_jdsrggiFgcaxDsd
+	jae	.L_16_blocks_overflow_356
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
-	jmp	.L_16_blocks_ok_jdsrggiFgcaxDsd
+	jmp	.L_16_blocks_ok_356
 
-.L_16_blocks_overflow_jdsrggiFgcaxDsd:
+.L_16_blocks_overflow_356:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
-.L_16_blocks_ok_jdsrggiFgcaxDsd:
+.L_16_blocks_ok_356:
 
 
 
@@ -50089,7 +50089,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_ipbqzpCeGnbjBkq
+	jl	.L_small_initial_partial_block_357
 
 
 
@@ -50141,8 +50141,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_ipbqzpCeGnbjBkq
-.L_small_initial_partial_block_ipbqzpCeGnbjBkq:
+	jmp	.L_small_initial_compute_done_357
+.L_small_initial_partial_block_357:
 
 
 
@@ -50196,32 +50196,32 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_ipbqzpCeGnbjBkq:
+.L_small_initial_compute_done_357:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_ipbqzpCeGnbjBkq
+	je	.L_after_reduction_357
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_ipbqzpCeGnbjBkq:
-	jmp	.L_last_blocks_done_aCrznswshDckglE
-.L_last_num_blocks_is_8_aCrznswshDckglE:
+.L_after_reduction_357:
+	jmp	.L_last_blocks_done_343
+.L_last_num_blocks_is_8_343:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$248,%r15d
-	jae	.L_16_blocks_overflow_zzpwuboDaryrADA
+	jae	.L_16_blocks_overflow_358
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
-	jmp	.L_16_blocks_ok_zzpwuboDaryrADA
+	jmp	.L_16_blocks_ok_358
 
-.L_16_blocks_overflow_zzpwuboDaryrADA:
+.L_16_blocks_overflow_358:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
-.L_16_blocks_ok_zzpwuboDaryrADA:
+.L_16_blocks_ok_358:
 
 
 
@@ -50333,7 +50333,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_EBtpEDqEjbcdsju
+	jl	.L_small_initial_partial_block_359
 
 
 
@@ -50387,8 +50387,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_EBtpEDqEjbcdsju
-.L_small_initial_partial_block_EBtpEDqEjbcdsju:
+	jmp	.L_small_initial_compute_done_359
+.L_small_initial_partial_block_359:
 
 
 
@@ -50443,26 +50443,26 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_EBtpEDqEjbcdsju:
+.L_small_initial_compute_done_359:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_EBtpEDqEjbcdsju
+	je	.L_after_reduction_359
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_EBtpEDqEjbcdsju:
-	jmp	.L_last_blocks_done_aCrznswshDckglE
-.L_last_num_blocks_is_9_aCrznswshDckglE:
+.L_after_reduction_359:
+	jmp	.L_last_blocks_done_343
+.L_last_num_blocks_is_9_343:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$247,%r15d
-	jae	.L_16_blocks_overflow_uAhsdrFiklzvFua
+	jae	.L_16_blocks_overflow_360
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%xmm27,%xmm3,%xmm4
-	jmp	.L_16_blocks_ok_uAhsdrFiklzvFua
+	jmp	.L_16_blocks_ok_360
 
-.L_16_blocks_overflow_uAhsdrFiklzvFua:
+.L_16_blocks_overflow_360:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -50471,7 +50471,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%xmm29,%xmm4,%xmm4
-.L_16_blocks_ok_uAhsdrFiklzvFua:
+.L_16_blocks_ok_360:
 
 
 
@@ -50602,7 +50602,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_qimdfBypdFskivz
+	jl	.L_small_initial_partial_block_361
 
 
 
@@ -50662,8 +50662,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_qimdfBypdFskivz
-.L_small_initial_partial_block_qimdfBypdFskivz:
+	jmp	.L_small_initial_compute_done_361
+.L_small_initial_partial_block_361:
 
 
 
@@ -50720,26 +50720,26 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_qimdfBypdFskivz:
+.L_small_initial_compute_done_361:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_qimdfBypdFskivz
+	je	.L_after_reduction_361
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_qimdfBypdFskivz:
-	jmp	.L_last_blocks_done_aCrznswshDckglE
-.L_last_num_blocks_is_10_aCrznswshDckglE:
+.L_after_reduction_361:
+	jmp	.L_last_blocks_done_343
+.L_last_num_blocks_is_10_343:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$246,%r15d
-	jae	.L_16_blocks_overflow_EwxbDxxxyrAaxlF
+	jae	.L_16_blocks_overflow_362
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%ymm27,%ymm3,%ymm4
-	jmp	.L_16_blocks_ok_EwxbDxxxyrAaxlF
+	jmp	.L_16_blocks_ok_362
 
-.L_16_blocks_overflow_EwxbDxxxyrAaxlF:
+.L_16_blocks_overflow_362:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -50748,7 +50748,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%ymm29,%ymm4,%ymm4
-.L_16_blocks_ok_EwxbDxxxyrAaxlF:
+.L_16_blocks_ok_362:
 
 
 
@@ -50879,7 +50879,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_nkaelugyCjhfuyc
+	jl	.L_small_initial_partial_block_363
 
 
 
@@ -50939,8 +50939,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_nkaelugyCjhfuyc
-.L_small_initial_partial_block_nkaelugyCjhfuyc:
+	jmp	.L_small_initial_compute_done_363
+.L_small_initial_partial_block_363:
 
 
 
@@ -51003,26 +51003,26 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_nkaelugyCjhfuyc:
+.L_small_initial_compute_done_363:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_nkaelugyCjhfuyc
+	je	.L_after_reduction_363
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_nkaelugyCjhfuyc:
-	jmp	.L_last_blocks_done_aCrznswshDckglE
-.L_last_num_blocks_is_11_aCrznswshDckglE:
+.L_after_reduction_363:
+	jmp	.L_last_blocks_done_343
+.L_last_num_blocks_is_11_343:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$245,%r15d
-	jae	.L_16_blocks_overflow_yjBGqlojalhBqya
+	jae	.L_16_blocks_overflow_364
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
-	jmp	.L_16_blocks_ok_yjBGqlojalhBqya
+	jmp	.L_16_blocks_ok_364
 
-.L_16_blocks_overflow_yjBGqlojalhBqya:
+.L_16_blocks_overflow_364:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -51031,7 +51031,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
-.L_16_blocks_ok_yjBGqlojalhBqya:
+.L_16_blocks_ok_364:
 
 
 
@@ -51162,7 +51162,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_upsvhpflcyjzqob
+	jl	.L_small_initial_partial_block_365
 
 
 
@@ -51223,8 +51223,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_upsvhpflcyjzqob
-.L_small_initial_partial_block_upsvhpflcyjzqob:
+	jmp	.L_small_initial_compute_done_365
+.L_small_initial_partial_block_365:
 
 
 
@@ -51287,26 +51287,26 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_upsvhpflcyjzqob:
+.L_small_initial_compute_done_365:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_upsvhpflcyjzqob
+	je	.L_after_reduction_365
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_upsvhpflcyjzqob:
-	jmp	.L_last_blocks_done_aCrznswshDckglE
-.L_last_num_blocks_is_12_aCrznswshDckglE:
+.L_after_reduction_365:
+	jmp	.L_last_blocks_done_343
+.L_last_num_blocks_is_12_343:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$244,%r15d
-	jae	.L_16_blocks_overflow_GBFtfyCisxaCDeo
+	jae	.L_16_blocks_overflow_366
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
-	jmp	.L_16_blocks_ok_GBFtfyCisxaCDeo
+	jmp	.L_16_blocks_ok_366
 
-.L_16_blocks_overflow_GBFtfyCisxaCDeo:
+.L_16_blocks_overflow_366:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -51315,7 +51315,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
-.L_16_blocks_ok_GBFtfyCisxaCDeo:
+.L_16_blocks_ok_366:
 
 
 
@@ -51446,7 +51446,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_jxqolABemjDcGoa
+	jl	.L_small_initial_partial_block_367
 
 
 
@@ -51505,8 +51505,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_jxqolABemjDcGoa
-.L_small_initial_partial_block_jxqolABemjDcGoa:
+	jmp	.L_small_initial_compute_done_367
+.L_small_initial_partial_block_367:
 
 
 
@@ -51570,27 +51570,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_jxqolABemjDcGoa:
+.L_small_initial_compute_done_367:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_jxqolABemjDcGoa
+	je	.L_after_reduction_367
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_jxqolABemjDcGoa:
-	jmp	.L_last_blocks_done_aCrznswshDckglE
-.L_last_num_blocks_is_13_aCrznswshDckglE:
+.L_after_reduction_367:
+	jmp	.L_last_blocks_done_343
+.L_last_num_blocks_is_13_343:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$243,%r15d
-	jae	.L_16_blocks_overflow_pmblFxwdwCDyeEp
+	jae	.L_16_blocks_overflow_368
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%xmm27,%xmm4,%xmm5
-	jmp	.L_16_blocks_ok_pmblFxwdwCDyeEp
+	jmp	.L_16_blocks_ok_368
 
-.L_16_blocks_overflow_pmblFxwdwCDyeEp:
+.L_16_blocks_overflow_368:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -51601,7 +51601,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%xmm29,%xmm5,%xmm5
-.L_16_blocks_ok_pmblFxwdwCDyeEp:
+.L_16_blocks_ok_368:
 
 
 
@@ -51751,7 +51751,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_AlbyExeFEFqjDkc
+	jl	.L_small_initial_partial_block_369
 
 
 
@@ -51816,8 +51816,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_AlbyExeFEFqjDkc
-.L_small_initial_partial_block_AlbyExeFEFqjDkc:
+	jmp	.L_small_initial_compute_done_369
+.L_small_initial_partial_block_369:
 
 
 
@@ -51879,27 +51879,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_AlbyExeFEFqjDkc:
+.L_small_initial_compute_done_369:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_AlbyExeFEFqjDkc
+	je	.L_after_reduction_369
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_AlbyExeFEFqjDkc:
-	jmp	.L_last_blocks_done_aCrznswshDckglE
-.L_last_num_blocks_is_14_aCrznswshDckglE:
+.L_after_reduction_369:
+	jmp	.L_last_blocks_done_343
+.L_last_num_blocks_is_14_343:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$242,%r15d
-	jae	.L_16_blocks_overflow_rbhrvgyqqDGtipE
+	jae	.L_16_blocks_overflow_370
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%ymm27,%ymm4,%ymm5
-	jmp	.L_16_blocks_ok_rbhrvgyqqDGtipE
+	jmp	.L_16_blocks_ok_370
 
-.L_16_blocks_overflow_rbhrvgyqqDGtipE:
+.L_16_blocks_overflow_370:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -51910,7 +51910,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%ymm29,%ymm5,%ymm5
-.L_16_blocks_ok_rbhrvgyqqDGtipE:
+.L_16_blocks_ok_370:
 
 
 
@@ -52060,7 +52060,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_zrFyAGcGCExrFql
+	jl	.L_small_initial_partial_block_371
 
 
 
@@ -52125,8 +52125,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_zrFyAGcGCExrFql
-.L_small_initial_partial_block_zrFyAGcGCExrFql:
+	jmp	.L_small_initial_compute_done_371
+.L_small_initial_partial_block_371:
 
 
 
@@ -52194,27 +52194,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_zrFyAGcGCExrFql:
+.L_small_initial_compute_done_371:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_zrFyAGcGCExrFql
+	je	.L_after_reduction_371
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_zrFyAGcGCExrFql:
-	jmp	.L_last_blocks_done_aCrznswshDckglE
-.L_last_num_blocks_is_15_aCrznswshDckglE:
+.L_after_reduction_371:
+	jmp	.L_last_blocks_done_343
+.L_last_num_blocks_is_15_343:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$241,%r15d
-	jae	.L_16_blocks_overflow_rFsEaCnGaplhzeu
+	jae	.L_16_blocks_overflow_372
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_rFsEaCnGaplhzeu
+	jmp	.L_16_blocks_ok_372
 
-.L_16_blocks_overflow_rFsEaCnGaplhzeu:
+.L_16_blocks_overflow_372:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -52225,7 +52225,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_rFsEaCnGaplhzeu:
+.L_16_blocks_ok_372:
 
 
 
@@ -52375,7 +52375,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_embEaDBkjsBkfvo
+	jl	.L_small_initial_partial_block_373
 
 
 
@@ -52441,8 +52441,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_embEaDBkjsBkfvo
-.L_small_initial_partial_block_embEaDBkjsBkfvo:
+	jmp	.L_small_initial_compute_done_373
+.L_small_initial_partial_block_373:
 
 
 
@@ -52510,27 +52510,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_embEaDBkjsBkfvo:
+.L_small_initial_compute_done_373:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_embEaDBkjsBkfvo
+	je	.L_after_reduction_373
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_embEaDBkjsBkfvo:
-	jmp	.L_last_blocks_done_aCrznswshDckglE
-.L_last_num_blocks_is_16_aCrznswshDckglE:
+.L_after_reduction_373:
+	jmp	.L_last_blocks_done_343
+.L_last_num_blocks_is_16_343:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$240,%r15d
-	jae	.L_16_blocks_overflow_jlBCFmxmthqAqub
+	jae	.L_16_blocks_overflow_374
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_jlBCFmxmthqAqub
+	jmp	.L_16_blocks_ok_374
 
-.L_16_blocks_overflow_jlBCFmxmthqAqub:
+.L_16_blocks_overflow_374:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -52541,7 +52541,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_jlBCFmxmthqAqub:
+.L_16_blocks_ok_374:
 
 
 
@@ -52688,7 +52688,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm5,%zmm21
 	vextracti32x4	$3,%zmm21,%xmm7
 	subq	$16 * (16 - 1),%r8
-.L_small_initial_partial_block_odaisFyfxykzsub:
+.L_small_initial_partial_block_375:
 
 
 
@@ -52757,11 +52757,11 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_odaisFyfxykzsub:
+.L_small_initial_compute_done_375:
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_odaisFyfxykzsub:
-	jmp	.L_last_blocks_done_aCrznswshDckglE
-.L_last_num_blocks_is_0_aCrznswshDckglE:
+.L_after_reduction_375:
+	jmp	.L_last_blocks_done_343
+.L_last_num_blocks_is_0_343:
 	vmovdqa64	1024(%rsp),%zmm13
 	vmovdqu64	0(%rsp,%rbx,1),%zmm12
 	vpclmulqdq	$0x11,%zmm12,%zmm13,%zmm0
@@ -52822,18 +52822,18 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm24,%xmm3,%xmm14
 
-.L_last_blocks_done_aCrznswshDckglE:
+.L_last_blocks_done_343:
 	vpshufb	%xmm29,%xmm2,%xmm2
-	jmp	.L_ghash_done_iygyqoBzBDrEGDx
-.L_encrypt_32_blocks_iygyqoBzBDrEGDx:
+	jmp	.L_ghash_done_334
+.L_encrypt_32_blocks_334:
 	cmpb	$240,%r15b
-	jae	.L_16_blocks_overflow_shbCqwuxatcarFk
+	jae	.L_16_blocks_overflow_376
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_shbCqwuxatcarFk
-.L_16_blocks_overflow_shbCqwuxatcarFk:
+	jmp	.L_16_blocks_ok_376
+.L_16_blocks_overflow_376:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -52844,7 +52844,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_shbCqwuxatcarFk:
+.L_16_blocks_ok_376:
 	vbroadcastf64x2	0(%rdi),%zmm30
 	vpxorq	768(%rsp),%zmm14,%zmm8
 	vmovdqu64	0(%rsp),%zmm1
@@ -53032,13 +53032,13 @@ ossl_aes_gcm_encrypt_avx512:
 	vmovdqa64	%zmm4,1408(%rsp)
 	vmovdqa64	%zmm5,1472(%rsp)
 	cmpb	$240,%r15b
-	jae	.L_16_blocks_overflow_qlsyayhgEdxuolb
+	jae	.L_16_blocks_overflow_377
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_qlsyayhgEdxuolb
-.L_16_blocks_overflow_qlsyayhgEdxuolb:
+	jmp	.L_16_blocks_ok_377
+.L_16_blocks_overflow_377:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -53049,7 +53049,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_qlsyayhgEdxuolb:
+.L_16_blocks_ok_377:
 	vbroadcastf64x2	0(%rdi),%zmm30
 	vmovdqa64	1024(%rsp),%zmm8
 	vmovdqu64	256(%rsp),%zmm1
@@ -53305,61 +53305,61 @@ ossl_aes_gcm_encrypt_avx512:
 	movl	%r8d,%r10d
 	addl	$15,%r10d
 	shrl	$4,%r10d
-	je	.L_last_num_blocks_is_0_btoesFmiotqivzq
+	je	.L_last_num_blocks_is_0_378
 
 	cmpl	$8,%r10d
-	je	.L_last_num_blocks_is_8_btoesFmiotqivzq
-	jb	.L_last_num_blocks_is_7_1_btoesFmiotqivzq
+	je	.L_last_num_blocks_is_8_378
+	jb	.L_last_num_blocks_is_7_1_378
 
 
 	cmpl	$12,%r10d
-	je	.L_last_num_blocks_is_12_btoesFmiotqivzq
-	jb	.L_last_num_blocks_is_11_9_btoesFmiotqivzq
+	je	.L_last_num_blocks_is_12_378
+	jb	.L_last_num_blocks_is_11_9_378
 
 
 	cmpl	$15,%r10d
-	je	.L_last_num_blocks_is_15_btoesFmiotqivzq
-	ja	.L_last_num_blocks_is_16_btoesFmiotqivzq
+	je	.L_last_num_blocks_is_15_378
+	ja	.L_last_num_blocks_is_16_378
 	cmpl	$14,%r10d
-	je	.L_last_num_blocks_is_14_btoesFmiotqivzq
-	jmp	.L_last_num_blocks_is_13_btoesFmiotqivzq
+	je	.L_last_num_blocks_is_14_378
+	jmp	.L_last_num_blocks_is_13_378
 
-.L_last_num_blocks_is_11_9_btoesFmiotqivzq:
+.L_last_num_blocks_is_11_9_378:
 
 	cmpl	$10,%r10d
-	je	.L_last_num_blocks_is_10_btoesFmiotqivzq
-	ja	.L_last_num_blocks_is_11_btoesFmiotqivzq
-	jmp	.L_last_num_blocks_is_9_btoesFmiotqivzq
+	je	.L_last_num_blocks_is_10_378
+	ja	.L_last_num_blocks_is_11_378
+	jmp	.L_last_num_blocks_is_9_378
 
-.L_last_num_blocks_is_7_1_btoesFmiotqivzq:
+.L_last_num_blocks_is_7_1_378:
 	cmpl	$4,%r10d
-	je	.L_last_num_blocks_is_4_btoesFmiotqivzq
-	jb	.L_last_num_blocks_is_3_1_btoesFmiotqivzq
+	je	.L_last_num_blocks_is_4_378
+	jb	.L_last_num_blocks_is_3_1_378
 
 	cmpl	$6,%r10d
-	ja	.L_last_num_blocks_is_7_btoesFmiotqivzq
-	je	.L_last_num_blocks_is_6_btoesFmiotqivzq
-	jmp	.L_last_num_blocks_is_5_btoesFmiotqivzq
+	ja	.L_last_num_blocks_is_7_378
+	je	.L_last_num_blocks_is_6_378
+	jmp	.L_last_num_blocks_is_5_378
 
-.L_last_num_blocks_is_3_1_btoesFmiotqivzq:
+.L_last_num_blocks_is_3_1_378:
 
 	cmpl	$2,%r10d
-	ja	.L_last_num_blocks_is_3_btoesFmiotqivzq
-	je	.L_last_num_blocks_is_2_btoesFmiotqivzq
-.L_last_num_blocks_is_1_btoesFmiotqivzq:
+	ja	.L_last_num_blocks_is_3_378
+	je	.L_last_num_blocks_is_2_378
+.L_last_num_blocks_is_1_378:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$255,%r15d
-	jae	.L_16_blocks_overflow_ykasuomdxjktbDA
+	jae	.L_16_blocks_overflow_379
 	vpaddd	%xmm28,%xmm2,%xmm0
-	jmp	.L_16_blocks_ok_ykasuomdxjktbDA
+	jmp	.L_16_blocks_ok_379
 
-.L_16_blocks_overflow_ykasuomdxjktbDA:
+.L_16_blocks_overflow_379:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%xmm29,%xmm0,%xmm0
-.L_16_blocks_ok_ykasuomdxjktbDA:
+.L_16_blocks_ok_379:
 
 
 
@@ -53451,7 +53451,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_tEnCdkciEyGxljp
+	jl	.L_small_initial_partial_block_380
 
 
 
@@ -53495,8 +53495,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_tEnCdkciEyGxljp
-.L_small_initial_partial_block_tEnCdkciEyGxljp:
+	jmp	.L_small_initial_compute_done_380
+.L_small_initial_partial_block_380:
 
 
 
@@ -53548,24 +53548,24 @@ ossl_aes_gcm_encrypt_avx512:
 
 	vpxorq	%xmm7,%xmm14,%xmm14
 
-	jmp	.L_after_reduction_tEnCdkciEyGxljp
-.L_small_initial_compute_done_tEnCdkciEyGxljp:
-.L_after_reduction_tEnCdkciEyGxljp:
-	jmp	.L_last_blocks_done_btoesFmiotqivzq
-.L_last_num_blocks_is_2_btoesFmiotqivzq:
+	jmp	.L_after_reduction_380
+.L_small_initial_compute_done_380:
+.L_after_reduction_380:
+	jmp	.L_last_blocks_done_378
+.L_last_num_blocks_is_2_378:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$254,%r15d
-	jae	.L_16_blocks_overflow_jyAcdjBuaExcddm
+	jae	.L_16_blocks_overflow_381
 	vpaddd	%ymm28,%ymm2,%ymm0
-	jmp	.L_16_blocks_ok_jyAcdjBuaExcddm
+	jmp	.L_16_blocks_ok_381
 
-.L_16_blocks_overflow_jyAcdjBuaExcddm:
+.L_16_blocks_overflow_381:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%ymm29,%ymm0,%ymm0
-.L_16_blocks_ok_jyAcdjBuaExcddm:
+.L_16_blocks_ok_381:
 
 
 
@@ -53658,7 +53658,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_kqoatuztgkstEbz
+	jl	.L_small_initial_partial_block_382
 
 
 
@@ -53702,8 +53702,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_kqoatuztgkstEbz
-.L_small_initial_partial_block_kqoatuztgkstEbz:
+	jmp	.L_small_initial_compute_done_382
+.L_small_initial_partial_block_382:
 
 
 
@@ -53750,27 +53750,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_kqoatuztgkstEbz:
+.L_small_initial_compute_done_382:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_kqoatuztgkstEbz
+	je	.L_after_reduction_382
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_kqoatuztgkstEbz:
-	jmp	.L_last_blocks_done_btoesFmiotqivzq
-.L_last_num_blocks_is_3_btoesFmiotqivzq:
+.L_after_reduction_382:
+	jmp	.L_last_blocks_done_378
+.L_last_num_blocks_is_3_378:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$253,%r15d
-	jae	.L_16_blocks_overflow_feEEqqeniDfFxCa
+	jae	.L_16_blocks_overflow_383
 	vpaddd	%zmm28,%zmm2,%zmm0
-	jmp	.L_16_blocks_ok_feEEqqeniDfFxCa
+	jmp	.L_16_blocks_ok_383
 
-.L_16_blocks_overflow_feEEqqeniDfFxCa:
+.L_16_blocks_overflow_383:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%zmm29,%zmm0,%zmm0
-.L_16_blocks_ok_feEEqqeniDfFxCa:
+.L_16_blocks_ok_383:
 
 
 
@@ -53863,7 +53863,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_DhDbgbdyGGbqwsv
+	jl	.L_small_initial_partial_block_384
 
 
 
@@ -53908,8 +53908,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_DhDbgbdyGGbqwsv
-.L_small_initial_partial_block_DhDbgbdyGGbqwsv:
+	jmp	.L_small_initial_compute_done_384
+.L_small_initial_partial_block_384:
 
 
 
@@ -53956,27 +53956,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_DhDbgbdyGGbqwsv:
+.L_small_initial_compute_done_384:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_DhDbgbdyGGbqwsv
+	je	.L_after_reduction_384
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_DhDbgbdyGGbqwsv:
-	jmp	.L_last_blocks_done_btoesFmiotqivzq
-.L_last_num_blocks_is_4_btoesFmiotqivzq:
+.L_after_reduction_384:
+	jmp	.L_last_blocks_done_378
+.L_last_num_blocks_is_4_378:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$252,%r15d
-	jae	.L_16_blocks_overflow_FpowsheAtkFuuam
+	jae	.L_16_blocks_overflow_385
 	vpaddd	%zmm28,%zmm2,%zmm0
-	jmp	.L_16_blocks_ok_FpowsheAtkFuuam
+	jmp	.L_16_blocks_ok_385
 
-.L_16_blocks_overflow_FpowsheAtkFuuam:
+.L_16_blocks_overflow_385:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%zmm29,%zmm0,%zmm0
-.L_16_blocks_ok_FpowsheAtkFuuam:
+.L_16_blocks_ok_385:
 
 
 
@@ -54069,7 +54069,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_gxjGhujutnupuuA
+	jl	.L_small_initial_partial_block_386
 
 
 
@@ -54114,8 +54114,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_gxjGhujutnupuuA
-.L_small_initial_partial_block_gxjGhujutnupuuA:
+	jmp	.L_small_initial_compute_done_386
+.L_small_initial_partial_block_386:
 
 
 
@@ -54163,32 +54163,32 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_gxjGhujutnupuuA:
+.L_small_initial_compute_done_386:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_gxjGhujutnupuuA
+	je	.L_after_reduction_386
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_gxjGhujutnupuuA:
-	jmp	.L_last_blocks_done_btoesFmiotqivzq
-.L_last_num_blocks_is_5_btoesFmiotqivzq:
+.L_after_reduction_386:
+	jmp	.L_last_blocks_done_378
+.L_last_num_blocks_is_5_378:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$251,%r15d
-	jae	.L_16_blocks_overflow_fxBvbhdGdeqfxpE
+	jae	.L_16_blocks_overflow_387
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%xmm27,%xmm0,%xmm3
-	jmp	.L_16_blocks_ok_fxBvbhdGdeqfxpE
+	jmp	.L_16_blocks_ok_387
 
-.L_16_blocks_overflow_fxBvbhdGdeqfxpE:
+.L_16_blocks_overflow_387:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%xmm29,%xmm3,%xmm3
-.L_16_blocks_ok_fxBvbhdGdeqfxpE:
+.L_16_blocks_ok_387:
 
 
 
@@ -54300,7 +54300,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_corxBoDpzcxzjCp
+	jl	.L_small_initial_partial_block_388
 
 
 
@@ -54351,8 +54351,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_corxBoDpzcxzjCp
-.L_small_initial_partial_block_corxBoDpzcxzjCp:
+	jmp	.L_small_initial_compute_done_388
+.L_small_initial_partial_block_388:
 
 
 
@@ -54400,32 +54400,32 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_corxBoDpzcxzjCp:
+.L_small_initial_compute_done_388:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_corxBoDpzcxzjCp
+	je	.L_after_reduction_388
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_corxBoDpzcxzjCp:
-	jmp	.L_last_blocks_done_btoesFmiotqivzq
-.L_last_num_blocks_is_6_btoesFmiotqivzq:
+.L_after_reduction_388:
+	jmp	.L_last_blocks_done_378
+.L_last_num_blocks_is_6_378:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$250,%r15d
-	jae	.L_16_blocks_overflow_eqqnvywtcBwBxFh
+	jae	.L_16_blocks_overflow_389
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%ymm27,%ymm0,%ymm3
-	jmp	.L_16_blocks_ok_eqqnvywtcBwBxFh
+	jmp	.L_16_blocks_ok_389
 
-.L_16_blocks_overflow_eqqnvywtcBwBxFh:
+.L_16_blocks_overflow_389:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%ymm29,%ymm3,%ymm3
-.L_16_blocks_ok_eqqnvywtcBwBxFh:
+.L_16_blocks_ok_389:
 
 
 
@@ -54537,7 +54537,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_ytuelzAGbgtGtfr
+	jl	.L_small_initial_partial_block_390
 
 
 
@@ -54588,8 +54588,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_ytuelzAGbgtGtfr
-.L_small_initial_partial_block_ytuelzAGbgtGtfr:
+	jmp	.L_small_initial_compute_done_390
+.L_small_initial_partial_block_390:
 
 
 
@@ -54643,32 +54643,32 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_ytuelzAGbgtGtfr:
+.L_small_initial_compute_done_390:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_ytuelzAGbgtGtfr
+	je	.L_after_reduction_390
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_ytuelzAGbgtGtfr:
-	jmp	.L_last_blocks_done_btoesFmiotqivzq
-.L_last_num_blocks_is_7_btoesFmiotqivzq:
+.L_after_reduction_390:
+	jmp	.L_last_blocks_done_378
+.L_last_num_blocks_is_7_378:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$249,%r15d
-	jae	.L_16_blocks_overflow_lfismiegtoxsceG
+	jae	.L_16_blocks_overflow_391
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
-	jmp	.L_16_blocks_ok_lfismiegtoxsceG
+	jmp	.L_16_blocks_ok_391
 
-.L_16_blocks_overflow_lfismiegtoxsceG:
+.L_16_blocks_overflow_391:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
-.L_16_blocks_ok_lfismiegtoxsceG:
+.L_16_blocks_ok_391:
 
 
 
@@ -54780,7 +54780,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_sBDghnoyhrCmBop
+	jl	.L_small_initial_partial_block_392
 
 
 
@@ -54832,8 +54832,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_sBDghnoyhrCmBop
-.L_small_initial_partial_block_sBDghnoyhrCmBop:
+	jmp	.L_small_initial_compute_done_392
+.L_small_initial_partial_block_392:
 
 
 
@@ -54887,32 +54887,32 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_sBDghnoyhrCmBop:
+.L_small_initial_compute_done_392:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_sBDghnoyhrCmBop
+	je	.L_after_reduction_392
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_sBDghnoyhrCmBop:
-	jmp	.L_last_blocks_done_btoesFmiotqivzq
-.L_last_num_blocks_is_8_btoesFmiotqivzq:
+.L_after_reduction_392:
+	jmp	.L_last_blocks_done_378
+.L_last_num_blocks_is_8_378:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$248,%r15d
-	jae	.L_16_blocks_overflow_cnxmjyrrxxDwctk
+	jae	.L_16_blocks_overflow_393
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
-	jmp	.L_16_blocks_ok_cnxmjyrrxxDwctk
+	jmp	.L_16_blocks_ok_393
 
-.L_16_blocks_overflow_cnxmjyrrxxDwctk:
+.L_16_blocks_overflow_393:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
-.L_16_blocks_ok_cnxmjyrrxxDwctk:
+.L_16_blocks_ok_393:
 
 
 
@@ -55024,7 +55024,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_zerxvifmubnFiAw
+	jl	.L_small_initial_partial_block_394
 
 
 
@@ -55078,8 +55078,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_zerxvifmubnFiAw
-.L_small_initial_partial_block_zerxvifmubnFiAw:
+	jmp	.L_small_initial_compute_done_394
+.L_small_initial_partial_block_394:
 
 
 
@@ -55134,26 +55134,26 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_zerxvifmubnFiAw:
+.L_small_initial_compute_done_394:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_zerxvifmubnFiAw
+	je	.L_after_reduction_394
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_zerxvifmubnFiAw:
-	jmp	.L_last_blocks_done_btoesFmiotqivzq
-.L_last_num_blocks_is_9_btoesFmiotqivzq:
+.L_after_reduction_394:
+	jmp	.L_last_blocks_done_378
+.L_last_num_blocks_is_9_378:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$247,%r15d
-	jae	.L_16_blocks_overflow_CysekAcEqrdoehB
+	jae	.L_16_blocks_overflow_395
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%xmm27,%xmm3,%xmm4
-	jmp	.L_16_blocks_ok_CysekAcEqrdoehB
+	jmp	.L_16_blocks_ok_395
 
-.L_16_blocks_overflow_CysekAcEqrdoehB:
+.L_16_blocks_overflow_395:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -55162,7 +55162,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%xmm29,%xmm4,%xmm4
-.L_16_blocks_ok_CysekAcEqrdoehB:
+.L_16_blocks_ok_395:
 
 
 
@@ -55293,7 +55293,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_CDCwcunhttfkhem
+	jl	.L_small_initial_partial_block_396
 
 
 
@@ -55353,8 +55353,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_CDCwcunhttfkhem
-.L_small_initial_partial_block_CDCwcunhttfkhem:
+	jmp	.L_small_initial_compute_done_396
+.L_small_initial_partial_block_396:
 
 
 
@@ -55411,26 +55411,26 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_CDCwcunhttfkhem:
+.L_small_initial_compute_done_396:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_CDCwcunhttfkhem
+	je	.L_after_reduction_396
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_CDCwcunhttfkhem:
-	jmp	.L_last_blocks_done_btoesFmiotqivzq
-.L_last_num_blocks_is_10_btoesFmiotqivzq:
+.L_after_reduction_396:
+	jmp	.L_last_blocks_done_378
+.L_last_num_blocks_is_10_378:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$246,%r15d
-	jae	.L_16_blocks_overflow_kjxnlEGsxyvlyCg
+	jae	.L_16_blocks_overflow_397
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%ymm27,%ymm3,%ymm4
-	jmp	.L_16_blocks_ok_kjxnlEGsxyvlyCg
+	jmp	.L_16_blocks_ok_397
 
-.L_16_blocks_overflow_kjxnlEGsxyvlyCg:
+.L_16_blocks_overflow_397:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -55439,7 +55439,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%ymm29,%ymm4,%ymm4
-.L_16_blocks_ok_kjxnlEGsxyvlyCg:
+.L_16_blocks_ok_397:
 
 
 
@@ -55570,7 +55570,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_yznAwzrGchmzhzn
+	jl	.L_small_initial_partial_block_398
 
 
 
@@ -55630,8 +55630,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_yznAwzrGchmzhzn
-.L_small_initial_partial_block_yznAwzrGchmzhzn:
+	jmp	.L_small_initial_compute_done_398
+.L_small_initial_partial_block_398:
 
 
 
@@ -55694,26 +55694,26 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_yznAwzrGchmzhzn:
+.L_small_initial_compute_done_398:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_yznAwzrGchmzhzn
+	je	.L_after_reduction_398
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_yznAwzrGchmzhzn:
-	jmp	.L_last_blocks_done_btoesFmiotqivzq
-.L_last_num_blocks_is_11_btoesFmiotqivzq:
+.L_after_reduction_398:
+	jmp	.L_last_blocks_done_378
+.L_last_num_blocks_is_11_378:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$245,%r15d
-	jae	.L_16_blocks_overflow_AoDlsApAqnltpeA
+	jae	.L_16_blocks_overflow_399
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
-	jmp	.L_16_blocks_ok_AoDlsApAqnltpeA
+	jmp	.L_16_blocks_ok_399
 
-.L_16_blocks_overflow_AoDlsApAqnltpeA:
+.L_16_blocks_overflow_399:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -55722,7 +55722,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
-.L_16_blocks_ok_AoDlsApAqnltpeA:
+.L_16_blocks_ok_399:
 
 
 
@@ -55853,7 +55853,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_sChkrDDpcBryCfz
+	jl	.L_small_initial_partial_block_400
 
 
 
@@ -55914,8 +55914,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_sChkrDDpcBryCfz
-.L_small_initial_partial_block_sChkrDDpcBryCfz:
+	jmp	.L_small_initial_compute_done_400
+.L_small_initial_partial_block_400:
 
 
 
@@ -55978,26 +55978,26 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_sChkrDDpcBryCfz:
+.L_small_initial_compute_done_400:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_sChkrDDpcBryCfz
+	je	.L_after_reduction_400
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_sChkrDDpcBryCfz:
-	jmp	.L_last_blocks_done_btoesFmiotqivzq
-.L_last_num_blocks_is_12_btoesFmiotqivzq:
+.L_after_reduction_400:
+	jmp	.L_last_blocks_done_378
+.L_last_num_blocks_is_12_378:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$244,%r15d
-	jae	.L_16_blocks_overflow_abBkyynBvCApgjh
+	jae	.L_16_blocks_overflow_401
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
-	jmp	.L_16_blocks_ok_abBkyynBvCApgjh
+	jmp	.L_16_blocks_ok_401
 
-.L_16_blocks_overflow_abBkyynBvCApgjh:
+.L_16_blocks_overflow_401:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -56006,7 +56006,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
-.L_16_blocks_ok_abBkyynBvCApgjh:
+.L_16_blocks_ok_401:
 
 
 
@@ -56137,7 +56137,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_teskjqpCqhfBhkd
+	jl	.L_small_initial_partial_block_402
 
 
 
@@ -56196,8 +56196,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_teskjqpCqhfBhkd
-.L_small_initial_partial_block_teskjqpCqhfBhkd:
+	jmp	.L_small_initial_compute_done_402
+.L_small_initial_partial_block_402:
 
 
 
@@ -56261,27 +56261,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_teskjqpCqhfBhkd:
+.L_small_initial_compute_done_402:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_teskjqpCqhfBhkd
+	je	.L_after_reduction_402
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_teskjqpCqhfBhkd:
-	jmp	.L_last_blocks_done_btoesFmiotqivzq
-.L_last_num_blocks_is_13_btoesFmiotqivzq:
+.L_after_reduction_402:
+	jmp	.L_last_blocks_done_378
+.L_last_num_blocks_is_13_378:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$243,%r15d
-	jae	.L_16_blocks_overflow_mjfDhrmwFmameEq
+	jae	.L_16_blocks_overflow_403
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%xmm27,%xmm4,%xmm5
-	jmp	.L_16_blocks_ok_mjfDhrmwFmameEq
+	jmp	.L_16_blocks_ok_403
 
-.L_16_blocks_overflow_mjfDhrmwFmameEq:
+.L_16_blocks_overflow_403:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -56292,7 +56292,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%xmm29,%xmm5,%xmm5
-.L_16_blocks_ok_mjfDhrmwFmameEq:
+.L_16_blocks_ok_403:
 
 
 
@@ -56442,7 +56442,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_CGlsuplczpgiEem
+	jl	.L_small_initial_partial_block_404
 
 
 
@@ -56507,8 +56507,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_CGlsuplczpgiEem
-.L_small_initial_partial_block_CGlsuplczpgiEem:
+	jmp	.L_small_initial_compute_done_404
+.L_small_initial_partial_block_404:
 
 
 
@@ -56570,27 +56570,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_CGlsuplczpgiEem:
+.L_small_initial_compute_done_404:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_CGlsuplczpgiEem
+	je	.L_after_reduction_404
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_CGlsuplczpgiEem:
-	jmp	.L_last_blocks_done_btoesFmiotqivzq
-.L_last_num_blocks_is_14_btoesFmiotqivzq:
+.L_after_reduction_404:
+	jmp	.L_last_blocks_done_378
+.L_last_num_blocks_is_14_378:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$242,%r15d
-	jae	.L_16_blocks_overflow_GBBmxzADzdkkvjA
+	jae	.L_16_blocks_overflow_405
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%ymm27,%ymm4,%ymm5
-	jmp	.L_16_blocks_ok_GBBmxzADzdkkvjA
+	jmp	.L_16_blocks_ok_405
 
-.L_16_blocks_overflow_GBBmxzADzdkkvjA:
+.L_16_blocks_overflow_405:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -56601,7 +56601,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%ymm29,%ymm5,%ymm5
-.L_16_blocks_ok_GBBmxzADzdkkvjA:
+.L_16_blocks_ok_405:
 
 
 
@@ -56751,7 +56751,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_cejDpngiqcgmylk
+	jl	.L_small_initial_partial_block_406
 
 
 
@@ -56816,8 +56816,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_cejDpngiqcgmylk
-.L_small_initial_partial_block_cejDpngiqcgmylk:
+	jmp	.L_small_initial_compute_done_406
+.L_small_initial_partial_block_406:
 
 
 
@@ -56885,27 +56885,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_cejDpngiqcgmylk:
+.L_small_initial_compute_done_406:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_cejDpngiqcgmylk
+	je	.L_after_reduction_406
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_cejDpngiqcgmylk:
-	jmp	.L_last_blocks_done_btoesFmiotqivzq
-.L_last_num_blocks_is_15_btoesFmiotqivzq:
+.L_after_reduction_406:
+	jmp	.L_last_blocks_done_378
+.L_last_num_blocks_is_15_378:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$241,%r15d
-	jae	.L_16_blocks_overflow_svAlCCqgkuvlAtx
+	jae	.L_16_blocks_overflow_407
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_svAlCCqgkuvlAtx
+	jmp	.L_16_blocks_ok_407
 
-.L_16_blocks_overflow_svAlCCqgkuvlAtx:
+.L_16_blocks_overflow_407:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -56916,7 +56916,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_svAlCCqgkuvlAtx:
+.L_16_blocks_ok_407:
 
 
 
@@ -57066,7 +57066,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_tygzbBzlhxjrdln
+	jl	.L_small_initial_partial_block_408
 
 
 
@@ -57132,8 +57132,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_tygzbBzlhxjrdln
-.L_small_initial_partial_block_tygzbBzlhxjrdln:
+	jmp	.L_small_initial_compute_done_408
+.L_small_initial_partial_block_408:
 
 
 
@@ -57201,27 +57201,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_tygzbBzlhxjrdln:
+.L_small_initial_compute_done_408:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_tygzbBzlhxjrdln
+	je	.L_after_reduction_408
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_tygzbBzlhxjrdln:
-	jmp	.L_last_blocks_done_btoesFmiotqivzq
-.L_last_num_blocks_is_16_btoesFmiotqivzq:
+.L_after_reduction_408:
+	jmp	.L_last_blocks_done_378
+.L_last_num_blocks_is_16_378:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$240,%r15d
-	jae	.L_16_blocks_overflow_aplGcBfDtrsdmlD
+	jae	.L_16_blocks_overflow_409
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_aplGcBfDtrsdmlD
+	jmp	.L_16_blocks_ok_409
 
-.L_16_blocks_overflow_aplGcBfDtrsdmlD:
+.L_16_blocks_overflow_409:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -57232,7 +57232,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_aplGcBfDtrsdmlD:
+.L_16_blocks_ok_409:
 
 
 
@@ -57379,7 +57379,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm5,%zmm21
 	vextracti32x4	$3,%zmm21,%xmm7
 	subq	$16 * (16 - 1),%r8
-.L_small_initial_partial_block_DFdzftBikbwdkrq:
+.L_small_initial_partial_block_410:
 
 
 
@@ -57448,11 +57448,11 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_DFdzftBikbwdkrq:
+.L_small_initial_compute_done_410:
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_DFdzftBikbwdkrq:
-	jmp	.L_last_blocks_done_btoesFmiotqivzq
-.L_last_num_blocks_is_0_btoesFmiotqivzq:
+.L_after_reduction_410:
+	jmp	.L_last_blocks_done_378
+.L_last_num_blocks_is_0_378:
 	vmovdqa64	768(%rsp),%zmm13
 	vpxorq	%zmm14,%zmm13,%zmm13
 	vmovdqu64	0(%rsp,%rbx,1),%zmm12
@@ -57514,18 +57514,18 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm24,%xmm3,%xmm14
 
-.L_last_blocks_done_btoesFmiotqivzq:
+.L_last_blocks_done_378:
 	vpshufb	%xmm29,%xmm2,%xmm2
-	jmp	.L_ghash_done_iygyqoBzBDrEGDx
-.L_encrypt_16_blocks_iygyqoBzBDrEGDx:
+	jmp	.L_ghash_done_334
+.L_encrypt_16_blocks_334:
 	cmpb	$240,%r15b
-	jae	.L_16_blocks_overflow_ErfrlhztcphytGy
+	jae	.L_16_blocks_overflow_411
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_ErfrlhztcphytGy
-.L_16_blocks_overflow_ErfrlhztcphytGy:
+	jmp	.L_16_blocks_ok_411
+.L_16_blocks_overflow_411:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -57536,7 +57536,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_ErfrlhztcphytGy:
+.L_16_blocks_ok_411:
 	vbroadcastf64x2	0(%rdi),%zmm30
 	vpxorq	768(%rsp),%zmm14,%zmm8
 	vmovdqu64	0(%rsp),%zmm1
@@ -57761,61 +57761,61 @@ ossl_aes_gcm_encrypt_avx512:
 	movl	%r8d,%r10d
 	addl	$15,%r10d
 	shrl	$4,%r10d
-	je	.L_last_num_blocks_is_0_Gnubivtecsvvxsn
+	je	.L_last_num_blocks_is_0_412
 
 	cmpl	$8,%r10d
-	je	.L_last_num_blocks_is_8_Gnubivtecsvvxsn
-	jb	.L_last_num_blocks_is_7_1_Gnubivtecsvvxsn
+	je	.L_last_num_blocks_is_8_412
+	jb	.L_last_num_blocks_is_7_1_412
 
 
 	cmpl	$12,%r10d
-	je	.L_last_num_blocks_is_12_Gnubivtecsvvxsn
-	jb	.L_last_num_blocks_is_11_9_Gnubivtecsvvxsn
+	je	.L_last_num_blocks_is_12_412
+	jb	.L_last_num_blocks_is_11_9_412
 
 
 	cmpl	$15,%r10d
-	je	.L_last_num_blocks_is_15_Gnubivtecsvvxsn
-	ja	.L_last_num_blocks_is_16_Gnubivtecsvvxsn
+	je	.L_last_num_blocks_is_15_412
+	ja	.L_last_num_blocks_is_16_412
 	cmpl	$14,%r10d
-	je	.L_last_num_blocks_is_14_Gnubivtecsvvxsn
-	jmp	.L_last_num_blocks_is_13_Gnubivtecsvvxsn
+	je	.L_last_num_blocks_is_14_412
+	jmp	.L_last_num_blocks_is_13_412
 
-.L_last_num_blocks_is_11_9_Gnubivtecsvvxsn:
+.L_last_num_blocks_is_11_9_412:
 
 	cmpl	$10,%r10d
-	je	.L_last_num_blocks_is_10_Gnubivtecsvvxsn
-	ja	.L_last_num_blocks_is_11_Gnubivtecsvvxsn
-	jmp	.L_last_num_blocks_is_9_Gnubivtecsvvxsn
+	je	.L_last_num_blocks_is_10_412
+	ja	.L_last_num_blocks_is_11_412
+	jmp	.L_last_num_blocks_is_9_412
 
-.L_last_num_blocks_is_7_1_Gnubivtecsvvxsn:
+.L_last_num_blocks_is_7_1_412:
 	cmpl	$4,%r10d
-	je	.L_last_num_blocks_is_4_Gnubivtecsvvxsn
-	jb	.L_last_num_blocks_is_3_1_Gnubivtecsvvxsn
+	je	.L_last_num_blocks_is_4_412
+	jb	.L_last_num_blocks_is_3_1_412
 
 	cmpl	$6,%r10d
-	ja	.L_last_num_blocks_is_7_Gnubivtecsvvxsn
-	je	.L_last_num_blocks_is_6_Gnubivtecsvvxsn
-	jmp	.L_last_num_blocks_is_5_Gnubivtecsvvxsn
+	ja	.L_last_num_blocks_is_7_412
+	je	.L_last_num_blocks_is_6_412
+	jmp	.L_last_num_blocks_is_5_412
 
-.L_last_num_blocks_is_3_1_Gnubivtecsvvxsn:
+.L_last_num_blocks_is_3_1_412:
 
 	cmpl	$2,%r10d
-	ja	.L_last_num_blocks_is_3_Gnubivtecsvvxsn
-	je	.L_last_num_blocks_is_2_Gnubivtecsvvxsn
-.L_last_num_blocks_is_1_Gnubivtecsvvxsn:
+	ja	.L_last_num_blocks_is_3_412
+	je	.L_last_num_blocks_is_2_412
+.L_last_num_blocks_is_1_412:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$255,%r15d
-	jae	.L_16_blocks_overflow_qAnlyyDDrCharyc
+	jae	.L_16_blocks_overflow_413
 	vpaddd	%xmm28,%xmm2,%xmm0
-	jmp	.L_16_blocks_ok_qAnlyyDDrCharyc
+	jmp	.L_16_blocks_ok_413
 
-.L_16_blocks_overflow_qAnlyyDDrCharyc:
+.L_16_blocks_overflow_413:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%xmm29,%xmm0,%xmm0
-.L_16_blocks_ok_qAnlyyDDrCharyc:
+.L_16_blocks_ok_413:
 
 
 
@@ -57930,7 +57930,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_fvxDhsaGzfnrkca
+	jl	.L_small_initial_partial_block_414
 
 
 
@@ -57972,8 +57972,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_fvxDhsaGzfnrkca
-.L_small_initial_partial_block_fvxDhsaGzfnrkca:
+	jmp	.L_small_initial_compute_done_414
+.L_small_initial_partial_block_414:
 
 
 
@@ -57997,24 +57997,24 @@ ossl_aes_gcm_encrypt_avx512:
 
 	vpxorq	%xmm7,%xmm14,%xmm14
 
-	jmp	.L_after_reduction_fvxDhsaGzfnrkca
-.L_small_initial_compute_done_fvxDhsaGzfnrkca:
-.L_after_reduction_fvxDhsaGzfnrkca:
-	jmp	.L_last_blocks_done_Gnubivtecsvvxsn
-.L_last_num_blocks_is_2_Gnubivtecsvvxsn:
+	jmp	.L_after_reduction_414
+.L_small_initial_compute_done_414:
+.L_after_reduction_414:
+	jmp	.L_last_blocks_done_412
+.L_last_num_blocks_is_2_412:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$254,%r15d
-	jae	.L_16_blocks_overflow_gEFEqxgkDqDlBrp
+	jae	.L_16_blocks_overflow_415
 	vpaddd	%ymm28,%ymm2,%ymm0
-	jmp	.L_16_blocks_ok_gEFEqxgkDqDlBrp
+	jmp	.L_16_blocks_ok_415
 
-.L_16_blocks_overflow_gEFEqxgkDqDlBrp:
+.L_16_blocks_overflow_415:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%ymm29,%ymm0,%ymm0
-.L_16_blocks_ok_gEFEqxgkDqDlBrp:
+.L_16_blocks_ok_415:
 
 
 
@@ -58130,7 +58130,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_GbbFDiEfauixjjg
+	jl	.L_small_initial_partial_block_416
 
 
 
@@ -58172,8 +58172,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_GbbFDiEfauixjjg
-.L_small_initial_partial_block_GbbFDiEfauixjjg:
+	jmp	.L_small_initial_compute_done_416
+.L_small_initial_partial_block_416:
 
 
 
@@ -58218,27 +58218,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_GbbFDiEfauixjjg:
+.L_small_initial_compute_done_416:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_GbbFDiEfauixjjg
+	je	.L_after_reduction_416
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_GbbFDiEfauixjjg:
-	jmp	.L_last_blocks_done_Gnubivtecsvvxsn
-.L_last_num_blocks_is_3_Gnubivtecsvvxsn:
+.L_after_reduction_416:
+	jmp	.L_last_blocks_done_412
+.L_last_num_blocks_is_3_412:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$253,%r15d
-	jae	.L_16_blocks_overflow_slmtggkbzGwheut
+	jae	.L_16_blocks_overflow_417
 	vpaddd	%zmm28,%zmm2,%zmm0
-	jmp	.L_16_blocks_ok_slmtggkbzGwheut
+	jmp	.L_16_blocks_ok_417
 
-.L_16_blocks_overflow_slmtggkbzGwheut:
+.L_16_blocks_overflow_417:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%zmm29,%zmm0,%zmm0
-.L_16_blocks_ok_slmtggkbzGwheut:
+.L_16_blocks_ok_417:
 
 
 
@@ -58354,7 +58354,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_ptEdonDntFBeGqk
+	jl	.L_small_initial_partial_block_418
 
 
 
@@ -58397,8 +58397,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_ptEdonDntFBeGqk
-.L_small_initial_partial_block_ptEdonDntFBeGqk:
+	jmp	.L_small_initial_compute_done_418
+.L_small_initial_partial_block_418:
 
 
 
@@ -58443,27 +58443,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_ptEdonDntFBeGqk:
+.L_small_initial_compute_done_418:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_ptEdonDntFBeGqk
+	je	.L_after_reduction_418
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_ptEdonDntFBeGqk:
-	jmp	.L_last_blocks_done_Gnubivtecsvvxsn
-.L_last_num_blocks_is_4_Gnubivtecsvvxsn:
+.L_after_reduction_418:
+	jmp	.L_last_blocks_done_412
+.L_last_num_blocks_is_4_412:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$252,%r15d
-	jae	.L_16_blocks_overflow_pyrnqjwtunwCifj
+	jae	.L_16_blocks_overflow_419
 	vpaddd	%zmm28,%zmm2,%zmm0
-	jmp	.L_16_blocks_ok_pyrnqjwtunwCifj
+	jmp	.L_16_blocks_ok_419
 
-.L_16_blocks_overflow_pyrnqjwtunwCifj:
+.L_16_blocks_overflow_419:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%zmm29,%zmm0,%zmm0
-.L_16_blocks_ok_pyrnqjwtunwCifj:
+.L_16_blocks_ok_419:
 
 
 
@@ -58579,7 +58579,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_EFnzvxanclnChAl
+	jl	.L_small_initial_partial_block_420
 
 
 
@@ -58621,8 +58621,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_EFnzvxanclnChAl
-.L_small_initial_partial_block_EFnzvxanclnChAl:
+	jmp	.L_small_initial_compute_done_420
+.L_small_initial_partial_block_420:
 
 
 
@@ -58668,32 +58668,32 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_EFnzvxanclnChAl:
+.L_small_initial_compute_done_420:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_EFnzvxanclnChAl
+	je	.L_after_reduction_420
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_EFnzvxanclnChAl:
-	jmp	.L_last_blocks_done_Gnubivtecsvvxsn
-.L_last_num_blocks_is_5_Gnubivtecsvvxsn:
+.L_after_reduction_420:
+	jmp	.L_last_blocks_done_412
+.L_last_num_blocks_is_5_412:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$251,%r15d
-	jae	.L_16_blocks_overflow_fwAnzFjtnADuhAc
+	jae	.L_16_blocks_overflow_421
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%xmm27,%xmm0,%xmm3
-	jmp	.L_16_blocks_ok_fwAnzFjtnADuhAc
+	jmp	.L_16_blocks_ok_421
 
-.L_16_blocks_overflow_fwAnzFjtnADuhAc:
+.L_16_blocks_overflow_421:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%xmm29,%xmm3,%xmm3
-.L_16_blocks_ok_fwAnzFjtnADuhAc:
+.L_16_blocks_ok_421:
 
 
 
@@ -58828,7 +58828,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_zDFmpGnvmcwcpcF
+	jl	.L_small_initial_partial_block_422
 
 
 
@@ -58880,8 +58880,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_zDFmpGnvmcwcpcF
-.L_small_initial_partial_block_zDFmpGnvmcwcpcF:
+	jmp	.L_small_initial_compute_done_422
+.L_small_initial_partial_block_422:
 
 
 
@@ -58926,32 +58926,32 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_zDFmpGnvmcwcpcF:
+.L_small_initial_compute_done_422:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_zDFmpGnvmcwcpcF
+	je	.L_after_reduction_422
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_zDFmpGnvmcwcpcF:
-	jmp	.L_last_blocks_done_Gnubivtecsvvxsn
-.L_last_num_blocks_is_6_Gnubivtecsvvxsn:
+.L_after_reduction_422:
+	jmp	.L_last_blocks_done_412
+.L_last_num_blocks_is_6_412:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$250,%r15d
-	jae	.L_16_blocks_overflow_oxGpzauifbxypuo
+	jae	.L_16_blocks_overflow_423
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%ymm27,%ymm0,%ymm3
-	jmp	.L_16_blocks_ok_oxGpzauifbxypuo
+	jmp	.L_16_blocks_ok_423
 
-.L_16_blocks_overflow_oxGpzauifbxypuo:
+.L_16_blocks_overflow_423:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%ymm29,%ymm3,%ymm3
-.L_16_blocks_ok_oxGpzauifbxypuo:
+.L_16_blocks_ok_423:
 
 
 
@@ -59086,7 +59086,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_BfEymsnFikrbmiG
+	jl	.L_small_initial_partial_block_424
 
 
 
@@ -59138,8 +59138,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_BfEymsnFikrbmiG
-.L_small_initial_partial_block_BfEymsnFikrbmiG:
+	jmp	.L_small_initial_compute_done_424
+.L_small_initial_partial_block_424:
 
 
 
@@ -59194,32 +59194,32 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_BfEymsnFikrbmiG:
+.L_small_initial_compute_done_424:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_BfEymsnFikrbmiG
+	je	.L_after_reduction_424
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_BfEymsnFikrbmiG:
-	jmp	.L_last_blocks_done_Gnubivtecsvvxsn
-.L_last_num_blocks_is_7_Gnubivtecsvvxsn:
+.L_after_reduction_424:
+	jmp	.L_last_blocks_done_412
+.L_last_num_blocks_is_7_412:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$249,%r15d
-	jae	.L_16_blocks_overflow_AebyqcFDoyhohAm
+	jae	.L_16_blocks_overflow_425
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
-	jmp	.L_16_blocks_ok_AebyqcFDoyhohAm
+	jmp	.L_16_blocks_ok_425
 
-.L_16_blocks_overflow_AebyqcFDoyhohAm:
+.L_16_blocks_overflow_425:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
-.L_16_blocks_ok_AebyqcFDoyhohAm:
+.L_16_blocks_ok_425:
 
 
 
@@ -59354,7 +59354,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_yGtdkquBpFrzGxA
+	jl	.L_small_initial_partial_block_426
 
 
 
@@ -59407,8 +59407,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_yGtdkquBpFrzGxA
-.L_small_initial_partial_block_yGtdkquBpFrzGxA:
+	jmp	.L_small_initial_compute_done_426
+.L_small_initial_partial_block_426:
 
 
 
@@ -59463,32 +59463,32 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_yGtdkquBpFrzGxA:
+.L_small_initial_compute_done_426:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_yGtdkquBpFrzGxA
+	je	.L_after_reduction_426
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_yGtdkquBpFrzGxA:
-	jmp	.L_last_blocks_done_Gnubivtecsvvxsn
-.L_last_num_blocks_is_8_Gnubivtecsvvxsn:
+.L_after_reduction_426:
+	jmp	.L_last_blocks_done_412
+.L_last_num_blocks_is_8_412:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$248,%r15d
-	jae	.L_16_blocks_overflow_oCxiagplknoApvk
+	jae	.L_16_blocks_overflow_427
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
-	jmp	.L_16_blocks_ok_oCxiagplknoApvk
+	jmp	.L_16_blocks_ok_427
 
-.L_16_blocks_overflow_oCxiagplknoApvk:
+.L_16_blocks_overflow_427:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
-.L_16_blocks_ok_oCxiagplknoApvk:
+.L_16_blocks_ok_427:
 
 
 
@@ -59623,7 +59623,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_hniungngbtdmzdr
+	jl	.L_small_initial_partial_block_428
 
 
 
@@ -59674,8 +59674,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_hniungngbtdmzdr
-.L_small_initial_partial_block_hniungngbtdmzdr:
+	jmp	.L_small_initial_compute_done_428
+.L_small_initial_partial_block_428:
 
 
 
@@ -59731,26 +59731,26 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_hniungngbtdmzdr:
+.L_small_initial_compute_done_428:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_hniungngbtdmzdr
+	je	.L_after_reduction_428
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_hniungngbtdmzdr:
-	jmp	.L_last_blocks_done_Gnubivtecsvvxsn
-.L_last_num_blocks_is_9_Gnubivtecsvvxsn:
+.L_after_reduction_428:
+	jmp	.L_last_blocks_done_412
+.L_last_num_blocks_is_9_412:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$247,%r15d
-	jae	.L_16_blocks_overflow_FCElafjzFDfavhs
+	jae	.L_16_blocks_overflow_429
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%xmm27,%xmm3,%xmm4
-	jmp	.L_16_blocks_ok_FCElafjzFDfavhs
+	jmp	.L_16_blocks_ok_429
 
-.L_16_blocks_overflow_FCElafjzFDfavhs:
+.L_16_blocks_overflow_429:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -59759,7 +59759,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%xmm29,%xmm4,%xmm4
-.L_16_blocks_ok_FCElafjzFDfavhs:
+.L_16_blocks_ok_429:
 
 
 
@@ -59913,7 +59913,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_mvCGduogqzcBglb
+	jl	.L_small_initial_partial_block_430
 
 
 
@@ -59974,8 +59974,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_mvCGduogqzcBglb
-.L_small_initial_partial_block_mvCGduogqzcBglb:
+	jmp	.L_small_initial_compute_done_430
+.L_small_initial_partial_block_430:
 
 
 
@@ -60029,26 +60029,26 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_mvCGduogqzcBglb:
+.L_small_initial_compute_done_430:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_mvCGduogqzcBglb
+	je	.L_after_reduction_430
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_mvCGduogqzcBglb:
-	jmp	.L_last_blocks_done_Gnubivtecsvvxsn
-.L_last_num_blocks_is_10_Gnubivtecsvvxsn:
+.L_after_reduction_430:
+	jmp	.L_last_blocks_done_412
+.L_last_num_blocks_is_10_412:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$246,%r15d
-	jae	.L_16_blocks_overflow_zjpEuudbihqhbzF
+	jae	.L_16_blocks_overflow_431
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%ymm27,%ymm3,%ymm4
-	jmp	.L_16_blocks_ok_zjpEuudbihqhbzF
+	jmp	.L_16_blocks_ok_431
 
-.L_16_blocks_overflow_zjpEuudbihqhbzF:
+.L_16_blocks_overflow_431:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -60057,7 +60057,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%ymm29,%ymm4,%ymm4
-.L_16_blocks_ok_zjpEuudbihqhbzF:
+.L_16_blocks_ok_431:
 
 
 
@@ -60211,7 +60211,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_rBzbuDmawutlBue
+	jl	.L_small_initial_partial_block_432
 
 
 
@@ -60272,8 +60272,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_rBzbuDmawutlBue
-.L_small_initial_partial_block_rBzbuDmawutlBue:
+	jmp	.L_small_initial_compute_done_432
+.L_small_initial_partial_block_432:
 
 
 
@@ -60337,26 +60337,26 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_rBzbuDmawutlBue:
+.L_small_initial_compute_done_432:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_rBzbuDmawutlBue
+	je	.L_after_reduction_432
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_rBzbuDmawutlBue:
-	jmp	.L_last_blocks_done_Gnubivtecsvvxsn
-.L_last_num_blocks_is_11_Gnubivtecsvvxsn:
+.L_after_reduction_432:
+	jmp	.L_last_blocks_done_412
+.L_last_num_blocks_is_11_412:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$245,%r15d
-	jae	.L_16_blocks_overflow_mBfswwiFwAiopFm
+	jae	.L_16_blocks_overflow_433
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
-	jmp	.L_16_blocks_ok_mBfswwiFwAiopFm
+	jmp	.L_16_blocks_ok_433
 
-.L_16_blocks_overflow_mBfswwiFwAiopFm:
+.L_16_blocks_overflow_433:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -60365,7 +60365,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
-.L_16_blocks_ok_mBfswwiFwAiopFm:
+.L_16_blocks_ok_433:
 
 
 
@@ -60519,7 +60519,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_ovzvvxganxCwprx
+	jl	.L_small_initial_partial_block_434
 
 
 
@@ -60581,8 +60581,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_ovzvvxganxCwprx
-.L_small_initial_partial_block_ovzvvxganxCwprx:
+	jmp	.L_small_initial_compute_done_434
+.L_small_initial_partial_block_434:
 
 
 
@@ -60646,26 +60646,26 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_ovzvvxganxCwprx:
+.L_small_initial_compute_done_434:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_ovzvvxganxCwprx
+	je	.L_after_reduction_434
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_ovzvvxganxCwprx:
-	jmp	.L_last_blocks_done_Gnubivtecsvvxsn
-.L_last_num_blocks_is_12_Gnubivtecsvvxsn:
+.L_after_reduction_434:
+	jmp	.L_last_blocks_done_412
+.L_last_num_blocks_is_12_412:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$244,%r15d
-	jae	.L_16_blocks_overflow_CzFuleccpdzkGbv
+	jae	.L_16_blocks_overflow_435
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
-	jmp	.L_16_blocks_ok_CzFuleccpdzkGbv
+	jmp	.L_16_blocks_ok_435
 
-.L_16_blocks_overflow_CzFuleccpdzkGbv:
+.L_16_blocks_overflow_435:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -60674,7 +60674,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
-.L_16_blocks_ok_CzFuleccpdzkGbv:
+.L_16_blocks_ok_435:
 
 
 
@@ -60828,7 +60828,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_xFyFnkBxGhsnghi
+	jl	.L_small_initial_partial_block_436
 
 
 
@@ -60884,8 +60884,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_xFyFnkBxGhsnghi
-.L_small_initial_partial_block_xFyFnkBxGhsnghi:
+	jmp	.L_small_initial_compute_done_436
+.L_small_initial_partial_block_436:
 
 
 
@@ -60950,27 +60950,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_xFyFnkBxGhsnghi:
+.L_small_initial_compute_done_436:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_xFyFnkBxGhsnghi
+	je	.L_after_reduction_436
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_xFyFnkBxGhsnghi:
-	jmp	.L_last_blocks_done_Gnubivtecsvvxsn
-.L_last_num_blocks_is_13_Gnubivtecsvvxsn:
+.L_after_reduction_436:
+	jmp	.L_last_blocks_done_412
+.L_last_num_blocks_is_13_412:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$243,%r15d
-	jae	.L_16_blocks_overflow_uhDBaxzddCojahr
+	jae	.L_16_blocks_overflow_437
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%xmm27,%xmm4,%xmm5
-	jmp	.L_16_blocks_ok_uhDBaxzddCojahr
+	jmp	.L_16_blocks_ok_437
 
-.L_16_blocks_overflow_uhDBaxzddCojahr:
+.L_16_blocks_overflow_437:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -60981,7 +60981,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%xmm29,%xmm5,%xmm5
-.L_16_blocks_ok_uhDBaxzddCojahr:
+.L_16_blocks_ok_437:
 
 
 
@@ -61154,7 +61154,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_xEqfwFDfExxAlne
+	jl	.L_small_initial_partial_block_438
 
 
 
@@ -61220,8 +61220,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_xEqfwFDfExxAlne
-.L_small_initial_partial_block_xEqfwFDfExxAlne:
+	jmp	.L_small_initial_compute_done_438
+.L_small_initial_partial_block_438:
 
 
 
@@ -61280,27 +61280,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_xEqfwFDfExxAlne:
+.L_small_initial_compute_done_438:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_xEqfwFDfExxAlne
+	je	.L_after_reduction_438
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_xEqfwFDfExxAlne:
-	jmp	.L_last_blocks_done_Gnubivtecsvvxsn
-.L_last_num_blocks_is_14_Gnubivtecsvvxsn:
+.L_after_reduction_438:
+	jmp	.L_last_blocks_done_412
+.L_last_num_blocks_is_14_412:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$242,%r15d
-	jae	.L_16_blocks_overflow_GkvhilqBilxepey
+	jae	.L_16_blocks_overflow_439
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%ymm27,%ymm4,%ymm5
-	jmp	.L_16_blocks_ok_GkvhilqBilxepey
+	jmp	.L_16_blocks_ok_439
 
-.L_16_blocks_overflow_GkvhilqBilxepey:
+.L_16_blocks_overflow_439:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -61311,7 +61311,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%ymm29,%ymm5,%ymm5
-.L_16_blocks_ok_GkvhilqBilxepey:
+.L_16_blocks_ok_439:
 
 
 
@@ -61484,7 +61484,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_lkgemhztDfdaxdt
+	jl	.L_small_initial_partial_block_440
 
 
 
@@ -61550,8 +61550,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_lkgemhztDfdaxdt
-.L_small_initial_partial_block_lkgemhztDfdaxdt:
+	jmp	.L_small_initial_compute_done_440
+.L_small_initial_partial_block_440:
 
 
 
@@ -61620,27 +61620,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_lkgemhztDfdaxdt:
+.L_small_initial_compute_done_440:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_lkgemhztDfdaxdt
+	je	.L_after_reduction_440
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_lkgemhztDfdaxdt:
-	jmp	.L_last_blocks_done_Gnubivtecsvvxsn
-.L_last_num_blocks_is_15_Gnubivtecsvvxsn:
+.L_after_reduction_440:
+	jmp	.L_last_blocks_done_412
+.L_last_num_blocks_is_15_412:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$241,%r15d
-	jae	.L_16_blocks_overflow_jCoymdtsFabmjta
+	jae	.L_16_blocks_overflow_441
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_jCoymdtsFabmjta
+	jmp	.L_16_blocks_ok_441
 
-.L_16_blocks_overflow_jCoymdtsFabmjta:
+.L_16_blocks_overflow_441:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -61651,7 +61651,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_jCoymdtsFabmjta:
+.L_16_blocks_ok_441:
 
 
 
@@ -61824,7 +61824,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_ptwuadxGeakCwBu
+	jl	.L_small_initial_partial_block_442
 
 
 
@@ -61891,8 +61891,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_ptwuadxGeakCwBu
-.L_small_initial_partial_block_ptwuadxGeakCwBu:
+	jmp	.L_small_initial_compute_done_442
+.L_small_initial_partial_block_442:
 
 
 
@@ -61961,27 +61961,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_ptwuadxGeakCwBu:
+.L_small_initial_compute_done_442:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_ptwuadxGeakCwBu
+	je	.L_after_reduction_442
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_ptwuadxGeakCwBu:
-	jmp	.L_last_blocks_done_Gnubivtecsvvxsn
-.L_last_num_blocks_is_16_Gnubivtecsvvxsn:
+.L_after_reduction_442:
+	jmp	.L_last_blocks_done_412
+.L_last_num_blocks_is_16_412:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$240,%r15d
-	jae	.L_16_blocks_overflow_eChADgkmpAxhbGf
+	jae	.L_16_blocks_overflow_443
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_eChADgkmpAxhbGf
+	jmp	.L_16_blocks_ok_443
 
-.L_16_blocks_overflow_eChADgkmpAxhbGf:
+.L_16_blocks_overflow_443:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -61992,7 +61992,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_eChADgkmpAxhbGf:
+.L_16_blocks_ok_443:
 
 
 
@@ -62162,7 +62162,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm5,%zmm21
 	vextracti32x4	$3,%zmm21,%xmm7
 	subq	$16 * (16 - 1),%r8
-.L_small_initial_partial_block_yqaymaBzAyEGkvr:
+.L_small_initial_partial_block_444:
 
 
 
@@ -62232,11 +62232,11 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_yqaymaBzAyEGkvr:
+.L_small_initial_compute_done_444:
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_yqaymaBzAyEGkvr:
-	jmp	.L_last_blocks_done_Gnubivtecsvvxsn
-.L_last_num_blocks_is_0_Gnubivtecsvvxsn:
+.L_after_reduction_444:
+	jmp	.L_last_blocks_done_412
+.L_last_num_blocks_is_0_412:
 	vmovdqa64	1280(%rsp),%zmm13
 	vmovdqu64	512(%rsp),%zmm12
 	vpclmulqdq	$0x11,%zmm12,%zmm13,%zmm0
@@ -62297,18 +62297,18 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm24,%xmm3,%xmm14
 
-.L_last_blocks_done_Gnubivtecsvvxsn:
+.L_last_blocks_done_412:
 	vpshufb	%xmm29,%xmm2,%xmm2
-	jmp	.L_ghash_done_iygyqoBzBDrEGDx
+	jmp	.L_ghash_done_334
 
-.L_message_below_32_blocks_iygyqoBzBDrEGDx:
+.L_message_below_32_blocks_334:
 
 
 	subq	$256,%r8
 	addq	$256,%r11
 	movl	%r8d,%r10d
 	testq	%r14,%r14
-	jnz	.L_skip_hkeys_precomputation_azDuvFwdmjnExka
+	jnz	.L_skip_hkeys_precomputation_445
 	vmovdqu64	640(%rsp),%zmm3
 
 
@@ -62436,7 +62436,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpternlogq	$0x96,%zmm7,%zmm6,%zmm5
 
 	vmovdqu64	%zmm5,256(%rsp)
-.L_skip_hkeys_precomputation_azDuvFwdmjnExka:
+.L_skip_hkeys_precomputation_445:
 	movq	$1,%r14
 	andl	$~15,%r10d
 	movl	$512,%ebx
@@ -62444,61 +62444,61 @@ ossl_aes_gcm_encrypt_avx512:
 	movl	%r8d,%r10d
 	addl	$15,%r10d
 	shrl	$4,%r10d
-	je	.L_last_num_blocks_is_0_gzwxEzzolteBiAA
+	je	.L_last_num_blocks_is_0_446
 
 	cmpl	$8,%r10d
-	je	.L_last_num_blocks_is_8_gzwxEzzolteBiAA
-	jb	.L_last_num_blocks_is_7_1_gzwxEzzolteBiAA
+	je	.L_last_num_blocks_is_8_446
+	jb	.L_last_num_blocks_is_7_1_446
 
 
 	cmpl	$12,%r10d
-	je	.L_last_num_blocks_is_12_gzwxEzzolteBiAA
-	jb	.L_last_num_blocks_is_11_9_gzwxEzzolteBiAA
+	je	.L_last_num_blocks_is_12_446
+	jb	.L_last_num_blocks_is_11_9_446
 
 
 	cmpl	$15,%r10d
-	je	.L_last_num_blocks_is_15_gzwxEzzolteBiAA
-	ja	.L_last_num_blocks_is_16_gzwxEzzolteBiAA
+	je	.L_last_num_blocks_is_15_446
+	ja	.L_last_num_blocks_is_16_446
 	cmpl	$14,%r10d
-	je	.L_last_num_blocks_is_14_gzwxEzzolteBiAA
-	jmp	.L_last_num_blocks_is_13_gzwxEzzolteBiAA
+	je	.L_last_num_blocks_is_14_446
+	jmp	.L_last_num_blocks_is_13_446
 
-.L_last_num_blocks_is_11_9_gzwxEzzolteBiAA:
+.L_last_num_blocks_is_11_9_446:
 
 	cmpl	$10,%r10d
-	je	.L_last_num_blocks_is_10_gzwxEzzolteBiAA
-	ja	.L_last_num_blocks_is_11_gzwxEzzolteBiAA
-	jmp	.L_last_num_blocks_is_9_gzwxEzzolteBiAA
+	je	.L_last_num_blocks_is_10_446
+	ja	.L_last_num_blocks_is_11_446
+	jmp	.L_last_num_blocks_is_9_446
 
-.L_last_num_blocks_is_7_1_gzwxEzzolteBiAA:
+.L_last_num_blocks_is_7_1_446:
 	cmpl	$4,%r10d
-	je	.L_last_num_blocks_is_4_gzwxEzzolteBiAA
-	jb	.L_last_num_blocks_is_3_1_gzwxEzzolteBiAA
+	je	.L_last_num_blocks_is_4_446
+	jb	.L_last_num_blocks_is_3_1_446
 
 	cmpl	$6,%r10d
-	ja	.L_last_num_blocks_is_7_gzwxEzzolteBiAA
-	je	.L_last_num_blocks_is_6_gzwxEzzolteBiAA
-	jmp	.L_last_num_blocks_is_5_gzwxEzzolteBiAA
+	ja	.L_last_num_blocks_is_7_446
+	je	.L_last_num_blocks_is_6_446
+	jmp	.L_last_num_blocks_is_5_446
 
-.L_last_num_blocks_is_3_1_gzwxEzzolteBiAA:
+.L_last_num_blocks_is_3_1_446:
 
 	cmpl	$2,%r10d
-	ja	.L_last_num_blocks_is_3_gzwxEzzolteBiAA
-	je	.L_last_num_blocks_is_2_gzwxEzzolteBiAA
-.L_last_num_blocks_is_1_gzwxEzzolteBiAA:
+	ja	.L_last_num_blocks_is_3_446
+	je	.L_last_num_blocks_is_2_446
+.L_last_num_blocks_is_1_446:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$255,%r15d
-	jae	.L_16_blocks_overflow_tcAeDEdjbkxBBvs
+	jae	.L_16_blocks_overflow_447
 	vpaddd	%xmm28,%xmm2,%xmm0
-	jmp	.L_16_blocks_ok_tcAeDEdjbkxBBvs
+	jmp	.L_16_blocks_ok_447
 
-.L_16_blocks_overflow_tcAeDEdjbkxBBvs:
+.L_16_blocks_overflow_447:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%xmm29,%xmm0,%xmm0
-.L_16_blocks_ok_tcAeDEdjbkxBBvs:
+.L_16_blocks_ok_447:
 
 
 
@@ -62590,7 +62590,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_xeFdigcGzfeaBDt
+	jl	.L_small_initial_partial_block_448
 
 
 
@@ -62634,8 +62634,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_xeFdigcGzfeaBDt
-.L_small_initial_partial_block_xeFdigcGzfeaBDt:
+	jmp	.L_small_initial_compute_done_448
+.L_small_initial_partial_block_448:
 
 
 
@@ -62687,24 +62687,24 @@ ossl_aes_gcm_encrypt_avx512:
 
 	vpxorq	%xmm7,%xmm14,%xmm14
 
-	jmp	.L_after_reduction_xeFdigcGzfeaBDt
-.L_small_initial_compute_done_xeFdigcGzfeaBDt:
-.L_after_reduction_xeFdigcGzfeaBDt:
-	jmp	.L_last_blocks_done_gzwxEzzolteBiAA
-.L_last_num_blocks_is_2_gzwxEzzolteBiAA:
+	jmp	.L_after_reduction_448
+.L_small_initial_compute_done_448:
+.L_after_reduction_448:
+	jmp	.L_last_blocks_done_446
+.L_last_num_blocks_is_2_446:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$254,%r15d
-	jae	.L_16_blocks_overflow_dAineCpcothilCk
+	jae	.L_16_blocks_overflow_449
 	vpaddd	%ymm28,%ymm2,%ymm0
-	jmp	.L_16_blocks_ok_dAineCpcothilCk
+	jmp	.L_16_blocks_ok_449
 
-.L_16_blocks_overflow_dAineCpcothilCk:
+.L_16_blocks_overflow_449:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%ymm29,%ymm0,%ymm0
-.L_16_blocks_ok_dAineCpcothilCk:
+.L_16_blocks_ok_449:
 
 
 
@@ -62797,7 +62797,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_ofjtfahGoqegcbx
+	jl	.L_small_initial_partial_block_450
 
 
 
@@ -62841,8 +62841,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_ofjtfahGoqegcbx
-.L_small_initial_partial_block_ofjtfahGoqegcbx:
+	jmp	.L_small_initial_compute_done_450
+.L_small_initial_partial_block_450:
 
 
 
@@ -62889,27 +62889,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_ofjtfahGoqegcbx:
+.L_small_initial_compute_done_450:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_ofjtfahGoqegcbx
+	je	.L_after_reduction_450
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_ofjtfahGoqegcbx:
-	jmp	.L_last_blocks_done_gzwxEzzolteBiAA
-.L_last_num_blocks_is_3_gzwxEzzolteBiAA:
+.L_after_reduction_450:
+	jmp	.L_last_blocks_done_446
+.L_last_num_blocks_is_3_446:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$253,%r15d
-	jae	.L_16_blocks_overflow_eAcurBaqahuEvqx
+	jae	.L_16_blocks_overflow_451
 	vpaddd	%zmm28,%zmm2,%zmm0
-	jmp	.L_16_blocks_ok_eAcurBaqahuEvqx
+	jmp	.L_16_blocks_ok_451
 
-.L_16_blocks_overflow_eAcurBaqahuEvqx:
+.L_16_blocks_overflow_451:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%zmm29,%zmm0,%zmm0
-.L_16_blocks_ok_eAcurBaqahuEvqx:
+.L_16_blocks_ok_451:
 
 
 
@@ -63002,7 +63002,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_mqkDffwwghfDgFe
+	jl	.L_small_initial_partial_block_452
 
 
 
@@ -63047,8 +63047,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_mqkDffwwghfDgFe
-.L_small_initial_partial_block_mqkDffwwghfDgFe:
+	jmp	.L_small_initial_compute_done_452
+.L_small_initial_partial_block_452:
 
 
 
@@ -63095,27 +63095,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_mqkDffwwghfDgFe:
+.L_small_initial_compute_done_452:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_mqkDffwwghfDgFe
+	je	.L_after_reduction_452
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_mqkDffwwghfDgFe:
-	jmp	.L_last_blocks_done_gzwxEzzolteBiAA
-.L_last_num_blocks_is_4_gzwxEzzolteBiAA:
+.L_after_reduction_452:
+	jmp	.L_last_blocks_done_446
+.L_last_num_blocks_is_4_446:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$252,%r15d
-	jae	.L_16_blocks_overflow_kEnpDEaykmkmueD
+	jae	.L_16_blocks_overflow_453
 	vpaddd	%zmm28,%zmm2,%zmm0
-	jmp	.L_16_blocks_ok_kEnpDEaykmkmueD
+	jmp	.L_16_blocks_ok_453
 
-.L_16_blocks_overflow_kEnpDEaykmkmueD:
+.L_16_blocks_overflow_453:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%zmm29,%zmm0,%zmm0
-.L_16_blocks_ok_kEnpDEaykmkmueD:
+.L_16_blocks_ok_453:
 
 
 
@@ -63208,7 +63208,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_vcdtlcyhhcslpim
+	jl	.L_small_initial_partial_block_454
 
 
 
@@ -63253,8 +63253,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_vcdtlcyhhcslpim
-.L_small_initial_partial_block_vcdtlcyhhcslpim:
+	jmp	.L_small_initial_compute_done_454
+.L_small_initial_partial_block_454:
 
 
 
@@ -63302,32 +63302,32 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_vcdtlcyhhcslpim:
+.L_small_initial_compute_done_454:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_vcdtlcyhhcslpim
+	je	.L_after_reduction_454
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_vcdtlcyhhcslpim:
-	jmp	.L_last_blocks_done_gzwxEzzolteBiAA
-.L_last_num_blocks_is_5_gzwxEzzolteBiAA:
+.L_after_reduction_454:
+	jmp	.L_last_blocks_done_446
+.L_last_num_blocks_is_5_446:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$251,%r15d
-	jae	.L_16_blocks_overflow_epyzBzlcwuAirjx
+	jae	.L_16_blocks_overflow_455
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%xmm27,%xmm0,%xmm3
-	jmp	.L_16_blocks_ok_epyzBzlcwuAirjx
+	jmp	.L_16_blocks_ok_455
 
-.L_16_blocks_overflow_epyzBzlcwuAirjx:
+.L_16_blocks_overflow_455:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%xmm29,%xmm3,%xmm3
-.L_16_blocks_ok_epyzBzlcwuAirjx:
+.L_16_blocks_ok_455:
 
 
 
@@ -63439,7 +63439,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_ewwaipyhlqonAgv
+	jl	.L_small_initial_partial_block_456
 
 
 
@@ -63490,8 +63490,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_ewwaipyhlqonAgv
-.L_small_initial_partial_block_ewwaipyhlqonAgv:
+	jmp	.L_small_initial_compute_done_456
+.L_small_initial_partial_block_456:
 
 
 
@@ -63539,32 +63539,32 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_ewwaipyhlqonAgv:
+.L_small_initial_compute_done_456:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_ewwaipyhlqonAgv
+	je	.L_after_reduction_456
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_ewwaipyhlqonAgv:
-	jmp	.L_last_blocks_done_gzwxEzzolteBiAA
-.L_last_num_blocks_is_6_gzwxEzzolteBiAA:
+.L_after_reduction_456:
+	jmp	.L_last_blocks_done_446
+.L_last_num_blocks_is_6_446:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$250,%r15d
-	jae	.L_16_blocks_overflow_hfzqDewGwcdnnFt
+	jae	.L_16_blocks_overflow_457
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%ymm27,%ymm0,%ymm3
-	jmp	.L_16_blocks_ok_hfzqDewGwcdnnFt
+	jmp	.L_16_blocks_ok_457
 
-.L_16_blocks_overflow_hfzqDewGwcdnnFt:
+.L_16_blocks_overflow_457:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%ymm29,%ymm3,%ymm3
-.L_16_blocks_ok_hfzqDewGwcdnnFt:
+.L_16_blocks_ok_457:
 
 
 
@@ -63676,7 +63676,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_rfhgErpgCjmnfvn
+	jl	.L_small_initial_partial_block_458
 
 
 
@@ -63727,8 +63727,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_rfhgErpgCjmnfvn
-.L_small_initial_partial_block_rfhgErpgCjmnfvn:
+	jmp	.L_small_initial_compute_done_458
+.L_small_initial_partial_block_458:
 
 
 
@@ -63782,32 +63782,32 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_rfhgErpgCjmnfvn:
+.L_small_initial_compute_done_458:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_rfhgErpgCjmnfvn
+	je	.L_after_reduction_458
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_rfhgErpgCjmnfvn:
-	jmp	.L_last_blocks_done_gzwxEzzolteBiAA
-.L_last_num_blocks_is_7_gzwxEzzolteBiAA:
+.L_after_reduction_458:
+	jmp	.L_last_blocks_done_446
+.L_last_num_blocks_is_7_446:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$249,%r15d
-	jae	.L_16_blocks_overflow_quhdBifmvgvjvmD
+	jae	.L_16_blocks_overflow_459
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
-	jmp	.L_16_blocks_ok_quhdBifmvgvjvmD
+	jmp	.L_16_blocks_ok_459
 
-.L_16_blocks_overflow_quhdBifmvgvjvmD:
+.L_16_blocks_overflow_459:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
-.L_16_blocks_ok_quhdBifmvgvjvmD:
+.L_16_blocks_ok_459:
 
 
 
@@ -63919,7 +63919,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_BFzjGFbnGgEEFao
+	jl	.L_small_initial_partial_block_460
 
 
 
@@ -63971,8 +63971,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_BFzjGFbnGgEEFao
-.L_small_initial_partial_block_BFzjGFbnGgEEFao:
+	jmp	.L_small_initial_compute_done_460
+.L_small_initial_partial_block_460:
 
 
 
@@ -64026,32 +64026,32 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_BFzjGFbnGgEEFao:
+.L_small_initial_compute_done_460:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_BFzjGFbnGgEEFao
+	je	.L_after_reduction_460
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_BFzjGFbnGgEEFao:
-	jmp	.L_last_blocks_done_gzwxEzzolteBiAA
-.L_last_num_blocks_is_8_gzwxEzzolteBiAA:
+.L_after_reduction_460:
+	jmp	.L_last_blocks_done_446
+.L_last_num_blocks_is_8_446:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$248,%r15d
-	jae	.L_16_blocks_overflow_gyktrCtEnzizCBy
+	jae	.L_16_blocks_overflow_461
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
-	jmp	.L_16_blocks_ok_gyktrCtEnzizCBy
+	jmp	.L_16_blocks_ok_461
 
-.L_16_blocks_overflow_gyktrCtEnzizCBy:
+.L_16_blocks_overflow_461:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
-.L_16_blocks_ok_gyktrCtEnzizCBy:
+.L_16_blocks_ok_461:
 
 
 
@@ -64163,7 +64163,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_ayCAbzwEahEemyi
+	jl	.L_small_initial_partial_block_462
 
 
 
@@ -64217,8 +64217,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_ayCAbzwEahEemyi
-.L_small_initial_partial_block_ayCAbzwEahEemyi:
+	jmp	.L_small_initial_compute_done_462
+.L_small_initial_partial_block_462:
 
 
 
@@ -64273,26 +64273,26 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_ayCAbzwEahEemyi:
+.L_small_initial_compute_done_462:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_ayCAbzwEahEemyi
+	je	.L_after_reduction_462
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_ayCAbzwEahEemyi:
-	jmp	.L_last_blocks_done_gzwxEzzolteBiAA
-.L_last_num_blocks_is_9_gzwxEzzolteBiAA:
+.L_after_reduction_462:
+	jmp	.L_last_blocks_done_446
+.L_last_num_blocks_is_9_446:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$247,%r15d
-	jae	.L_16_blocks_overflow_wzjqGnDrxpicBig
+	jae	.L_16_blocks_overflow_463
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%xmm27,%xmm3,%xmm4
-	jmp	.L_16_blocks_ok_wzjqGnDrxpicBig
+	jmp	.L_16_blocks_ok_463
 
-.L_16_blocks_overflow_wzjqGnDrxpicBig:
+.L_16_blocks_overflow_463:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -64301,7 +64301,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%xmm29,%xmm4,%xmm4
-.L_16_blocks_ok_wzjqGnDrxpicBig:
+.L_16_blocks_ok_463:
 
 
 
@@ -64432,7 +64432,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_ftkjfEfnyyBmcdc
+	jl	.L_small_initial_partial_block_464
 
 
 
@@ -64492,8 +64492,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_ftkjfEfnyyBmcdc
-.L_small_initial_partial_block_ftkjfEfnyyBmcdc:
+	jmp	.L_small_initial_compute_done_464
+.L_small_initial_partial_block_464:
 
 
 
@@ -64550,26 +64550,26 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_ftkjfEfnyyBmcdc:
+.L_small_initial_compute_done_464:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_ftkjfEfnyyBmcdc
+	je	.L_after_reduction_464
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_ftkjfEfnyyBmcdc:
-	jmp	.L_last_blocks_done_gzwxEzzolteBiAA
-.L_last_num_blocks_is_10_gzwxEzzolteBiAA:
+.L_after_reduction_464:
+	jmp	.L_last_blocks_done_446
+.L_last_num_blocks_is_10_446:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$246,%r15d
-	jae	.L_16_blocks_overflow_obhoAlGGxdmtiFr
+	jae	.L_16_blocks_overflow_465
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%ymm27,%ymm3,%ymm4
-	jmp	.L_16_blocks_ok_obhoAlGGxdmtiFr
+	jmp	.L_16_blocks_ok_465
 
-.L_16_blocks_overflow_obhoAlGGxdmtiFr:
+.L_16_blocks_overflow_465:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -64578,7 +64578,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%ymm29,%ymm4,%ymm4
-.L_16_blocks_ok_obhoAlGGxdmtiFr:
+.L_16_blocks_ok_465:
 
 
 
@@ -64709,7 +64709,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_swwkphiridauobp
+	jl	.L_small_initial_partial_block_466
 
 
 
@@ -64769,8 +64769,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_swwkphiridauobp
-.L_small_initial_partial_block_swwkphiridauobp:
+	jmp	.L_small_initial_compute_done_466
+.L_small_initial_partial_block_466:
 
 
 
@@ -64833,26 +64833,26 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_swwkphiridauobp:
+.L_small_initial_compute_done_466:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_swwkphiridauobp
+	je	.L_after_reduction_466
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_swwkphiridauobp:
-	jmp	.L_last_blocks_done_gzwxEzzolteBiAA
-.L_last_num_blocks_is_11_gzwxEzzolteBiAA:
+.L_after_reduction_466:
+	jmp	.L_last_blocks_done_446
+.L_last_num_blocks_is_11_446:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$245,%r15d
-	jae	.L_16_blocks_overflow_pfabBBAcckzFwtp
+	jae	.L_16_blocks_overflow_467
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
-	jmp	.L_16_blocks_ok_pfabBBAcckzFwtp
+	jmp	.L_16_blocks_ok_467
 
-.L_16_blocks_overflow_pfabBBAcckzFwtp:
+.L_16_blocks_overflow_467:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -64861,7 +64861,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
-.L_16_blocks_ok_pfabBBAcckzFwtp:
+.L_16_blocks_ok_467:
 
 
 
@@ -64992,7 +64992,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_sEDmGoxjAfppati
+	jl	.L_small_initial_partial_block_468
 
 
 
@@ -65053,8 +65053,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_sEDmGoxjAfppati
-.L_small_initial_partial_block_sEDmGoxjAfppati:
+	jmp	.L_small_initial_compute_done_468
+.L_small_initial_partial_block_468:
 
 
 
@@ -65117,26 +65117,26 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_sEDmGoxjAfppati:
+.L_small_initial_compute_done_468:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_sEDmGoxjAfppati
+	je	.L_after_reduction_468
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_sEDmGoxjAfppati:
-	jmp	.L_last_blocks_done_gzwxEzzolteBiAA
-.L_last_num_blocks_is_12_gzwxEzzolteBiAA:
+.L_after_reduction_468:
+	jmp	.L_last_blocks_done_446
+.L_last_num_blocks_is_12_446:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$244,%r15d
-	jae	.L_16_blocks_overflow_EoqzDusxkBytzvg
+	jae	.L_16_blocks_overflow_469
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
-	jmp	.L_16_blocks_ok_EoqzDusxkBytzvg
+	jmp	.L_16_blocks_ok_469
 
-.L_16_blocks_overflow_EoqzDusxkBytzvg:
+.L_16_blocks_overflow_469:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -65145,7 +65145,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
-.L_16_blocks_ok_EoqzDusxkBytzvg:
+.L_16_blocks_ok_469:
 
 
 
@@ -65276,7 +65276,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_zCBwarExqmDnwjF
+	jl	.L_small_initial_partial_block_470
 
 
 
@@ -65335,8 +65335,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_zCBwarExqmDnwjF
-.L_small_initial_partial_block_zCBwarExqmDnwjF:
+	jmp	.L_small_initial_compute_done_470
+.L_small_initial_partial_block_470:
 
 
 
@@ -65400,27 +65400,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_zCBwarExqmDnwjF:
+.L_small_initial_compute_done_470:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_zCBwarExqmDnwjF
+	je	.L_after_reduction_470
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_zCBwarExqmDnwjF:
-	jmp	.L_last_blocks_done_gzwxEzzolteBiAA
-.L_last_num_blocks_is_13_gzwxEzzolteBiAA:
+.L_after_reduction_470:
+	jmp	.L_last_blocks_done_446
+.L_last_num_blocks_is_13_446:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$243,%r15d
-	jae	.L_16_blocks_overflow_rBcDgiadkybFwbh
+	jae	.L_16_blocks_overflow_471
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%xmm27,%xmm4,%xmm5
-	jmp	.L_16_blocks_ok_rBcDgiadkybFwbh
+	jmp	.L_16_blocks_ok_471
 
-.L_16_blocks_overflow_rBcDgiadkybFwbh:
+.L_16_blocks_overflow_471:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -65431,7 +65431,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%xmm29,%xmm5,%xmm5
-.L_16_blocks_ok_rBcDgiadkybFwbh:
+.L_16_blocks_ok_471:
 
 
 
@@ -65581,7 +65581,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_ydylEAhcuohxern
+	jl	.L_small_initial_partial_block_472
 
 
 
@@ -65646,8 +65646,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_ydylEAhcuohxern
-.L_small_initial_partial_block_ydylEAhcuohxern:
+	jmp	.L_small_initial_compute_done_472
+.L_small_initial_partial_block_472:
 
 
 
@@ -65709,27 +65709,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_ydylEAhcuohxern:
+.L_small_initial_compute_done_472:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_ydylEAhcuohxern
+	je	.L_after_reduction_472
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_ydylEAhcuohxern:
-	jmp	.L_last_blocks_done_gzwxEzzolteBiAA
-.L_last_num_blocks_is_14_gzwxEzzolteBiAA:
+.L_after_reduction_472:
+	jmp	.L_last_blocks_done_446
+.L_last_num_blocks_is_14_446:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$242,%r15d
-	jae	.L_16_blocks_overflow_DBissuDpEtBDdDq
+	jae	.L_16_blocks_overflow_473
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%ymm27,%ymm4,%ymm5
-	jmp	.L_16_blocks_ok_DBissuDpEtBDdDq
+	jmp	.L_16_blocks_ok_473
 
-.L_16_blocks_overflow_DBissuDpEtBDdDq:
+.L_16_blocks_overflow_473:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -65740,7 +65740,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%ymm29,%ymm5,%ymm5
-.L_16_blocks_ok_DBissuDpEtBDdDq:
+.L_16_blocks_ok_473:
 
 
 
@@ -65890,7 +65890,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_weAdFlpFlgBGvvF
+	jl	.L_small_initial_partial_block_474
 
 
 
@@ -65955,8 +65955,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_weAdFlpFlgBGvvF
-.L_small_initial_partial_block_weAdFlpFlgBGvvF:
+	jmp	.L_small_initial_compute_done_474
+.L_small_initial_partial_block_474:
 
 
 
@@ -66024,27 +66024,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_weAdFlpFlgBGvvF:
+.L_small_initial_compute_done_474:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_weAdFlpFlgBGvvF
+	je	.L_after_reduction_474
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_weAdFlpFlgBGvvF:
-	jmp	.L_last_blocks_done_gzwxEzzolteBiAA
-.L_last_num_blocks_is_15_gzwxEzzolteBiAA:
+.L_after_reduction_474:
+	jmp	.L_last_blocks_done_446
+.L_last_num_blocks_is_15_446:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$241,%r15d
-	jae	.L_16_blocks_overflow_kAohyzDDrpCdCbB
+	jae	.L_16_blocks_overflow_475
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_kAohyzDDrpCdCbB
+	jmp	.L_16_blocks_ok_475
 
-.L_16_blocks_overflow_kAohyzDDrpCdCbB:
+.L_16_blocks_overflow_475:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -66055,7 +66055,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_kAohyzDDrpCdCbB:
+.L_16_blocks_ok_475:
 
 
 
@@ -66205,7 +66205,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_wzGGqcpiEhzftDp
+	jl	.L_small_initial_partial_block_476
 
 
 
@@ -66271,8 +66271,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_wzGGqcpiEhzftDp
-.L_small_initial_partial_block_wzGGqcpiEhzftDp:
+	jmp	.L_small_initial_compute_done_476
+.L_small_initial_partial_block_476:
 
 
 
@@ -66340,27 +66340,27 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_wzGGqcpiEhzftDp:
+.L_small_initial_compute_done_476:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_wzGGqcpiEhzftDp
+	je	.L_after_reduction_476
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_wzGGqcpiEhzftDp:
-	jmp	.L_last_blocks_done_gzwxEzzolteBiAA
-.L_last_num_blocks_is_16_gzwxEzzolteBiAA:
+.L_after_reduction_476:
+	jmp	.L_last_blocks_done_446
+.L_last_num_blocks_is_16_446:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$240,%r15d
-	jae	.L_16_blocks_overflow_nEnxAgcqwpiizwh
+	jae	.L_16_blocks_overflow_477
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_nEnxAgcqwpiizwh
+	jmp	.L_16_blocks_ok_477
 
-.L_16_blocks_overflow_nEnxAgcqwpiizwh:
+.L_16_blocks_overflow_477:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -66371,7 +66371,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_nEnxAgcqwpiizwh:
+.L_16_blocks_ok_477:
 
 
 
@@ -66518,7 +66518,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm5,%zmm21
 	vextracti32x4	$3,%zmm21,%xmm7
 	subq	$16 * (16 - 1),%r8
-.L_small_initial_partial_block_pysGjAasElzftre:
+.L_small_initial_partial_block_478:
 
 
 
@@ -66587,11 +66587,11 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_pysGjAasElzftre:
+.L_small_initial_compute_done_478:
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_pysGjAasElzftre:
-	jmp	.L_last_blocks_done_gzwxEzzolteBiAA
-.L_last_num_blocks_is_0_gzwxEzzolteBiAA:
+.L_after_reduction_478:
+	jmp	.L_last_blocks_done_446
+.L_last_num_blocks_is_0_446:
 	vmovdqa64	768(%rsp),%zmm13
 	vpxorq	%zmm14,%zmm13,%zmm13
 	vmovdqu64	0(%rsp,%rbx,1),%zmm12
@@ -66653,65 +66653,65 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm24,%xmm3,%xmm14
 
-.L_last_blocks_done_gzwxEzzolteBiAA:
+.L_last_blocks_done_446:
 	vpshufb	%xmm29,%xmm2,%xmm2
-	jmp	.L_ghash_done_iygyqoBzBDrEGDx
+	jmp	.L_ghash_done_334
 
-.L_message_below_equal_16_blocks_iygyqoBzBDrEGDx:
+.L_message_below_equal_16_blocks_334:
 
 
 	movl	%r8d,%r12d
 	addl	$15,%r12d
 	shrl	$4,%r12d
 	cmpq	$8,%r12
-	je	.L_small_initial_num_blocks_is_8_fjkhbFvywuClvDi
-	jl	.L_small_initial_num_blocks_is_7_1_fjkhbFvywuClvDi
+	je	.L_small_initial_num_blocks_is_8_479
+	jl	.L_small_initial_num_blocks_is_7_1_479
 
 
 	cmpq	$12,%r12
-	je	.L_small_initial_num_blocks_is_12_fjkhbFvywuClvDi
-	jl	.L_small_initial_num_blocks_is_11_9_fjkhbFvywuClvDi
+	je	.L_small_initial_num_blocks_is_12_479
+	jl	.L_small_initial_num_blocks_is_11_9_479
 
 
 	cmpq	$16,%r12
-	je	.L_small_initial_num_blocks_is_16_fjkhbFvywuClvDi
+	je	.L_small_initial_num_blocks_is_16_479
 	cmpq	$15,%r12
-	je	.L_small_initial_num_blocks_is_15_fjkhbFvywuClvDi
+	je	.L_small_initial_num_blocks_is_15_479
 	cmpq	$14,%r12
-	je	.L_small_initial_num_blocks_is_14_fjkhbFvywuClvDi
-	jmp	.L_small_initial_num_blocks_is_13_fjkhbFvywuClvDi
+	je	.L_small_initial_num_blocks_is_14_479
+	jmp	.L_small_initial_num_blocks_is_13_479
 
-.L_small_initial_num_blocks_is_11_9_fjkhbFvywuClvDi:
+.L_small_initial_num_blocks_is_11_9_479:
 
 	cmpq	$11,%r12
-	je	.L_small_initial_num_blocks_is_11_fjkhbFvywuClvDi
+	je	.L_small_initial_num_blocks_is_11_479
 	cmpq	$10,%r12
-	je	.L_small_initial_num_blocks_is_10_fjkhbFvywuClvDi
-	jmp	.L_small_initial_num_blocks_is_9_fjkhbFvywuClvDi
+	je	.L_small_initial_num_blocks_is_10_479
+	jmp	.L_small_initial_num_blocks_is_9_479
 
-.L_small_initial_num_blocks_is_7_1_fjkhbFvywuClvDi:
+.L_small_initial_num_blocks_is_7_1_479:
 	cmpq	$4,%r12
-	je	.L_small_initial_num_blocks_is_4_fjkhbFvywuClvDi
-	jl	.L_small_initial_num_blocks_is_3_1_fjkhbFvywuClvDi
+	je	.L_small_initial_num_blocks_is_4_479
+	jl	.L_small_initial_num_blocks_is_3_1_479
 
 	cmpq	$7,%r12
-	je	.L_small_initial_num_blocks_is_7_fjkhbFvywuClvDi
+	je	.L_small_initial_num_blocks_is_7_479
 	cmpq	$6,%r12
-	je	.L_small_initial_num_blocks_is_6_fjkhbFvywuClvDi
-	jmp	.L_small_initial_num_blocks_is_5_fjkhbFvywuClvDi
+	je	.L_small_initial_num_blocks_is_6_479
+	jmp	.L_small_initial_num_blocks_is_5_479
 
-.L_small_initial_num_blocks_is_3_1_fjkhbFvywuClvDi:
+.L_small_initial_num_blocks_is_3_1_479:
 
 	cmpq	$3,%r12
-	je	.L_small_initial_num_blocks_is_3_fjkhbFvywuClvDi
+	je	.L_small_initial_num_blocks_is_3_479
 	cmpq	$2,%r12
-	je	.L_small_initial_num_blocks_is_2_fjkhbFvywuClvDi
+	je	.L_small_initial_num_blocks_is_2_479
 
 
 
 
 
-.L_small_initial_num_blocks_is_1_fjkhbFvywuClvDi:
+.L_small_initial_num_blocks_is_1_479:
 	vmovdqa64	SHUF_MASK(%rip),%xmm29
 	vpaddd	ONE(%rip),%xmm2,%xmm0
 	leaq	byte64_len_to_mask_table(%rip),%r10
@@ -66760,7 +66760,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_tqqgaGflmBqowhn
+	jl	.L_small_initial_partial_block_480
 
 
 
@@ -66802,8 +66802,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_tqqgaGflmBqowhn
-.L_small_initial_partial_block_tqqgaGflmBqowhn:
+	jmp	.L_small_initial_compute_done_480
+.L_small_initial_partial_block_480:
 
 
 
@@ -66827,11 +66827,11 @@ ossl_aes_gcm_encrypt_avx512:
 
 	vpxorq	%xmm13,%xmm14,%xmm14
 
-	jmp	.L_after_reduction_tqqgaGflmBqowhn
-.L_small_initial_compute_done_tqqgaGflmBqowhn:
-.L_after_reduction_tqqgaGflmBqowhn:
-	jmp	.L_small_initial_blocks_encrypted_fjkhbFvywuClvDi
-.L_small_initial_num_blocks_is_2_fjkhbFvywuClvDi:
+	jmp	.L_after_reduction_480
+.L_small_initial_compute_done_480:
+.L_after_reduction_480:
+	jmp	.L_small_initial_blocks_encrypted_479
+.L_small_initial_num_blocks_is_2_479:
 	vmovdqa64	SHUF_MASK(%rip),%ymm29
 	vshufi64x2	$0,%ymm2,%ymm2,%ymm0
 	vpaddd	ddq_add_1234(%rip),%ymm0,%ymm0
@@ -66882,7 +66882,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_jaewgcmucxndegx
+	jl	.L_small_initial_partial_block_481
 
 
 
@@ -66924,8 +66924,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_jaewgcmucxndegx
-.L_small_initial_partial_block_jaewgcmucxndegx:
+	jmp	.L_small_initial_compute_done_481
+.L_small_initial_partial_block_481:
 
 
 
@@ -66970,14 +66970,14 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_jaewgcmucxndegx:
+.L_small_initial_compute_done_481:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_jaewgcmucxndegx
+	je	.L_after_reduction_481
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_jaewgcmucxndegx:
-	jmp	.L_small_initial_blocks_encrypted_fjkhbFvywuClvDi
-.L_small_initial_num_blocks_is_3_fjkhbFvywuClvDi:
+.L_after_reduction_481:
+	jmp	.L_small_initial_blocks_encrypted_479
+.L_small_initial_num_blocks_is_3_479:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -67028,7 +67028,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_AueghshnrfcFmfw
+	jl	.L_small_initial_partial_block_482
 
 
 
@@ -67071,8 +67071,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_AueghshnrfcFmfw
-.L_small_initial_partial_block_AueghshnrfcFmfw:
+	jmp	.L_small_initial_compute_done_482
+.L_small_initial_partial_block_482:
 
 
 
@@ -67117,14 +67117,14 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_AueghshnrfcFmfw:
+.L_small_initial_compute_done_482:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_AueghshnrfcFmfw
+	je	.L_after_reduction_482
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_AueghshnrfcFmfw:
-	jmp	.L_small_initial_blocks_encrypted_fjkhbFvywuClvDi
-.L_small_initial_num_blocks_is_4_fjkhbFvywuClvDi:
+.L_after_reduction_482:
+	jmp	.L_small_initial_blocks_encrypted_479
+.L_small_initial_num_blocks_is_4_479:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -67175,7 +67175,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_lrnwoafpFsiCueF
+	jl	.L_small_initial_partial_block_483
 
 
 
@@ -67217,8 +67217,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_lrnwoafpFsiCueF
-.L_small_initial_partial_block_lrnwoafpFsiCueF:
+	jmp	.L_small_initial_compute_done_483
+.L_small_initial_partial_block_483:
 
 
 
@@ -67264,14 +67264,14 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_lrnwoafpFsiCueF:
+.L_small_initial_compute_done_483:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_lrnwoafpFsiCueF
+	je	.L_after_reduction_483
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_lrnwoafpFsiCueF:
-	jmp	.L_small_initial_blocks_encrypted_fjkhbFvywuClvDi
-.L_small_initial_num_blocks_is_5_fjkhbFvywuClvDi:
+.L_after_reduction_483:
+	jmp	.L_small_initial_blocks_encrypted_479
+.L_small_initial_num_blocks_is_5_479:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -67344,7 +67344,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_zfmzgwhDvmGdAnD
+	jl	.L_small_initial_partial_block_484
 
 
 
@@ -67396,8 +67396,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_zfmzgwhDvmGdAnD
-.L_small_initial_partial_block_zfmzgwhDvmGdAnD:
+	jmp	.L_small_initial_compute_done_484
+.L_small_initial_partial_block_484:
 
 
 
@@ -67442,14 +67442,14 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_zfmzgwhDvmGdAnD:
+.L_small_initial_compute_done_484:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_zfmzgwhDvmGdAnD
+	je	.L_after_reduction_484
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_zfmzgwhDvmGdAnD:
-	jmp	.L_small_initial_blocks_encrypted_fjkhbFvywuClvDi
-.L_small_initial_num_blocks_is_6_fjkhbFvywuClvDi:
+.L_after_reduction_484:
+	jmp	.L_small_initial_blocks_encrypted_479
+.L_small_initial_num_blocks_is_6_479:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -67522,7 +67522,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_emcBAFyAwubDAvm
+	jl	.L_small_initial_partial_block_485
 
 
 
@@ -67574,8 +67574,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_emcBAFyAwubDAvm
-.L_small_initial_partial_block_emcBAFyAwubDAvm:
+	jmp	.L_small_initial_compute_done_485
+.L_small_initial_partial_block_485:
 
 
 
@@ -67630,14 +67630,14 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_emcBAFyAwubDAvm:
+.L_small_initial_compute_done_485:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_emcBAFyAwubDAvm
+	je	.L_after_reduction_485
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_emcBAFyAwubDAvm:
-	jmp	.L_small_initial_blocks_encrypted_fjkhbFvywuClvDi
-.L_small_initial_num_blocks_is_7_fjkhbFvywuClvDi:
+.L_after_reduction_485:
+	jmp	.L_small_initial_blocks_encrypted_479
+.L_small_initial_num_blocks_is_7_479:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -67710,7 +67710,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_lFpqvebAgebnlul
+	jl	.L_small_initial_partial_block_486
 
 
 
@@ -67763,8 +67763,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_lFpqvebAgebnlul
-.L_small_initial_partial_block_lFpqvebAgebnlul:
+	jmp	.L_small_initial_compute_done_486
+.L_small_initial_partial_block_486:
 
 
 
@@ -67819,14 +67819,14 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_lFpqvebAgebnlul:
+.L_small_initial_compute_done_486:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_lFpqvebAgebnlul
+	je	.L_after_reduction_486
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_lFpqvebAgebnlul:
-	jmp	.L_small_initial_blocks_encrypted_fjkhbFvywuClvDi
-.L_small_initial_num_blocks_is_8_fjkhbFvywuClvDi:
+.L_after_reduction_486:
+	jmp	.L_small_initial_blocks_encrypted_479
+.L_small_initial_num_blocks_is_8_479:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -67899,7 +67899,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_rqhAzAClokAbGve
+	jl	.L_small_initial_partial_block_487
 
 
 
@@ -67950,8 +67950,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_rqhAzAClokAbGve
-.L_small_initial_partial_block_rqhAzAClokAbGve:
+	jmp	.L_small_initial_compute_done_487
+.L_small_initial_partial_block_487:
 
 
 
@@ -68007,14 +68007,14 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_rqhAzAClokAbGve:
+.L_small_initial_compute_done_487:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_rqhAzAClokAbGve
+	je	.L_after_reduction_487
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_rqhAzAClokAbGve:
-	jmp	.L_small_initial_blocks_encrypted_fjkhbFvywuClvDi
-.L_small_initial_num_blocks_is_9_fjkhbFvywuClvDi:
+.L_after_reduction_487:
+	jmp	.L_small_initial_blocks_encrypted_479
+.L_small_initial_num_blocks_is_9_479:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -68108,7 +68108,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_cuwvipptyzcGaqy
+	jl	.L_small_initial_partial_block_488
 
 
 
@@ -68169,8 +68169,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_cuwvipptyzcGaqy
-.L_small_initial_partial_block_cuwvipptyzcGaqy:
+	jmp	.L_small_initial_compute_done_488
+.L_small_initial_partial_block_488:
 
 
 
@@ -68224,14 +68224,14 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_cuwvipptyzcGaqy:
+.L_small_initial_compute_done_488:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_cuwvipptyzcGaqy
+	je	.L_after_reduction_488
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_cuwvipptyzcGaqy:
-	jmp	.L_small_initial_blocks_encrypted_fjkhbFvywuClvDi
-.L_small_initial_num_blocks_is_10_fjkhbFvywuClvDi:
+.L_after_reduction_488:
+	jmp	.L_small_initial_blocks_encrypted_479
+.L_small_initial_num_blocks_is_10_479:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -68325,7 +68325,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_ooyjhummfFduyai
+	jl	.L_small_initial_partial_block_489
 
 
 
@@ -68386,8 +68386,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_ooyjhummfFduyai
-.L_small_initial_partial_block_ooyjhummfFduyai:
+	jmp	.L_small_initial_compute_done_489
+.L_small_initial_partial_block_489:
 
 
 
@@ -68451,14 +68451,14 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_ooyjhummfFduyai:
+.L_small_initial_compute_done_489:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_ooyjhummfFduyai
+	je	.L_after_reduction_489
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_ooyjhummfFduyai:
-	jmp	.L_small_initial_blocks_encrypted_fjkhbFvywuClvDi
-.L_small_initial_num_blocks_is_11_fjkhbFvywuClvDi:
+.L_after_reduction_489:
+	jmp	.L_small_initial_blocks_encrypted_479
+.L_small_initial_num_blocks_is_11_479:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -68552,7 +68552,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_xsddqtyfukjktdn
+	jl	.L_small_initial_partial_block_490
 
 
 
@@ -68614,8 +68614,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_xsddqtyfukjktdn
-.L_small_initial_partial_block_xsddqtyfukjktdn:
+	jmp	.L_small_initial_compute_done_490
+.L_small_initial_partial_block_490:
 
 
 
@@ -68679,14 +68679,14 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_xsddqtyfukjktdn:
+.L_small_initial_compute_done_490:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_xsddqtyfukjktdn
+	je	.L_after_reduction_490
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_xsddqtyfukjktdn:
-	jmp	.L_small_initial_blocks_encrypted_fjkhbFvywuClvDi
-.L_small_initial_num_blocks_is_12_fjkhbFvywuClvDi:
+.L_after_reduction_490:
+	jmp	.L_small_initial_blocks_encrypted_479
+.L_small_initial_num_blocks_is_12_479:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -68780,7 +68780,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_jgFhnerFhcnkGrE
+	jl	.L_small_initial_partial_block_491
 
 
 
@@ -68836,8 +68836,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_jgFhnerFhcnkGrE
-.L_small_initial_partial_block_jgFhnerFhcnkGrE:
+	jmp	.L_small_initial_compute_done_491
+.L_small_initial_partial_block_491:
 
 
 
@@ -68902,14 +68902,14 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_jgFhnerFhcnkGrE:
+.L_small_initial_compute_done_491:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_jgFhnerFhcnkGrE
+	je	.L_after_reduction_491
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_jgFhnerFhcnkGrE:
-	jmp	.L_small_initial_blocks_encrypted_fjkhbFvywuClvDi
-.L_small_initial_num_blocks_is_13_fjkhbFvywuClvDi:
+.L_after_reduction_491:
+	jmp	.L_small_initial_blocks_encrypted_479
+.L_small_initial_num_blocks_is_13_479:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -69024,7 +69024,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_BDqmwyidnAqtBwp
+	jl	.L_small_initial_partial_block_492
 
 
 
@@ -69090,8 +69090,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_BDqmwyidnAqtBwp
-.L_small_initial_partial_block_BDqmwyidnAqtBwp:
+	jmp	.L_small_initial_compute_done_492
+.L_small_initial_partial_block_492:
 
 
 
@@ -69150,14 +69150,14 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_BDqmwyidnAqtBwp:
+.L_small_initial_compute_done_492:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_BDqmwyidnAqtBwp
+	je	.L_after_reduction_492
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_BDqmwyidnAqtBwp:
-	jmp	.L_small_initial_blocks_encrypted_fjkhbFvywuClvDi
-.L_small_initial_num_blocks_is_14_fjkhbFvywuClvDi:
+.L_after_reduction_492:
+	jmp	.L_small_initial_blocks_encrypted_479
+.L_small_initial_num_blocks_is_14_479:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -69272,7 +69272,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_GwxcghxuEqoynDe
+	jl	.L_small_initial_partial_block_493
 
 
 
@@ -69338,8 +69338,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_GwxcghxuEqoynDe
-.L_small_initial_partial_block_GwxcghxuEqoynDe:
+	jmp	.L_small_initial_compute_done_493
+.L_small_initial_partial_block_493:
 
 
 
@@ -69408,14 +69408,14 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_GwxcghxuEqoynDe:
+.L_small_initial_compute_done_493:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_GwxcghxuEqoynDe
+	je	.L_after_reduction_493
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_GwxcghxuEqoynDe:
-	jmp	.L_small_initial_blocks_encrypted_fjkhbFvywuClvDi
-.L_small_initial_num_blocks_is_15_fjkhbFvywuClvDi:
+.L_after_reduction_493:
+	jmp	.L_small_initial_blocks_encrypted_479
+.L_small_initial_num_blocks_is_15_479:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -69530,7 +69530,7 @@ ossl_aes_gcm_encrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_nEunfqrwpbdCwtA
+	jl	.L_small_initial_partial_block_494
 
 
 
@@ -69597,8 +69597,8 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_nEunfqrwpbdCwtA
-.L_small_initial_partial_block_nEunfqrwpbdCwtA:
+	jmp	.L_small_initial_compute_done_494
+.L_small_initial_partial_block_494:
 
 
 
@@ -69667,14 +69667,14 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_nEunfqrwpbdCwtA:
+.L_small_initial_compute_done_494:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_nEunfqrwpbdCwtA
+	je	.L_after_reduction_494
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_nEunfqrwpbdCwtA:
-	jmp	.L_small_initial_blocks_encrypted_fjkhbFvywuClvDi
-.L_small_initial_num_blocks_is_16_fjkhbFvywuClvDi:
+.L_after_reduction_494:
+	jmp	.L_small_initial_blocks_encrypted_479
+.L_small_initial_num_blocks_is_16_479:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -69786,7 +69786,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vpshufb	%zmm29,%zmm5,%zmm11
 	vextracti32x4	$3,%zmm11,%xmm13
 	subq	$16 * (16 - 1),%r8
-.L_small_initial_partial_block_afkDoqpaFxxhmvw:
+.L_small_initial_partial_block_495:
 
 
 
@@ -69856,18 +69856,18 @@ ossl_aes_gcm_encrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_afkDoqpaFxxhmvw:
+.L_small_initial_compute_done_495:
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_afkDoqpaFxxhmvw:
-.L_small_initial_blocks_encrypted_fjkhbFvywuClvDi:
-.L_ghash_done_iygyqoBzBDrEGDx:
+.L_after_reduction_495:
+.L_small_initial_blocks_encrypted_479:
+.L_ghash_done_334:
 	vmovdqu64	%xmm2,0(%rsi)
 	vmovdqu64	%xmm14,64(%rsi)
-.L_enc_dec_done_iygyqoBzBDrEGDx:
+.L_enc_dec_done_334:
 	jmp	.Lexit_gcm_encrypt
 .Lexit_gcm_encrypt:
 	cmpq	$256,%r8
-	jbe	.Lskip_hkeys_cleanup_nAzenDskcnmrwEb
+	jbe	.Lskip_hkeys_cleanup_496
 	vpxor	%xmm0,%xmm0,%xmm0
 	vmovdqa64	%zmm0,0(%rsp)
 	vmovdqa64	%zmm0,64(%rsp)
@@ -69881,7 +69881,7 @@ ossl_aes_gcm_encrypt_avx512:
 	vmovdqa64	%zmm0,576(%rsp)
 	vmovdqa64	%zmm0,640(%rsp)
 	vmovdqa64	%zmm0,704(%rsp)
-.Lskip_hkeys_cleanup_nAzenDskcnmrwEb:
+.Lskip_hkeys_cleanup_496:
 	vzeroupper
 	leaq	(%rbp),%rsp
 .cfi_def_cfa_register	%rsp
@@ -69969,13 +69969,13 @@ ossl_aes_gcm_decrypt_avx512:
 .align	32
 .Laes_gcm_decrypt_128_avx512:
 	orq	%r8,%r8
-	je	.L_enc_dec_done_kpzgFwDvlzADzny
+	je	.L_enc_dec_done_497
 	xorq	%r14,%r14
 	vmovdqu64	64(%rsi),%xmm14
 
 	movq	(%rdx),%r11
 	orq	%r11,%r11
-	je	.L_partial_block_done_jAEgtiodweiEsqa
+	je	.L_partial_block_done_498
 	movl	$16,%r10d
 	leaq	byte_len_to_mask_table(%rip),%r12
 	cmpq	%r10,%r8
@@ -69999,9 +69999,9 @@ ossl_aes_gcm_decrypt_avx512:
 
 	leaq	(%r8,%r11,1),%r13
 	subq	$16,%r13
-	jge	.L_no_extra_mask_jAEgtiodweiEsqa
+	jge	.L_no_extra_mask_498
 	subq	%r13,%r12
-.L_no_extra_mask_jAEgtiodweiEsqa:
+.L_no_extra_mask_498:
 
 
 
@@ -70012,7 +70012,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%xmm5,%xmm6,%xmm6
 	vpxorq	%xmm6,%xmm14,%xmm14
 	cmpq	$0,%r13
-	jl	.L_partial_incomplete_jAEgtiodweiEsqa
+	jl	.L_partial_incomplete_498
 
 	vpclmulqdq	$0x11,%xmm4,%xmm14,%xmm7
 	vpclmulqdq	$0x00,%xmm4,%xmm14,%xmm10
@@ -70047,13 +70047,13 @@ ossl_aes_gcm_decrypt_avx512:
 	movq	%r11,%r12
 	movq	$16,%r11
 	subq	%r12,%r11
-	jmp	.L_enc_dec_done_jAEgtiodweiEsqa
+	jmp	.L_enc_dec_done_498
 
-.L_partial_incomplete_jAEgtiodweiEsqa:
+.L_partial_incomplete_498:
 	addq	%r8,(%rdx)
 	movq	%r8,%r11
 
-.L_enc_dec_done_jAEgtiodweiEsqa:
+.L_enc_dec_done_498:
 
 
 	leaq	byte_len_to_mask_table(%rip),%r12
@@ -70061,12 +70061,12 @@ ossl_aes_gcm_decrypt_avx512:
 	vmovdqu64	%xmm14,64(%rsi)
 	movq	%r9,%r12
 	vmovdqu8	%xmm3,(%r12){%k1}
-.L_partial_block_done_jAEgtiodweiEsqa:
+.L_partial_block_done_498:
 	vmovdqu64	0(%rsi),%xmm2
 	subq	%r11,%r8
-	je	.L_enc_dec_done_kpzgFwDvlzADzny
+	je	.L_enc_dec_done_497
 	cmpq	$256,%r8
-	jbe	.L_message_below_equal_16_blocks_kpzgFwDvlzADzny
+	jbe	.L_message_below_equal_16_blocks_497
 
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vmovdqa64	ddq_addbe_4444(%rip),%zmm27
@@ -70086,13 +70086,13 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpb	$240,%r15b
-	jae	.L_next_16_overflow_dBeAgDgfbzxElcb
+	jae	.L_next_16_overflow_499
 	vpaddd	%zmm28,%zmm2,%zmm7
 	vpaddd	%zmm27,%zmm7,%zmm10
 	vpaddd	%zmm27,%zmm10,%zmm11
 	vpaddd	%zmm27,%zmm11,%zmm12
-	jmp	.L_next_16_ok_dBeAgDgfbzxElcb
-.L_next_16_overflow_dBeAgDgfbzxElcb:
+	jmp	.L_next_16_ok_499
+.L_next_16_overflow_499:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vmovdqa64	ddq_add_4444(%rip),%zmm12
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm7
@@ -70103,7 +70103,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm10,%zmm10
 	vpshufb	%zmm29,%zmm11,%zmm11
 	vpshufb	%zmm29,%zmm12,%zmm12
-.L_next_16_ok_dBeAgDgfbzxElcb:
+.L_next_16_ok_499:
 	vshufi64x2	$255,%zmm12,%zmm12,%zmm2
 	addb	$16,%r15b
 
@@ -70191,7 +70191,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vmovdqa64	%zmm11,896(%rsp)
 	vmovdqa64	%zmm12,960(%rsp)
 	testq	%r14,%r14
-	jnz	.L_skip_hkeys_precomputation_itkoyyqvjiztGGp
+	jnz	.L_skip_hkeys_precomputation_500
 
 	vmovdqu64	288(%rsi),%zmm0
 	vmovdqu64	%zmm0,704(%rsp)
@@ -70207,20 +70207,20 @@ ossl_aes_gcm_decrypt_avx512:
 
 	vmovdqu64	96(%rsi),%zmm5
 	vmovdqu64	%zmm5,512(%rsp)
-.L_skip_hkeys_precomputation_itkoyyqvjiztGGp:
+.L_skip_hkeys_precomputation_500:
 	cmpq	$512,%r8
-	jb	.L_message_below_32_blocks_kpzgFwDvlzADzny
+	jb	.L_message_below_32_blocks_497
 
 
 
 	cmpb	$240,%r15b
-	jae	.L_next_16_overflow_cDClwfcyajGjzdu
+	jae	.L_next_16_overflow_501
 	vpaddd	%zmm28,%zmm2,%zmm7
 	vpaddd	%zmm27,%zmm7,%zmm10
 	vpaddd	%zmm27,%zmm10,%zmm11
 	vpaddd	%zmm27,%zmm11,%zmm12
-	jmp	.L_next_16_ok_cDClwfcyajGjzdu
-.L_next_16_overflow_cDClwfcyajGjzdu:
+	jmp	.L_next_16_ok_501
+.L_next_16_overflow_501:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vmovdqa64	ddq_add_4444(%rip),%zmm12
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm7
@@ -70231,7 +70231,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm10,%zmm10
 	vpshufb	%zmm29,%zmm11,%zmm11
 	vpshufb	%zmm29,%zmm12,%zmm12
-.L_next_16_ok_cDClwfcyajGjzdu:
+.L_next_16_ok_501:
 	vshufi64x2	$255,%zmm12,%zmm12,%zmm2
 	addb	$16,%r15b
 
@@ -70319,7 +70319,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vmovdqa64	%zmm11,1152(%rsp)
 	vmovdqa64	%zmm12,1216(%rsp)
 	testq	%r14,%r14
-	jnz	.L_skip_hkeys_precomputation_kDBGpbFpykhbaBz
+	jnz	.L_skip_hkeys_precomputation_502
 	vmovdqu64	640(%rsp),%zmm3
 
 
@@ -70567,22 +70567,22 @@ ossl_aes_gcm_decrypt_avx512:
 	vpternlogq	$0x96,%zmm7,%zmm6,%zmm5
 
 	vmovdqu64	%zmm5,0(%rsp)
-.L_skip_hkeys_precomputation_kDBGpbFpykhbaBz:
+.L_skip_hkeys_precomputation_502:
 	movq	$1,%r14
 	addq	$512,%r11
 	subq	$512,%r8
 
 	cmpq	$768,%r8
-	jb	.L_no_more_big_nblocks_kpzgFwDvlzADzny
-.L_encrypt_big_nblocks_kpzgFwDvlzADzny:
+	jb	.L_no_more_big_nblocks_497
+.L_encrypt_big_nblocks_497:
 	cmpb	$240,%r15b
-	jae	.L_16_blocks_overflow_deetwmnmqriqGnl
+	jae	.L_16_blocks_overflow_503
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_deetwmnmqriqGnl
-.L_16_blocks_overflow_deetwmnmqriqGnl:
+	jmp	.L_16_blocks_ok_503
+.L_16_blocks_overflow_503:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -70593,7 +70593,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_deetwmnmqriqGnl:
+.L_16_blocks_ok_503:
 	vbroadcastf64x2	0(%rdi),%zmm30
 	vpxorq	768(%rsp),%zmm14,%zmm8
 	vmovdqu64	0(%rsp),%zmm1
@@ -70758,13 +70758,13 @@ ossl_aes_gcm_decrypt_avx512:
 	vmovdqa64	%zmm4,1408(%rsp)
 	vmovdqa64	%zmm5,1472(%rsp)
 	cmpb	$240,%r15b
-	jae	.L_16_blocks_overflow_imECwClsCdbxwmD
+	jae	.L_16_blocks_overflow_504
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_imECwClsCdbxwmD
-.L_16_blocks_overflow_imECwClsCdbxwmD:
+	jmp	.L_16_blocks_ok_504
+.L_16_blocks_overflow_504:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -70775,7 +70775,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_imECwClsCdbxwmD:
+.L_16_blocks_ok_504:
 	vbroadcastf64x2	0(%rdi),%zmm30
 	vmovdqa64	1024(%rsp),%zmm8
 	vmovdqu64	256(%rsp),%zmm1
@@ -70940,13 +70940,13 @@ ossl_aes_gcm_decrypt_avx512:
 	vmovdqa64	%zmm4,896(%rsp)
 	vmovdqa64	%zmm5,960(%rsp)
 	cmpb	$240,%r15b
-	jae	.L_16_blocks_overflow_vcBkrdEmphAtbBl
+	jae	.L_16_blocks_overflow_505
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_vcBkrdEmphAtbBl
-.L_16_blocks_overflow_vcBkrdEmphAtbBl:
+	jmp	.L_16_blocks_ok_505
+.L_16_blocks_overflow_505:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -70957,7 +70957,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_vcBkrdEmphAtbBl:
+.L_16_blocks_ok_505:
 	vbroadcastf64x2	0(%rdi),%zmm30
 	vmovdqa64	1280(%rsp),%zmm8
 	vmovdqu64	512(%rsp),%zmm1
@@ -71152,16 +71152,16 @@ ossl_aes_gcm_decrypt_avx512:
 	addq	$768,%r11
 	subq	$768,%r8
 	cmpq	$768,%r8
-	jae	.L_encrypt_big_nblocks_kpzgFwDvlzADzny
+	jae	.L_encrypt_big_nblocks_497
 
-.L_no_more_big_nblocks_kpzgFwDvlzADzny:
+.L_no_more_big_nblocks_497:
 
 	cmpq	$512,%r8
-	jae	.L_encrypt_32_blocks_kpzgFwDvlzADzny
+	jae	.L_encrypt_32_blocks_497
 
 	cmpq	$256,%r8
-	jae	.L_encrypt_16_blocks_kpzgFwDvlzADzny
-.L_encrypt_0_blocks_ghash_32_kpzgFwDvlzADzny:
+	jae	.L_encrypt_16_blocks_497
+.L_encrypt_0_blocks_ghash_32_497:
 	movl	%r8d,%r10d
 	andl	$~15,%r10d
 	movl	$256,%ebx
@@ -71204,61 +71204,61 @@ ossl_aes_gcm_decrypt_avx512:
 	movl	%r8d,%r10d
 	addl	$15,%r10d
 	shrl	$4,%r10d
-	je	.L_last_num_blocks_is_0_eetGtppdondlGqv
+	je	.L_last_num_blocks_is_0_506
 
 	cmpl	$8,%r10d
-	je	.L_last_num_blocks_is_8_eetGtppdondlGqv
-	jb	.L_last_num_blocks_is_7_1_eetGtppdondlGqv
+	je	.L_last_num_blocks_is_8_506
+	jb	.L_last_num_blocks_is_7_1_506
 
 
 	cmpl	$12,%r10d
-	je	.L_last_num_blocks_is_12_eetGtppdondlGqv
-	jb	.L_last_num_blocks_is_11_9_eetGtppdondlGqv
+	je	.L_last_num_blocks_is_12_506
+	jb	.L_last_num_blocks_is_11_9_506
 
 
 	cmpl	$15,%r10d
-	je	.L_last_num_blocks_is_15_eetGtppdondlGqv
-	ja	.L_last_num_blocks_is_16_eetGtppdondlGqv
+	je	.L_last_num_blocks_is_15_506
+	ja	.L_last_num_blocks_is_16_506
 	cmpl	$14,%r10d
-	je	.L_last_num_blocks_is_14_eetGtppdondlGqv
-	jmp	.L_last_num_blocks_is_13_eetGtppdondlGqv
+	je	.L_last_num_blocks_is_14_506
+	jmp	.L_last_num_blocks_is_13_506
 
-.L_last_num_blocks_is_11_9_eetGtppdondlGqv:
+.L_last_num_blocks_is_11_9_506:
 
 	cmpl	$10,%r10d
-	je	.L_last_num_blocks_is_10_eetGtppdondlGqv
-	ja	.L_last_num_blocks_is_11_eetGtppdondlGqv
-	jmp	.L_last_num_blocks_is_9_eetGtppdondlGqv
+	je	.L_last_num_blocks_is_10_506
+	ja	.L_last_num_blocks_is_11_506
+	jmp	.L_last_num_blocks_is_9_506
 
-.L_last_num_blocks_is_7_1_eetGtppdondlGqv:
+.L_last_num_blocks_is_7_1_506:
 	cmpl	$4,%r10d
-	je	.L_last_num_blocks_is_4_eetGtppdondlGqv
-	jb	.L_last_num_blocks_is_3_1_eetGtppdondlGqv
+	je	.L_last_num_blocks_is_4_506
+	jb	.L_last_num_blocks_is_3_1_506
 
 	cmpl	$6,%r10d
-	ja	.L_last_num_blocks_is_7_eetGtppdondlGqv
-	je	.L_last_num_blocks_is_6_eetGtppdondlGqv
-	jmp	.L_last_num_blocks_is_5_eetGtppdondlGqv
+	ja	.L_last_num_blocks_is_7_506
+	je	.L_last_num_blocks_is_6_506
+	jmp	.L_last_num_blocks_is_5_506
 
-.L_last_num_blocks_is_3_1_eetGtppdondlGqv:
+.L_last_num_blocks_is_3_1_506:
 
 	cmpl	$2,%r10d
-	ja	.L_last_num_blocks_is_3_eetGtppdondlGqv
-	je	.L_last_num_blocks_is_2_eetGtppdondlGqv
-.L_last_num_blocks_is_1_eetGtppdondlGqv:
+	ja	.L_last_num_blocks_is_3_506
+	je	.L_last_num_blocks_is_2_506
+.L_last_num_blocks_is_1_506:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$255,%r15d
-	jae	.L_16_blocks_overflow_gfjvCdibyncsraa
+	jae	.L_16_blocks_overflow_507
 	vpaddd	%xmm28,%xmm2,%xmm0
-	jmp	.L_16_blocks_ok_gfjvCdibyncsraa
+	jmp	.L_16_blocks_ok_507
 
-.L_16_blocks_overflow_gfjvCdibyncsraa:
+.L_16_blocks_overflow_507:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%xmm29,%xmm0,%xmm0
-.L_16_blocks_ok_gfjvCdibyncsraa:
+.L_16_blocks_ok_507:
 
 
 
@@ -71342,7 +71342,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_hbrfdwDhzcAtwls
+	jl	.L_small_initial_partial_block_508
 
 
 
@@ -71386,8 +71386,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_hbrfdwDhzcAtwls
-.L_small_initial_partial_block_hbrfdwDhzcAtwls:
+	jmp	.L_small_initial_compute_done_508
+.L_small_initial_partial_block_508:
 
 
 
@@ -71439,24 +71439,24 @@ ossl_aes_gcm_decrypt_avx512:
 
 	vpxorq	%xmm7,%xmm14,%xmm14
 
-	jmp	.L_after_reduction_hbrfdwDhzcAtwls
-.L_small_initial_compute_done_hbrfdwDhzcAtwls:
-.L_after_reduction_hbrfdwDhzcAtwls:
-	jmp	.L_last_blocks_done_eetGtppdondlGqv
-.L_last_num_blocks_is_2_eetGtppdondlGqv:
+	jmp	.L_after_reduction_508
+.L_small_initial_compute_done_508:
+.L_after_reduction_508:
+	jmp	.L_last_blocks_done_506
+.L_last_num_blocks_is_2_506:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$254,%r15d
-	jae	.L_16_blocks_overflow_zmdmmyjEvqbznbA
+	jae	.L_16_blocks_overflow_509
 	vpaddd	%ymm28,%ymm2,%ymm0
-	jmp	.L_16_blocks_ok_zmdmmyjEvqbznbA
+	jmp	.L_16_blocks_ok_509
 
-.L_16_blocks_overflow_zmdmmyjEvqbznbA:
+.L_16_blocks_overflow_509:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%ymm29,%ymm0,%ymm0
-.L_16_blocks_ok_zmdmmyjEvqbznbA:
+.L_16_blocks_ok_509:
 
 
 
@@ -71541,7 +71541,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_cxdDliEcuurqbjq
+	jl	.L_small_initial_partial_block_510
 
 
 
@@ -71585,8 +71585,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_cxdDliEcuurqbjq
-.L_small_initial_partial_block_cxdDliEcuurqbjq:
+	jmp	.L_small_initial_compute_done_510
+.L_small_initial_partial_block_510:
 
 
 
@@ -71633,27 +71633,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_cxdDliEcuurqbjq:
+.L_small_initial_compute_done_510:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_cxdDliEcuurqbjq
+	je	.L_after_reduction_510
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_cxdDliEcuurqbjq:
-	jmp	.L_last_blocks_done_eetGtppdondlGqv
-.L_last_num_blocks_is_3_eetGtppdondlGqv:
+.L_after_reduction_510:
+	jmp	.L_last_blocks_done_506
+.L_last_num_blocks_is_3_506:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$253,%r15d
-	jae	.L_16_blocks_overflow_fhpDcEkfvbphmqF
+	jae	.L_16_blocks_overflow_511
 	vpaddd	%zmm28,%zmm2,%zmm0
-	jmp	.L_16_blocks_ok_fhpDcEkfvbphmqF
+	jmp	.L_16_blocks_ok_511
 
-.L_16_blocks_overflow_fhpDcEkfvbphmqF:
+.L_16_blocks_overflow_511:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%zmm29,%zmm0,%zmm0
-.L_16_blocks_ok_fhpDcEkfvbphmqF:
+.L_16_blocks_ok_511:
 
 
 
@@ -71738,7 +71738,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_hqqbsqetGCAvupc
+	jl	.L_small_initial_partial_block_512
 
 
 
@@ -71783,8 +71783,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_hqqbsqetGCAvupc
-.L_small_initial_partial_block_hqqbsqetGCAvupc:
+	jmp	.L_small_initial_compute_done_512
+.L_small_initial_partial_block_512:
 
 
 
@@ -71831,27 +71831,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_hqqbsqetGCAvupc:
+.L_small_initial_compute_done_512:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_hqqbsqetGCAvupc
+	je	.L_after_reduction_512
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_hqqbsqetGCAvupc:
-	jmp	.L_last_blocks_done_eetGtppdondlGqv
-.L_last_num_blocks_is_4_eetGtppdondlGqv:
+.L_after_reduction_512:
+	jmp	.L_last_blocks_done_506
+.L_last_num_blocks_is_4_506:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$252,%r15d
-	jae	.L_16_blocks_overflow_ibBbgCccGjgpvDh
+	jae	.L_16_blocks_overflow_513
 	vpaddd	%zmm28,%zmm2,%zmm0
-	jmp	.L_16_blocks_ok_ibBbgCccGjgpvDh
+	jmp	.L_16_blocks_ok_513
 
-.L_16_blocks_overflow_ibBbgCccGjgpvDh:
+.L_16_blocks_overflow_513:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%zmm29,%zmm0,%zmm0
-.L_16_blocks_ok_ibBbgCccGjgpvDh:
+.L_16_blocks_ok_513:
 
 
 
@@ -71936,7 +71936,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_mkdzdutAvqxDjfn
+	jl	.L_small_initial_partial_block_514
 
 
 
@@ -71981,8 +71981,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_mkdzdutAvqxDjfn
-.L_small_initial_partial_block_mkdzdutAvqxDjfn:
+	jmp	.L_small_initial_compute_done_514
+.L_small_initial_partial_block_514:
 
 
 
@@ -72030,32 +72030,32 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_mkdzdutAvqxDjfn:
+.L_small_initial_compute_done_514:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_mkdzdutAvqxDjfn
+	je	.L_after_reduction_514
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_mkdzdutAvqxDjfn:
-	jmp	.L_last_blocks_done_eetGtppdondlGqv
-.L_last_num_blocks_is_5_eetGtppdondlGqv:
+.L_after_reduction_514:
+	jmp	.L_last_blocks_done_506
+.L_last_num_blocks_is_5_506:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$251,%r15d
-	jae	.L_16_blocks_overflow_EFEnlhckpgCFbdm
+	jae	.L_16_blocks_overflow_515
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%xmm27,%xmm0,%xmm3
-	jmp	.L_16_blocks_ok_EFEnlhckpgCFbdm
+	jmp	.L_16_blocks_ok_515
 
-.L_16_blocks_overflow_EFEnlhckpgCFbdm:
+.L_16_blocks_overflow_515:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%xmm29,%xmm3,%xmm3
-.L_16_blocks_ok_EFEnlhckpgCFbdm:
+.L_16_blocks_ok_515:
 
 
 
@@ -72155,7 +72155,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_wbCqsrblzsrfFid
+	jl	.L_small_initial_partial_block_516
 
 
 
@@ -72206,8 +72206,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_wbCqsrblzsrfFid
-.L_small_initial_partial_block_wbCqsrblzsrfFid:
+	jmp	.L_small_initial_compute_done_516
+.L_small_initial_partial_block_516:
 
 
 
@@ -72255,32 +72255,32 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_wbCqsrblzsrfFid:
+.L_small_initial_compute_done_516:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_wbCqsrblzsrfFid
+	je	.L_after_reduction_516
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_wbCqsrblzsrfFid:
-	jmp	.L_last_blocks_done_eetGtppdondlGqv
-.L_last_num_blocks_is_6_eetGtppdondlGqv:
+.L_after_reduction_516:
+	jmp	.L_last_blocks_done_506
+.L_last_num_blocks_is_6_506:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$250,%r15d
-	jae	.L_16_blocks_overflow_ofmxlpECjwwAkgo
+	jae	.L_16_blocks_overflow_517
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%ymm27,%ymm0,%ymm3
-	jmp	.L_16_blocks_ok_ofmxlpECjwwAkgo
+	jmp	.L_16_blocks_ok_517
 
-.L_16_blocks_overflow_ofmxlpECjwwAkgo:
+.L_16_blocks_overflow_517:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%ymm29,%ymm3,%ymm3
-.L_16_blocks_ok_ofmxlpECjwwAkgo:
+.L_16_blocks_ok_517:
 
 
 
@@ -72380,7 +72380,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_wwbqxuzhtAlfqta
+	jl	.L_small_initial_partial_block_518
 
 
 
@@ -72431,8 +72431,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_wwbqxuzhtAlfqta
-.L_small_initial_partial_block_wwbqxuzhtAlfqta:
+	jmp	.L_small_initial_compute_done_518
+.L_small_initial_partial_block_518:
 
 
 
@@ -72486,32 +72486,32 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_wwbqxuzhtAlfqta:
+.L_small_initial_compute_done_518:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_wwbqxuzhtAlfqta
+	je	.L_after_reduction_518
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_wwbqxuzhtAlfqta:
-	jmp	.L_last_blocks_done_eetGtppdondlGqv
-.L_last_num_blocks_is_7_eetGtppdondlGqv:
+.L_after_reduction_518:
+	jmp	.L_last_blocks_done_506
+.L_last_num_blocks_is_7_506:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$249,%r15d
-	jae	.L_16_blocks_overflow_bqdqbesqojlslco
+	jae	.L_16_blocks_overflow_519
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
-	jmp	.L_16_blocks_ok_bqdqbesqojlslco
+	jmp	.L_16_blocks_ok_519
 
-.L_16_blocks_overflow_bqdqbesqojlslco:
+.L_16_blocks_overflow_519:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
-.L_16_blocks_ok_bqdqbesqojlslco:
+.L_16_blocks_ok_519:
 
 
 
@@ -72611,7 +72611,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_bAxjwxmixvpFnqD
+	jl	.L_small_initial_partial_block_520
 
 
 
@@ -72663,8 +72663,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_bAxjwxmixvpFnqD
-.L_small_initial_partial_block_bAxjwxmixvpFnqD:
+	jmp	.L_small_initial_compute_done_520
+.L_small_initial_partial_block_520:
 
 
 
@@ -72718,32 +72718,32 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_bAxjwxmixvpFnqD:
+.L_small_initial_compute_done_520:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_bAxjwxmixvpFnqD
+	je	.L_after_reduction_520
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_bAxjwxmixvpFnqD:
-	jmp	.L_last_blocks_done_eetGtppdondlGqv
-.L_last_num_blocks_is_8_eetGtppdondlGqv:
+.L_after_reduction_520:
+	jmp	.L_last_blocks_done_506
+.L_last_num_blocks_is_8_506:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$248,%r15d
-	jae	.L_16_blocks_overflow_pBytEyeqaDrikcE
+	jae	.L_16_blocks_overflow_521
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
-	jmp	.L_16_blocks_ok_pBytEyeqaDrikcE
+	jmp	.L_16_blocks_ok_521
 
-.L_16_blocks_overflow_pBytEyeqaDrikcE:
+.L_16_blocks_overflow_521:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
-.L_16_blocks_ok_pBytEyeqaDrikcE:
+.L_16_blocks_ok_521:
 
 
 
@@ -72843,7 +72843,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_mdBakavzFGwGxqB
+	jl	.L_small_initial_partial_block_522
 
 
 
@@ -72897,8 +72897,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_mdBakavzFGwGxqB
-.L_small_initial_partial_block_mdBakavzFGwGxqB:
+	jmp	.L_small_initial_compute_done_522
+.L_small_initial_partial_block_522:
 
 
 
@@ -72953,26 +72953,26 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_mdBakavzFGwGxqB:
+.L_small_initial_compute_done_522:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_mdBakavzFGwGxqB
+	je	.L_after_reduction_522
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_mdBakavzFGwGxqB:
-	jmp	.L_last_blocks_done_eetGtppdondlGqv
-.L_last_num_blocks_is_9_eetGtppdondlGqv:
+.L_after_reduction_522:
+	jmp	.L_last_blocks_done_506
+.L_last_num_blocks_is_9_506:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$247,%r15d
-	jae	.L_16_blocks_overflow_hmojuwGlwprmzBx
+	jae	.L_16_blocks_overflow_523
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%xmm27,%xmm3,%xmm4
-	jmp	.L_16_blocks_ok_hmojuwGlwprmzBx
+	jmp	.L_16_blocks_ok_523
 
-.L_16_blocks_overflow_hmojuwGlwprmzBx:
+.L_16_blocks_overflow_523:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -72981,7 +72981,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%xmm29,%xmm4,%xmm4
-.L_16_blocks_ok_hmojuwGlwprmzBx:
+.L_16_blocks_ok_523:
 
 
 
@@ -73096,7 +73096,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_yCzpGsDmAEfywvj
+	jl	.L_small_initial_partial_block_524
 
 
 
@@ -73156,8 +73156,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_yCzpGsDmAEfywvj
-.L_small_initial_partial_block_yCzpGsDmAEfywvj:
+	jmp	.L_small_initial_compute_done_524
+.L_small_initial_partial_block_524:
 
 
 
@@ -73214,26 +73214,26 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_yCzpGsDmAEfywvj:
+.L_small_initial_compute_done_524:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_yCzpGsDmAEfywvj
+	je	.L_after_reduction_524
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_yCzpGsDmAEfywvj:
-	jmp	.L_last_blocks_done_eetGtppdondlGqv
-.L_last_num_blocks_is_10_eetGtppdondlGqv:
+.L_after_reduction_524:
+	jmp	.L_last_blocks_done_506
+.L_last_num_blocks_is_10_506:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$246,%r15d
-	jae	.L_16_blocks_overflow_yECjfywmbFnxacs
+	jae	.L_16_blocks_overflow_525
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%ymm27,%ymm3,%ymm4
-	jmp	.L_16_blocks_ok_yECjfywmbFnxacs
+	jmp	.L_16_blocks_ok_525
 
-.L_16_blocks_overflow_yECjfywmbFnxacs:
+.L_16_blocks_overflow_525:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -73242,7 +73242,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%ymm29,%ymm4,%ymm4
-.L_16_blocks_ok_yECjfywmbFnxacs:
+.L_16_blocks_ok_525:
 
 
 
@@ -73357,7 +73357,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_jaFAxycEEajiDjd
+	jl	.L_small_initial_partial_block_526
 
 
 
@@ -73417,8 +73417,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_jaFAxycEEajiDjd
-.L_small_initial_partial_block_jaFAxycEEajiDjd:
+	jmp	.L_small_initial_compute_done_526
+.L_small_initial_partial_block_526:
 
 
 
@@ -73481,26 +73481,26 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_jaFAxycEEajiDjd:
+.L_small_initial_compute_done_526:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_jaFAxycEEajiDjd
+	je	.L_after_reduction_526
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_jaFAxycEEajiDjd:
-	jmp	.L_last_blocks_done_eetGtppdondlGqv
-.L_last_num_blocks_is_11_eetGtppdondlGqv:
+.L_after_reduction_526:
+	jmp	.L_last_blocks_done_506
+.L_last_num_blocks_is_11_506:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$245,%r15d
-	jae	.L_16_blocks_overflow_DzGftfvrohzEhyD
+	jae	.L_16_blocks_overflow_527
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
-	jmp	.L_16_blocks_ok_DzGftfvrohzEhyD
+	jmp	.L_16_blocks_ok_527
 
-.L_16_blocks_overflow_DzGftfvrohzEhyD:
+.L_16_blocks_overflow_527:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -73509,7 +73509,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
-.L_16_blocks_ok_DzGftfvrohzEhyD:
+.L_16_blocks_ok_527:
 
 
 
@@ -73624,7 +73624,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_odtqaBajmorEoen
+	jl	.L_small_initial_partial_block_528
 
 
 
@@ -73685,8 +73685,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_odtqaBajmorEoen
-.L_small_initial_partial_block_odtqaBajmorEoen:
+	jmp	.L_small_initial_compute_done_528
+.L_small_initial_partial_block_528:
 
 
 
@@ -73749,26 +73749,26 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_odtqaBajmorEoen:
+.L_small_initial_compute_done_528:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_odtqaBajmorEoen
+	je	.L_after_reduction_528
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_odtqaBajmorEoen:
-	jmp	.L_last_blocks_done_eetGtppdondlGqv
-.L_last_num_blocks_is_12_eetGtppdondlGqv:
+.L_after_reduction_528:
+	jmp	.L_last_blocks_done_506
+.L_last_num_blocks_is_12_506:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$244,%r15d
-	jae	.L_16_blocks_overflow_riyhqpywrEoeomv
+	jae	.L_16_blocks_overflow_529
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
-	jmp	.L_16_blocks_ok_riyhqpywrEoeomv
+	jmp	.L_16_blocks_ok_529
 
-.L_16_blocks_overflow_riyhqpywrEoeomv:
+.L_16_blocks_overflow_529:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -73777,7 +73777,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
-.L_16_blocks_ok_riyhqpywrEoeomv:
+.L_16_blocks_ok_529:
 
 
 
@@ -73892,7 +73892,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_vlCDEfDvrfvBGyx
+	jl	.L_small_initial_partial_block_530
 
 
 
@@ -73951,8 +73951,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_vlCDEfDvrfvBGyx
-.L_small_initial_partial_block_vlCDEfDvrfvBGyx:
+	jmp	.L_small_initial_compute_done_530
+.L_small_initial_partial_block_530:
 
 
 
@@ -74016,27 +74016,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_vlCDEfDvrfvBGyx:
+.L_small_initial_compute_done_530:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_vlCDEfDvrfvBGyx
+	je	.L_after_reduction_530
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_vlCDEfDvrfvBGyx:
-	jmp	.L_last_blocks_done_eetGtppdondlGqv
-.L_last_num_blocks_is_13_eetGtppdondlGqv:
+.L_after_reduction_530:
+	jmp	.L_last_blocks_done_506
+.L_last_num_blocks_is_13_506:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$243,%r15d
-	jae	.L_16_blocks_overflow_EqDCyFGsCaxyrow
+	jae	.L_16_blocks_overflow_531
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%xmm27,%xmm4,%xmm5
-	jmp	.L_16_blocks_ok_EqDCyFGsCaxyrow
+	jmp	.L_16_blocks_ok_531
 
-.L_16_blocks_overflow_EqDCyFGsCaxyrow:
+.L_16_blocks_overflow_531:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -74047,7 +74047,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%xmm29,%xmm5,%xmm5
-.L_16_blocks_ok_EqDCyFGsCaxyrow:
+.L_16_blocks_ok_531:
 
 
 
@@ -74177,7 +74177,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_mbzeFuuElnsbsig
+	jl	.L_small_initial_partial_block_532
 
 
 
@@ -74242,8 +74242,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_mbzeFuuElnsbsig
-.L_small_initial_partial_block_mbzeFuuElnsbsig:
+	jmp	.L_small_initial_compute_done_532
+.L_small_initial_partial_block_532:
 
 
 
@@ -74305,27 +74305,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_mbzeFuuElnsbsig:
+.L_small_initial_compute_done_532:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_mbzeFuuElnsbsig
+	je	.L_after_reduction_532
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_mbzeFuuElnsbsig:
-	jmp	.L_last_blocks_done_eetGtppdondlGqv
-.L_last_num_blocks_is_14_eetGtppdondlGqv:
+.L_after_reduction_532:
+	jmp	.L_last_blocks_done_506
+.L_last_num_blocks_is_14_506:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$242,%r15d
-	jae	.L_16_blocks_overflow_DCshtwrrnawpAxD
+	jae	.L_16_blocks_overflow_533
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%ymm27,%ymm4,%ymm5
-	jmp	.L_16_blocks_ok_DCshtwrrnawpAxD
+	jmp	.L_16_blocks_ok_533
 
-.L_16_blocks_overflow_DCshtwrrnawpAxD:
+.L_16_blocks_overflow_533:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -74336,7 +74336,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%ymm29,%ymm5,%ymm5
-.L_16_blocks_ok_DCshtwrrnawpAxD:
+.L_16_blocks_ok_533:
 
 
 
@@ -74466,7 +74466,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_tkcxpjEmpqwbvej
+	jl	.L_small_initial_partial_block_534
 
 
 
@@ -74531,8 +74531,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_tkcxpjEmpqwbvej
-.L_small_initial_partial_block_tkcxpjEmpqwbvej:
+	jmp	.L_small_initial_compute_done_534
+.L_small_initial_partial_block_534:
 
 
 
@@ -74600,27 +74600,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_tkcxpjEmpqwbvej:
+.L_small_initial_compute_done_534:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_tkcxpjEmpqwbvej
+	je	.L_after_reduction_534
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_tkcxpjEmpqwbvej:
-	jmp	.L_last_blocks_done_eetGtppdondlGqv
-.L_last_num_blocks_is_15_eetGtppdondlGqv:
+.L_after_reduction_534:
+	jmp	.L_last_blocks_done_506
+.L_last_num_blocks_is_15_506:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$241,%r15d
-	jae	.L_16_blocks_overflow_tcsnnmGfovEcooE
+	jae	.L_16_blocks_overflow_535
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_tcsnnmGfovEcooE
+	jmp	.L_16_blocks_ok_535
 
-.L_16_blocks_overflow_tcsnnmGfovEcooE:
+.L_16_blocks_overflow_535:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -74631,7 +74631,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_tcsnnmGfovEcooE:
+.L_16_blocks_ok_535:
 
 
 
@@ -74761,7 +74761,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_oAusysBjjifDnDf
+	jl	.L_small_initial_partial_block_536
 
 
 
@@ -74827,8 +74827,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_oAusysBjjifDnDf
-.L_small_initial_partial_block_oAusysBjjifDnDf:
+	jmp	.L_small_initial_compute_done_536
+.L_small_initial_partial_block_536:
 
 
 
@@ -74896,27 +74896,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_oAusysBjjifDnDf:
+.L_small_initial_compute_done_536:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_oAusysBjjifDnDf
+	je	.L_after_reduction_536
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_oAusysBjjifDnDf:
-	jmp	.L_last_blocks_done_eetGtppdondlGqv
-.L_last_num_blocks_is_16_eetGtppdondlGqv:
+.L_after_reduction_536:
+	jmp	.L_last_blocks_done_506
+.L_last_num_blocks_is_16_506:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$240,%r15d
-	jae	.L_16_blocks_overflow_ctsDzhEDzaqcpuo
+	jae	.L_16_blocks_overflow_537
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_ctsDzhEDzaqcpuo
+	jmp	.L_16_blocks_ok_537
 
-.L_16_blocks_overflow_ctsDzhEDzaqcpuo:
+.L_16_blocks_overflow_537:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -74927,7 +74927,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_ctsDzhEDzaqcpuo:
+.L_16_blocks_ok_537:
 
 
 
@@ -75054,7 +75054,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm21,%zmm21
 	vextracti32x4	$3,%zmm21,%xmm7
 	subq	$16 * (16 - 1),%r8
-.L_small_initial_partial_block_FjCifaBakmzlfFC:
+.L_small_initial_partial_block_538:
 
 
 
@@ -75123,11 +75123,11 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_FjCifaBakmzlfFC:
+.L_small_initial_compute_done_538:
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_FjCifaBakmzlfFC:
-	jmp	.L_last_blocks_done_eetGtppdondlGqv
-.L_last_num_blocks_is_0_eetGtppdondlGqv:
+.L_after_reduction_538:
+	jmp	.L_last_blocks_done_506
+.L_last_num_blocks_is_0_506:
 	vmovdqa64	1024(%rsp),%zmm13
 	vmovdqu64	0(%rsp,%rbx,1),%zmm12
 	vpclmulqdq	$0x11,%zmm12,%zmm13,%zmm0
@@ -75188,18 +75188,18 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm24,%xmm3,%xmm14
 
-.L_last_blocks_done_eetGtppdondlGqv:
+.L_last_blocks_done_506:
 	vpshufb	%xmm29,%xmm2,%xmm2
-	jmp	.L_ghash_done_kpzgFwDvlzADzny
-.L_encrypt_32_blocks_kpzgFwDvlzADzny:
+	jmp	.L_ghash_done_497
+.L_encrypt_32_blocks_497:
 	cmpb	$240,%r15b
-	jae	.L_16_blocks_overflow_zopmdpdnBxlEnBB
+	jae	.L_16_blocks_overflow_539
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_zopmdpdnBxlEnBB
-.L_16_blocks_overflow_zopmdpdnBxlEnBB:
+	jmp	.L_16_blocks_ok_539
+.L_16_blocks_overflow_539:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -75210,7 +75210,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_zopmdpdnBxlEnBB:
+.L_16_blocks_ok_539:
 	vbroadcastf64x2	0(%rdi),%zmm30
 	vpxorq	768(%rsp),%zmm14,%zmm8
 	vmovdqu64	0(%rsp),%zmm1
@@ -75375,13 +75375,13 @@ ossl_aes_gcm_decrypt_avx512:
 	vmovdqa64	%zmm4,1408(%rsp)
 	vmovdqa64	%zmm5,1472(%rsp)
 	cmpb	$240,%r15b
-	jae	.L_16_blocks_overflow_ptlkwckkbgnbseE
+	jae	.L_16_blocks_overflow_540
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_ptlkwckkbgnbseE
-.L_16_blocks_overflow_ptlkwckkbgnbseE:
+	jmp	.L_16_blocks_ok_540
+.L_16_blocks_overflow_540:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -75392,7 +75392,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_ptlkwckkbgnbseE:
+.L_16_blocks_ok_540:
 	vbroadcastf64x2	0(%rdi),%zmm30
 	vmovdqa64	1024(%rsp),%zmm8
 	vmovdqu64	256(%rsp),%zmm1
@@ -75625,61 +75625,61 @@ ossl_aes_gcm_decrypt_avx512:
 	movl	%r8d,%r10d
 	addl	$15,%r10d
 	shrl	$4,%r10d
-	je	.L_last_num_blocks_is_0_naArnppmugyrAeq
+	je	.L_last_num_blocks_is_0_541
 
 	cmpl	$8,%r10d
-	je	.L_last_num_blocks_is_8_naArnppmugyrAeq
-	jb	.L_last_num_blocks_is_7_1_naArnppmugyrAeq
+	je	.L_last_num_blocks_is_8_541
+	jb	.L_last_num_blocks_is_7_1_541
 
 
 	cmpl	$12,%r10d
-	je	.L_last_num_blocks_is_12_naArnppmugyrAeq
-	jb	.L_last_num_blocks_is_11_9_naArnppmugyrAeq
+	je	.L_last_num_blocks_is_12_541
+	jb	.L_last_num_blocks_is_11_9_541
 
 
 	cmpl	$15,%r10d
-	je	.L_last_num_blocks_is_15_naArnppmugyrAeq
-	ja	.L_last_num_blocks_is_16_naArnppmugyrAeq
+	je	.L_last_num_blocks_is_15_541
+	ja	.L_last_num_blocks_is_16_541
 	cmpl	$14,%r10d
-	je	.L_last_num_blocks_is_14_naArnppmugyrAeq
-	jmp	.L_last_num_blocks_is_13_naArnppmugyrAeq
+	je	.L_last_num_blocks_is_14_541
+	jmp	.L_last_num_blocks_is_13_541
 
-.L_last_num_blocks_is_11_9_naArnppmugyrAeq:
+.L_last_num_blocks_is_11_9_541:
 
 	cmpl	$10,%r10d
-	je	.L_last_num_blocks_is_10_naArnppmugyrAeq
-	ja	.L_last_num_blocks_is_11_naArnppmugyrAeq
-	jmp	.L_last_num_blocks_is_9_naArnppmugyrAeq
+	je	.L_last_num_blocks_is_10_541
+	ja	.L_last_num_blocks_is_11_541
+	jmp	.L_last_num_blocks_is_9_541
 
-.L_last_num_blocks_is_7_1_naArnppmugyrAeq:
+.L_last_num_blocks_is_7_1_541:
 	cmpl	$4,%r10d
-	je	.L_last_num_blocks_is_4_naArnppmugyrAeq
-	jb	.L_last_num_blocks_is_3_1_naArnppmugyrAeq
+	je	.L_last_num_blocks_is_4_541
+	jb	.L_last_num_blocks_is_3_1_541
 
 	cmpl	$6,%r10d
-	ja	.L_last_num_blocks_is_7_naArnppmugyrAeq
-	je	.L_last_num_blocks_is_6_naArnppmugyrAeq
-	jmp	.L_last_num_blocks_is_5_naArnppmugyrAeq
+	ja	.L_last_num_blocks_is_7_541
+	je	.L_last_num_blocks_is_6_541
+	jmp	.L_last_num_blocks_is_5_541
 
-.L_last_num_blocks_is_3_1_naArnppmugyrAeq:
+.L_last_num_blocks_is_3_1_541:
 
 	cmpl	$2,%r10d
-	ja	.L_last_num_blocks_is_3_naArnppmugyrAeq
-	je	.L_last_num_blocks_is_2_naArnppmugyrAeq
-.L_last_num_blocks_is_1_naArnppmugyrAeq:
+	ja	.L_last_num_blocks_is_3_541
+	je	.L_last_num_blocks_is_2_541
+.L_last_num_blocks_is_1_541:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$255,%r15d
-	jae	.L_16_blocks_overflow_foblolbfaretoCA
+	jae	.L_16_blocks_overflow_542
 	vpaddd	%xmm28,%xmm2,%xmm0
-	jmp	.L_16_blocks_ok_foblolbfaretoCA
+	jmp	.L_16_blocks_ok_542
 
-.L_16_blocks_overflow_foblolbfaretoCA:
+.L_16_blocks_overflow_542:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%xmm29,%xmm0,%xmm0
-.L_16_blocks_ok_foblolbfaretoCA:
+.L_16_blocks_ok_542:
 
 
 
@@ -75763,7 +75763,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_fdGrcsACsFoknkk
+	jl	.L_small_initial_partial_block_543
 
 
 
@@ -75807,8 +75807,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_fdGrcsACsFoknkk
-.L_small_initial_partial_block_fdGrcsACsFoknkk:
+	jmp	.L_small_initial_compute_done_543
+.L_small_initial_partial_block_543:
 
 
 
@@ -75860,24 +75860,24 @@ ossl_aes_gcm_decrypt_avx512:
 
 	vpxorq	%xmm7,%xmm14,%xmm14
 
-	jmp	.L_after_reduction_fdGrcsACsFoknkk
-.L_small_initial_compute_done_fdGrcsACsFoknkk:
-.L_after_reduction_fdGrcsACsFoknkk:
-	jmp	.L_last_blocks_done_naArnppmugyrAeq
-.L_last_num_blocks_is_2_naArnppmugyrAeq:
+	jmp	.L_after_reduction_543
+.L_small_initial_compute_done_543:
+.L_after_reduction_543:
+	jmp	.L_last_blocks_done_541
+.L_last_num_blocks_is_2_541:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$254,%r15d
-	jae	.L_16_blocks_overflow_ijzjnzDDhfeACza
+	jae	.L_16_blocks_overflow_544
 	vpaddd	%ymm28,%ymm2,%ymm0
-	jmp	.L_16_blocks_ok_ijzjnzDDhfeACza
+	jmp	.L_16_blocks_ok_544
 
-.L_16_blocks_overflow_ijzjnzDDhfeACza:
+.L_16_blocks_overflow_544:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%ymm29,%ymm0,%ymm0
-.L_16_blocks_ok_ijzjnzDDhfeACza:
+.L_16_blocks_ok_544:
 
 
 
@@ -75962,7 +75962,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_mmiucroxtrconnu
+	jl	.L_small_initial_partial_block_545
 
 
 
@@ -76006,8 +76006,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_mmiucroxtrconnu
-.L_small_initial_partial_block_mmiucroxtrconnu:
+	jmp	.L_small_initial_compute_done_545
+.L_small_initial_partial_block_545:
 
 
 
@@ -76054,27 +76054,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_mmiucroxtrconnu:
+.L_small_initial_compute_done_545:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_mmiucroxtrconnu
+	je	.L_after_reduction_545
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_mmiucroxtrconnu:
-	jmp	.L_last_blocks_done_naArnppmugyrAeq
-.L_last_num_blocks_is_3_naArnppmugyrAeq:
+.L_after_reduction_545:
+	jmp	.L_last_blocks_done_541
+.L_last_num_blocks_is_3_541:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$253,%r15d
-	jae	.L_16_blocks_overflow_rgCqaEsvhyvbioD
+	jae	.L_16_blocks_overflow_546
 	vpaddd	%zmm28,%zmm2,%zmm0
-	jmp	.L_16_blocks_ok_rgCqaEsvhyvbioD
+	jmp	.L_16_blocks_ok_546
 
-.L_16_blocks_overflow_rgCqaEsvhyvbioD:
+.L_16_blocks_overflow_546:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%zmm29,%zmm0,%zmm0
-.L_16_blocks_ok_rgCqaEsvhyvbioD:
+.L_16_blocks_ok_546:
 
 
 
@@ -76159,7 +76159,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_xEmCGjixeBviAzq
+	jl	.L_small_initial_partial_block_547
 
 
 
@@ -76204,8 +76204,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_xEmCGjixeBviAzq
-.L_small_initial_partial_block_xEmCGjixeBviAzq:
+	jmp	.L_small_initial_compute_done_547
+.L_small_initial_partial_block_547:
 
 
 
@@ -76252,27 +76252,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_xEmCGjixeBviAzq:
+.L_small_initial_compute_done_547:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_xEmCGjixeBviAzq
+	je	.L_after_reduction_547
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_xEmCGjixeBviAzq:
-	jmp	.L_last_blocks_done_naArnppmugyrAeq
-.L_last_num_blocks_is_4_naArnppmugyrAeq:
+.L_after_reduction_547:
+	jmp	.L_last_blocks_done_541
+.L_last_num_blocks_is_4_541:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$252,%r15d
-	jae	.L_16_blocks_overflow_uucaiDcpdfEeCpk
+	jae	.L_16_blocks_overflow_548
 	vpaddd	%zmm28,%zmm2,%zmm0
-	jmp	.L_16_blocks_ok_uucaiDcpdfEeCpk
+	jmp	.L_16_blocks_ok_548
 
-.L_16_blocks_overflow_uucaiDcpdfEeCpk:
+.L_16_blocks_overflow_548:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%zmm29,%zmm0,%zmm0
-.L_16_blocks_ok_uucaiDcpdfEeCpk:
+.L_16_blocks_ok_548:
 
 
 
@@ -76357,7 +76357,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_uvepkEtuBtmvyiC
+	jl	.L_small_initial_partial_block_549
 
 
 
@@ -76402,8 +76402,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_uvepkEtuBtmvyiC
-.L_small_initial_partial_block_uvepkEtuBtmvyiC:
+	jmp	.L_small_initial_compute_done_549
+.L_small_initial_partial_block_549:
 
 
 
@@ -76451,32 +76451,32 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_uvepkEtuBtmvyiC:
+.L_small_initial_compute_done_549:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_uvepkEtuBtmvyiC
+	je	.L_after_reduction_549
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_uvepkEtuBtmvyiC:
-	jmp	.L_last_blocks_done_naArnppmugyrAeq
-.L_last_num_blocks_is_5_naArnppmugyrAeq:
+.L_after_reduction_549:
+	jmp	.L_last_blocks_done_541
+.L_last_num_blocks_is_5_541:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$251,%r15d
-	jae	.L_16_blocks_overflow_upsbDwhvjvdhcjA
+	jae	.L_16_blocks_overflow_550
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%xmm27,%xmm0,%xmm3
-	jmp	.L_16_blocks_ok_upsbDwhvjvdhcjA
+	jmp	.L_16_blocks_ok_550
 
-.L_16_blocks_overflow_upsbDwhvjvdhcjA:
+.L_16_blocks_overflow_550:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%xmm29,%xmm3,%xmm3
-.L_16_blocks_ok_upsbDwhvjvdhcjA:
+.L_16_blocks_ok_550:
 
 
 
@@ -76576,7 +76576,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_xpGEpmBAectsEsk
+	jl	.L_small_initial_partial_block_551
 
 
 
@@ -76627,8 +76627,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_xpGEpmBAectsEsk
-.L_small_initial_partial_block_xpGEpmBAectsEsk:
+	jmp	.L_small_initial_compute_done_551
+.L_small_initial_partial_block_551:
 
 
 
@@ -76676,32 +76676,32 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_xpGEpmBAectsEsk:
+.L_small_initial_compute_done_551:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_xpGEpmBAectsEsk
+	je	.L_after_reduction_551
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_xpGEpmBAectsEsk:
-	jmp	.L_last_blocks_done_naArnppmugyrAeq
-.L_last_num_blocks_is_6_naArnppmugyrAeq:
+.L_after_reduction_551:
+	jmp	.L_last_blocks_done_541
+.L_last_num_blocks_is_6_541:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$250,%r15d
-	jae	.L_16_blocks_overflow_GFaCgmrvDluBwsh
+	jae	.L_16_blocks_overflow_552
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%ymm27,%ymm0,%ymm3
-	jmp	.L_16_blocks_ok_GFaCgmrvDluBwsh
+	jmp	.L_16_blocks_ok_552
 
-.L_16_blocks_overflow_GFaCgmrvDluBwsh:
+.L_16_blocks_overflow_552:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%ymm29,%ymm3,%ymm3
-.L_16_blocks_ok_GFaCgmrvDluBwsh:
+.L_16_blocks_ok_552:
 
 
 
@@ -76801,7 +76801,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_xcvdqzFgCijgcjn
+	jl	.L_small_initial_partial_block_553
 
 
 
@@ -76852,8 +76852,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_xcvdqzFgCijgcjn
-.L_small_initial_partial_block_xcvdqzFgCijgcjn:
+	jmp	.L_small_initial_compute_done_553
+.L_small_initial_partial_block_553:
 
 
 
@@ -76907,32 +76907,32 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_xcvdqzFgCijgcjn:
+.L_small_initial_compute_done_553:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_xcvdqzFgCijgcjn
+	je	.L_after_reduction_553
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_xcvdqzFgCijgcjn:
-	jmp	.L_last_blocks_done_naArnppmugyrAeq
-.L_last_num_blocks_is_7_naArnppmugyrAeq:
+.L_after_reduction_553:
+	jmp	.L_last_blocks_done_541
+.L_last_num_blocks_is_7_541:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$249,%r15d
-	jae	.L_16_blocks_overflow_bBhtfqngfAjwCgn
+	jae	.L_16_blocks_overflow_554
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
-	jmp	.L_16_blocks_ok_bBhtfqngfAjwCgn
+	jmp	.L_16_blocks_ok_554
 
-.L_16_blocks_overflow_bBhtfqngfAjwCgn:
+.L_16_blocks_overflow_554:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
-.L_16_blocks_ok_bBhtfqngfAjwCgn:
+.L_16_blocks_ok_554:
 
 
 
@@ -77032,7 +77032,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_rBzsfipgFbprhya
+	jl	.L_small_initial_partial_block_555
 
 
 
@@ -77084,8 +77084,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_rBzsfipgFbprhya
-.L_small_initial_partial_block_rBzsfipgFbprhya:
+	jmp	.L_small_initial_compute_done_555
+.L_small_initial_partial_block_555:
 
 
 
@@ -77139,32 +77139,32 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_rBzsfipgFbprhya:
+.L_small_initial_compute_done_555:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_rBzsfipgFbprhya
+	je	.L_after_reduction_555
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_rBzsfipgFbprhya:
-	jmp	.L_last_blocks_done_naArnppmugyrAeq
-.L_last_num_blocks_is_8_naArnppmugyrAeq:
+.L_after_reduction_555:
+	jmp	.L_last_blocks_done_541
+.L_last_num_blocks_is_8_541:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$248,%r15d
-	jae	.L_16_blocks_overflow_baCralbqexwqmuj
+	jae	.L_16_blocks_overflow_556
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
-	jmp	.L_16_blocks_ok_baCralbqexwqmuj
+	jmp	.L_16_blocks_ok_556
 
-.L_16_blocks_overflow_baCralbqexwqmuj:
+.L_16_blocks_overflow_556:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
-.L_16_blocks_ok_baCralbqexwqmuj:
+.L_16_blocks_ok_556:
 
 
 
@@ -77264,7 +77264,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_ypowpGsCzuEbmDd
+	jl	.L_small_initial_partial_block_557
 
 
 
@@ -77318,8 +77318,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_ypowpGsCzuEbmDd
-.L_small_initial_partial_block_ypowpGsCzuEbmDd:
+	jmp	.L_small_initial_compute_done_557
+.L_small_initial_partial_block_557:
 
 
 
@@ -77374,26 +77374,26 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_ypowpGsCzuEbmDd:
+.L_small_initial_compute_done_557:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_ypowpGsCzuEbmDd
+	je	.L_after_reduction_557
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_ypowpGsCzuEbmDd:
-	jmp	.L_last_blocks_done_naArnppmugyrAeq
-.L_last_num_blocks_is_9_naArnppmugyrAeq:
+.L_after_reduction_557:
+	jmp	.L_last_blocks_done_541
+.L_last_num_blocks_is_9_541:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$247,%r15d
-	jae	.L_16_blocks_overflow_nEgupijfbolfeuy
+	jae	.L_16_blocks_overflow_558
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%xmm27,%xmm3,%xmm4
-	jmp	.L_16_blocks_ok_nEgupijfbolfeuy
+	jmp	.L_16_blocks_ok_558
 
-.L_16_blocks_overflow_nEgupijfbolfeuy:
+.L_16_blocks_overflow_558:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -77402,7 +77402,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%xmm29,%xmm4,%xmm4
-.L_16_blocks_ok_nEgupijfbolfeuy:
+.L_16_blocks_ok_558:
 
 
 
@@ -77517,7 +77517,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_nFxABjFvvpGyick
+	jl	.L_small_initial_partial_block_559
 
 
 
@@ -77577,8 +77577,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_nFxABjFvvpGyick
-.L_small_initial_partial_block_nFxABjFvvpGyick:
+	jmp	.L_small_initial_compute_done_559
+.L_small_initial_partial_block_559:
 
 
 
@@ -77635,26 +77635,26 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_nFxABjFvvpGyick:
+.L_small_initial_compute_done_559:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_nFxABjFvvpGyick
+	je	.L_after_reduction_559
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_nFxABjFvvpGyick:
-	jmp	.L_last_blocks_done_naArnppmugyrAeq
-.L_last_num_blocks_is_10_naArnppmugyrAeq:
+.L_after_reduction_559:
+	jmp	.L_last_blocks_done_541
+.L_last_num_blocks_is_10_541:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$246,%r15d
-	jae	.L_16_blocks_overflow_fCpiAfrGwulgzmh
+	jae	.L_16_blocks_overflow_560
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%ymm27,%ymm3,%ymm4
-	jmp	.L_16_blocks_ok_fCpiAfrGwulgzmh
+	jmp	.L_16_blocks_ok_560
 
-.L_16_blocks_overflow_fCpiAfrGwulgzmh:
+.L_16_blocks_overflow_560:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -77663,7 +77663,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%ymm29,%ymm4,%ymm4
-.L_16_blocks_ok_fCpiAfrGwulgzmh:
+.L_16_blocks_ok_560:
 
 
 
@@ -77778,7 +77778,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_rsaqoFfCupqCdCF
+	jl	.L_small_initial_partial_block_561
 
 
 
@@ -77838,8 +77838,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_rsaqoFfCupqCdCF
-.L_small_initial_partial_block_rsaqoFfCupqCdCF:
+	jmp	.L_small_initial_compute_done_561
+.L_small_initial_partial_block_561:
 
 
 
@@ -77902,26 +77902,26 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_rsaqoFfCupqCdCF:
+.L_small_initial_compute_done_561:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_rsaqoFfCupqCdCF
+	je	.L_after_reduction_561
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_rsaqoFfCupqCdCF:
-	jmp	.L_last_blocks_done_naArnppmugyrAeq
-.L_last_num_blocks_is_11_naArnppmugyrAeq:
+.L_after_reduction_561:
+	jmp	.L_last_blocks_done_541
+.L_last_num_blocks_is_11_541:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$245,%r15d
-	jae	.L_16_blocks_overflow_favjaueCtrberEb
+	jae	.L_16_blocks_overflow_562
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
-	jmp	.L_16_blocks_ok_favjaueCtrberEb
+	jmp	.L_16_blocks_ok_562
 
-.L_16_blocks_overflow_favjaueCtrberEb:
+.L_16_blocks_overflow_562:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -77930,7 +77930,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
-.L_16_blocks_ok_favjaueCtrberEb:
+.L_16_blocks_ok_562:
 
 
 
@@ -78045,7 +78045,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_loEkooaDsnEadhb
+	jl	.L_small_initial_partial_block_563
 
 
 
@@ -78106,8 +78106,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_loEkooaDsnEadhb
-.L_small_initial_partial_block_loEkooaDsnEadhb:
+	jmp	.L_small_initial_compute_done_563
+.L_small_initial_partial_block_563:
 
 
 
@@ -78170,26 +78170,26 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_loEkooaDsnEadhb:
+.L_small_initial_compute_done_563:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_loEkooaDsnEadhb
+	je	.L_after_reduction_563
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_loEkooaDsnEadhb:
-	jmp	.L_last_blocks_done_naArnppmugyrAeq
-.L_last_num_blocks_is_12_naArnppmugyrAeq:
+.L_after_reduction_563:
+	jmp	.L_last_blocks_done_541
+.L_last_num_blocks_is_12_541:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$244,%r15d
-	jae	.L_16_blocks_overflow_sceEntmnnqAnAiv
+	jae	.L_16_blocks_overflow_564
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
-	jmp	.L_16_blocks_ok_sceEntmnnqAnAiv
+	jmp	.L_16_blocks_ok_564
 
-.L_16_blocks_overflow_sceEntmnnqAnAiv:
+.L_16_blocks_overflow_564:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -78198,7 +78198,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
-.L_16_blocks_ok_sceEntmnnqAnAiv:
+.L_16_blocks_ok_564:
 
 
 
@@ -78313,7 +78313,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_AGdzDAjfhmywmvu
+	jl	.L_small_initial_partial_block_565
 
 
 
@@ -78372,8 +78372,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_AGdzDAjfhmywmvu
-.L_small_initial_partial_block_AGdzDAjfhmywmvu:
+	jmp	.L_small_initial_compute_done_565
+.L_small_initial_partial_block_565:
 
 
 
@@ -78437,27 +78437,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_AGdzDAjfhmywmvu:
+.L_small_initial_compute_done_565:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_AGdzDAjfhmywmvu
+	je	.L_after_reduction_565
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_AGdzDAjfhmywmvu:
-	jmp	.L_last_blocks_done_naArnppmugyrAeq
-.L_last_num_blocks_is_13_naArnppmugyrAeq:
+.L_after_reduction_565:
+	jmp	.L_last_blocks_done_541
+.L_last_num_blocks_is_13_541:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$243,%r15d
-	jae	.L_16_blocks_overflow_GsdFdttmDswlCqr
+	jae	.L_16_blocks_overflow_566
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%xmm27,%xmm4,%xmm5
-	jmp	.L_16_blocks_ok_GsdFdttmDswlCqr
+	jmp	.L_16_blocks_ok_566
 
-.L_16_blocks_overflow_GsdFdttmDswlCqr:
+.L_16_blocks_overflow_566:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -78468,7 +78468,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%xmm29,%xmm5,%xmm5
-.L_16_blocks_ok_GsdFdttmDswlCqr:
+.L_16_blocks_ok_566:
 
 
 
@@ -78598,7 +78598,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_FzAhftrFnkdufxA
+	jl	.L_small_initial_partial_block_567
 
 
 
@@ -78663,8 +78663,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_FzAhftrFnkdufxA
-.L_small_initial_partial_block_FzAhftrFnkdufxA:
+	jmp	.L_small_initial_compute_done_567
+.L_small_initial_partial_block_567:
 
 
 
@@ -78726,27 +78726,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_FzAhftrFnkdufxA:
+.L_small_initial_compute_done_567:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_FzAhftrFnkdufxA
+	je	.L_after_reduction_567
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_FzAhftrFnkdufxA:
-	jmp	.L_last_blocks_done_naArnppmugyrAeq
-.L_last_num_blocks_is_14_naArnppmugyrAeq:
+.L_after_reduction_567:
+	jmp	.L_last_blocks_done_541
+.L_last_num_blocks_is_14_541:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$242,%r15d
-	jae	.L_16_blocks_overflow_GtoGCodajCEAuoA
+	jae	.L_16_blocks_overflow_568
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%ymm27,%ymm4,%ymm5
-	jmp	.L_16_blocks_ok_GtoGCodajCEAuoA
+	jmp	.L_16_blocks_ok_568
 
-.L_16_blocks_overflow_GtoGCodajCEAuoA:
+.L_16_blocks_overflow_568:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -78757,7 +78757,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%ymm29,%ymm5,%ymm5
-.L_16_blocks_ok_GtoGCodajCEAuoA:
+.L_16_blocks_ok_568:
 
 
 
@@ -78887,7 +78887,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_sFaacyvufBxDbkq
+	jl	.L_small_initial_partial_block_569
 
 
 
@@ -78952,8 +78952,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_sFaacyvufBxDbkq
-.L_small_initial_partial_block_sFaacyvufBxDbkq:
+	jmp	.L_small_initial_compute_done_569
+.L_small_initial_partial_block_569:
 
 
 
@@ -79021,27 +79021,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_sFaacyvufBxDbkq:
+.L_small_initial_compute_done_569:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_sFaacyvufBxDbkq
+	je	.L_after_reduction_569
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_sFaacyvufBxDbkq:
-	jmp	.L_last_blocks_done_naArnppmugyrAeq
-.L_last_num_blocks_is_15_naArnppmugyrAeq:
+.L_after_reduction_569:
+	jmp	.L_last_blocks_done_541
+.L_last_num_blocks_is_15_541:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$241,%r15d
-	jae	.L_16_blocks_overflow_srmwDxytmnnuhan
+	jae	.L_16_blocks_overflow_570
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_srmwDxytmnnuhan
+	jmp	.L_16_blocks_ok_570
 
-.L_16_blocks_overflow_srmwDxytmnnuhan:
+.L_16_blocks_overflow_570:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -79052,7 +79052,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_srmwDxytmnnuhan:
+.L_16_blocks_ok_570:
 
 
 
@@ -79182,7 +79182,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_okrkbyBaDkApexq
+	jl	.L_small_initial_partial_block_571
 
 
 
@@ -79248,8 +79248,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_okrkbyBaDkApexq
-.L_small_initial_partial_block_okrkbyBaDkApexq:
+	jmp	.L_small_initial_compute_done_571
+.L_small_initial_partial_block_571:
 
 
 
@@ -79317,27 +79317,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_okrkbyBaDkApexq:
+.L_small_initial_compute_done_571:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_okrkbyBaDkApexq
+	je	.L_after_reduction_571
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_okrkbyBaDkApexq:
-	jmp	.L_last_blocks_done_naArnppmugyrAeq
-.L_last_num_blocks_is_16_naArnppmugyrAeq:
+.L_after_reduction_571:
+	jmp	.L_last_blocks_done_541
+.L_last_num_blocks_is_16_541:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$240,%r15d
-	jae	.L_16_blocks_overflow_AEzurkudrvgDcss
+	jae	.L_16_blocks_overflow_572
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_AEzurkudrvgDcss
+	jmp	.L_16_blocks_ok_572
 
-.L_16_blocks_overflow_AEzurkudrvgDcss:
+.L_16_blocks_overflow_572:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -79348,7 +79348,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_AEzurkudrvgDcss:
+.L_16_blocks_ok_572:
 
 
 
@@ -79475,7 +79475,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm21,%zmm21
 	vextracti32x4	$3,%zmm21,%xmm7
 	subq	$16 * (16 - 1),%r8
-.L_small_initial_partial_block_dawyAebroEvqgat:
+.L_small_initial_partial_block_573:
 
 
 
@@ -79544,11 +79544,11 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_dawyAebroEvqgat:
+.L_small_initial_compute_done_573:
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_dawyAebroEvqgat:
-	jmp	.L_last_blocks_done_naArnppmugyrAeq
-.L_last_num_blocks_is_0_naArnppmugyrAeq:
+.L_after_reduction_573:
+	jmp	.L_last_blocks_done_541
+.L_last_num_blocks_is_0_541:
 	vmovdqa64	768(%rsp),%zmm13
 	vpxorq	%zmm14,%zmm13,%zmm13
 	vmovdqu64	0(%rsp,%rbx,1),%zmm12
@@ -79610,18 +79610,18 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm24,%xmm3,%xmm14
 
-.L_last_blocks_done_naArnppmugyrAeq:
+.L_last_blocks_done_541:
 	vpshufb	%xmm29,%xmm2,%xmm2
-	jmp	.L_ghash_done_kpzgFwDvlzADzny
-.L_encrypt_16_blocks_kpzgFwDvlzADzny:
+	jmp	.L_ghash_done_497
+.L_encrypt_16_blocks_497:
 	cmpb	$240,%r15b
-	jae	.L_16_blocks_overflow_qczevpkanlelayb
+	jae	.L_16_blocks_overflow_574
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_qczevpkanlelayb
-.L_16_blocks_overflow_qczevpkanlelayb:
+	jmp	.L_16_blocks_ok_574
+.L_16_blocks_overflow_574:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -79632,7 +79632,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_qczevpkanlelayb:
+.L_16_blocks_ok_574:
 	vbroadcastf64x2	0(%rdi),%zmm30
 	vpxorq	768(%rsp),%zmm14,%zmm8
 	vmovdqu64	0(%rsp),%zmm1
@@ -79834,61 +79834,61 @@ ossl_aes_gcm_decrypt_avx512:
 	movl	%r8d,%r10d
 	addl	$15,%r10d
 	shrl	$4,%r10d
-	je	.L_last_num_blocks_is_0_oxxaFudqqjGjCEq
+	je	.L_last_num_blocks_is_0_575
 
 	cmpl	$8,%r10d
-	je	.L_last_num_blocks_is_8_oxxaFudqqjGjCEq
-	jb	.L_last_num_blocks_is_7_1_oxxaFudqqjGjCEq
+	je	.L_last_num_blocks_is_8_575
+	jb	.L_last_num_blocks_is_7_1_575
 
 
 	cmpl	$12,%r10d
-	je	.L_last_num_blocks_is_12_oxxaFudqqjGjCEq
-	jb	.L_last_num_blocks_is_11_9_oxxaFudqqjGjCEq
+	je	.L_last_num_blocks_is_12_575
+	jb	.L_last_num_blocks_is_11_9_575
 
 
 	cmpl	$15,%r10d
-	je	.L_last_num_blocks_is_15_oxxaFudqqjGjCEq
-	ja	.L_last_num_blocks_is_16_oxxaFudqqjGjCEq
+	je	.L_last_num_blocks_is_15_575
+	ja	.L_last_num_blocks_is_16_575
 	cmpl	$14,%r10d
-	je	.L_last_num_blocks_is_14_oxxaFudqqjGjCEq
-	jmp	.L_last_num_blocks_is_13_oxxaFudqqjGjCEq
+	je	.L_last_num_blocks_is_14_575
+	jmp	.L_last_num_blocks_is_13_575
 
-.L_last_num_blocks_is_11_9_oxxaFudqqjGjCEq:
+.L_last_num_blocks_is_11_9_575:
 
 	cmpl	$10,%r10d
-	je	.L_last_num_blocks_is_10_oxxaFudqqjGjCEq
-	ja	.L_last_num_blocks_is_11_oxxaFudqqjGjCEq
-	jmp	.L_last_num_blocks_is_9_oxxaFudqqjGjCEq
+	je	.L_last_num_blocks_is_10_575
+	ja	.L_last_num_blocks_is_11_575
+	jmp	.L_last_num_blocks_is_9_575
 
-.L_last_num_blocks_is_7_1_oxxaFudqqjGjCEq:
+.L_last_num_blocks_is_7_1_575:
 	cmpl	$4,%r10d
-	je	.L_last_num_blocks_is_4_oxxaFudqqjGjCEq
-	jb	.L_last_num_blocks_is_3_1_oxxaFudqqjGjCEq
+	je	.L_last_num_blocks_is_4_575
+	jb	.L_last_num_blocks_is_3_1_575
 
 	cmpl	$6,%r10d
-	ja	.L_last_num_blocks_is_7_oxxaFudqqjGjCEq
-	je	.L_last_num_blocks_is_6_oxxaFudqqjGjCEq
-	jmp	.L_last_num_blocks_is_5_oxxaFudqqjGjCEq
+	ja	.L_last_num_blocks_is_7_575
+	je	.L_last_num_blocks_is_6_575
+	jmp	.L_last_num_blocks_is_5_575
 
-.L_last_num_blocks_is_3_1_oxxaFudqqjGjCEq:
+.L_last_num_blocks_is_3_1_575:
 
 	cmpl	$2,%r10d
-	ja	.L_last_num_blocks_is_3_oxxaFudqqjGjCEq
-	je	.L_last_num_blocks_is_2_oxxaFudqqjGjCEq
-.L_last_num_blocks_is_1_oxxaFudqqjGjCEq:
+	ja	.L_last_num_blocks_is_3_575
+	je	.L_last_num_blocks_is_2_575
+.L_last_num_blocks_is_1_575:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$255,%r15d
-	jae	.L_16_blocks_overflow_qixjldmiysyrDqi
+	jae	.L_16_blocks_overflow_576
 	vpaddd	%xmm28,%xmm2,%xmm0
-	jmp	.L_16_blocks_ok_qixjldmiysyrDqi
+	jmp	.L_16_blocks_ok_576
 
-.L_16_blocks_overflow_qixjldmiysyrDqi:
+.L_16_blocks_overflow_576:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%xmm29,%xmm0,%xmm0
-.L_16_blocks_ok_qixjldmiysyrDqi:
+.L_16_blocks_ok_576:
 
 
 
@@ -79995,7 +79995,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_uqruCboBusDamjG
+	jl	.L_small_initial_partial_block_577
 
 
 
@@ -80037,8 +80037,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_uqruCboBusDamjG
-.L_small_initial_partial_block_uqruCboBusDamjG:
+	jmp	.L_small_initial_compute_done_577
+.L_small_initial_partial_block_577:
 
 
 
@@ -80062,24 +80062,24 @@ ossl_aes_gcm_decrypt_avx512:
 
 	vpxorq	%xmm7,%xmm14,%xmm14
 
-	jmp	.L_after_reduction_uqruCboBusDamjG
-.L_small_initial_compute_done_uqruCboBusDamjG:
-.L_after_reduction_uqruCboBusDamjG:
-	jmp	.L_last_blocks_done_oxxaFudqqjGjCEq
-.L_last_num_blocks_is_2_oxxaFudqqjGjCEq:
+	jmp	.L_after_reduction_577
+.L_small_initial_compute_done_577:
+.L_after_reduction_577:
+	jmp	.L_last_blocks_done_575
+.L_last_num_blocks_is_2_575:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$254,%r15d
-	jae	.L_16_blocks_overflow_vbGCsziijqGyGaB
+	jae	.L_16_blocks_overflow_578
 	vpaddd	%ymm28,%ymm2,%ymm0
-	jmp	.L_16_blocks_ok_vbGCsziijqGyGaB
+	jmp	.L_16_blocks_ok_578
 
-.L_16_blocks_overflow_vbGCsziijqGyGaB:
+.L_16_blocks_overflow_578:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%ymm29,%ymm0,%ymm0
-.L_16_blocks_ok_vbGCsziijqGyGaB:
+.L_16_blocks_ok_578:
 
 
 
@@ -80187,7 +80187,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_GrgkadgCnprowys
+	jl	.L_small_initial_partial_block_579
 
 
 
@@ -80229,8 +80229,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_GrgkadgCnprowys
-.L_small_initial_partial_block_GrgkadgCnprowys:
+	jmp	.L_small_initial_compute_done_579
+.L_small_initial_partial_block_579:
 
 
 
@@ -80275,27 +80275,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_GrgkadgCnprowys:
+.L_small_initial_compute_done_579:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_GrgkadgCnprowys
+	je	.L_after_reduction_579
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_GrgkadgCnprowys:
-	jmp	.L_last_blocks_done_oxxaFudqqjGjCEq
-.L_last_num_blocks_is_3_oxxaFudqqjGjCEq:
+.L_after_reduction_579:
+	jmp	.L_last_blocks_done_575
+.L_last_num_blocks_is_3_575:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$253,%r15d
-	jae	.L_16_blocks_overflow_kDbFrbEdpuoFvds
+	jae	.L_16_blocks_overflow_580
 	vpaddd	%zmm28,%zmm2,%zmm0
-	jmp	.L_16_blocks_ok_kDbFrbEdpuoFvds
+	jmp	.L_16_blocks_ok_580
 
-.L_16_blocks_overflow_kDbFrbEdpuoFvds:
+.L_16_blocks_overflow_580:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%zmm29,%zmm0,%zmm0
-.L_16_blocks_ok_kDbFrbEdpuoFvds:
+.L_16_blocks_ok_580:
 
 
 
@@ -80403,7 +80403,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_AwCkAenocFafyyF
+	jl	.L_small_initial_partial_block_581
 
 
 
@@ -80446,8 +80446,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_AwCkAenocFafyyF
-.L_small_initial_partial_block_AwCkAenocFafyyF:
+	jmp	.L_small_initial_compute_done_581
+.L_small_initial_partial_block_581:
 
 
 
@@ -80492,27 +80492,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_AwCkAenocFafyyF:
+.L_small_initial_compute_done_581:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_AwCkAenocFafyyF
+	je	.L_after_reduction_581
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_AwCkAenocFafyyF:
-	jmp	.L_last_blocks_done_oxxaFudqqjGjCEq
-.L_last_num_blocks_is_4_oxxaFudqqjGjCEq:
+.L_after_reduction_581:
+	jmp	.L_last_blocks_done_575
+.L_last_num_blocks_is_4_575:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$252,%r15d
-	jae	.L_16_blocks_overflow_fvBkmbicqdjvzif
+	jae	.L_16_blocks_overflow_582
 	vpaddd	%zmm28,%zmm2,%zmm0
-	jmp	.L_16_blocks_ok_fvBkmbicqdjvzif
+	jmp	.L_16_blocks_ok_582
 
-.L_16_blocks_overflow_fvBkmbicqdjvzif:
+.L_16_blocks_overflow_582:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%zmm29,%zmm0,%zmm0
-.L_16_blocks_ok_fvBkmbicqdjvzif:
+.L_16_blocks_ok_582:
 
 
 
@@ -80620,7 +80620,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_fxficfshrBuyzef
+	jl	.L_small_initial_partial_block_583
 
 
 
@@ -80662,8 +80662,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_fxficfshrBuyzef
-.L_small_initial_partial_block_fxficfshrBuyzef:
+	jmp	.L_small_initial_compute_done_583
+.L_small_initial_partial_block_583:
 
 
 
@@ -80709,32 +80709,32 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_fxficfshrBuyzef:
+.L_small_initial_compute_done_583:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_fxficfshrBuyzef
+	je	.L_after_reduction_583
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_fxficfshrBuyzef:
-	jmp	.L_last_blocks_done_oxxaFudqqjGjCEq
-.L_last_num_blocks_is_5_oxxaFudqqjGjCEq:
+.L_after_reduction_583:
+	jmp	.L_last_blocks_done_575
+.L_last_num_blocks_is_5_575:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$251,%r15d
-	jae	.L_16_blocks_overflow_gpnAxFvilmBtqrp
+	jae	.L_16_blocks_overflow_584
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%xmm27,%xmm0,%xmm3
-	jmp	.L_16_blocks_ok_gpnAxFvilmBtqrp
+	jmp	.L_16_blocks_ok_584
 
-.L_16_blocks_overflow_gpnAxFvilmBtqrp:
+.L_16_blocks_overflow_584:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%xmm29,%xmm3,%xmm3
-.L_16_blocks_ok_gpnAxFvilmBtqrp:
+.L_16_blocks_ok_584:
 
 
 
@@ -80857,7 +80857,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_EiyajignneBvejo
+	jl	.L_small_initial_partial_block_585
 
 
 
@@ -80909,8 +80909,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_EiyajignneBvejo
-.L_small_initial_partial_block_EiyajignneBvejo:
+	jmp	.L_small_initial_compute_done_585
+.L_small_initial_partial_block_585:
 
 
 
@@ -80955,32 +80955,32 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_EiyajignneBvejo:
+.L_small_initial_compute_done_585:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_EiyajignneBvejo
+	je	.L_after_reduction_585
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_EiyajignneBvejo:
-	jmp	.L_last_blocks_done_oxxaFudqqjGjCEq
-.L_last_num_blocks_is_6_oxxaFudqqjGjCEq:
+.L_after_reduction_585:
+	jmp	.L_last_blocks_done_575
+.L_last_num_blocks_is_6_575:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$250,%r15d
-	jae	.L_16_blocks_overflow_CfDevglEqphrvEc
+	jae	.L_16_blocks_overflow_586
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%ymm27,%ymm0,%ymm3
-	jmp	.L_16_blocks_ok_CfDevglEqphrvEc
+	jmp	.L_16_blocks_ok_586
 
-.L_16_blocks_overflow_CfDevglEqphrvEc:
+.L_16_blocks_overflow_586:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%ymm29,%ymm3,%ymm3
-.L_16_blocks_ok_CfDevglEqphrvEc:
+.L_16_blocks_ok_586:
 
 
 
@@ -81103,7 +81103,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_lsnusklsBhzbghA
+	jl	.L_small_initial_partial_block_587
 
 
 
@@ -81155,8 +81155,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_lsnusklsBhzbghA
-.L_small_initial_partial_block_lsnusklsBhzbghA:
+	jmp	.L_small_initial_compute_done_587
+.L_small_initial_partial_block_587:
 
 
 
@@ -81211,32 +81211,32 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_lsnusklsBhzbghA:
+.L_small_initial_compute_done_587:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_lsnusklsBhzbghA
+	je	.L_after_reduction_587
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_lsnusklsBhzbghA:
-	jmp	.L_last_blocks_done_oxxaFudqqjGjCEq
-.L_last_num_blocks_is_7_oxxaFudqqjGjCEq:
+.L_after_reduction_587:
+	jmp	.L_last_blocks_done_575
+.L_last_num_blocks_is_7_575:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$249,%r15d
-	jae	.L_16_blocks_overflow_CiiqygszsbnEsdA
+	jae	.L_16_blocks_overflow_588
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
-	jmp	.L_16_blocks_ok_CiiqygszsbnEsdA
+	jmp	.L_16_blocks_ok_588
 
-.L_16_blocks_overflow_CiiqygszsbnEsdA:
+.L_16_blocks_overflow_588:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
-.L_16_blocks_ok_CiiqygszsbnEsdA:
+.L_16_blocks_ok_588:
 
 
 
@@ -81359,7 +81359,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_BhaiezgEmcAqGcA
+	jl	.L_small_initial_partial_block_589
 
 
 
@@ -81412,8 +81412,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_BhaiezgEmcAqGcA
-.L_small_initial_partial_block_BhaiezgEmcAqGcA:
+	jmp	.L_small_initial_compute_done_589
+.L_small_initial_partial_block_589:
 
 
 
@@ -81468,32 +81468,32 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_BhaiezgEmcAqGcA:
+.L_small_initial_compute_done_589:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_BhaiezgEmcAqGcA
+	je	.L_after_reduction_589
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_BhaiezgEmcAqGcA:
-	jmp	.L_last_blocks_done_oxxaFudqqjGjCEq
-.L_last_num_blocks_is_8_oxxaFudqqjGjCEq:
+.L_after_reduction_589:
+	jmp	.L_last_blocks_done_575
+.L_last_num_blocks_is_8_575:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$248,%r15d
-	jae	.L_16_blocks_overflow_ECttuspxBEesibq
+	jae	.L_16_blocks_overflow_590
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
-	jmp	.L_16_blocks_ok_ECttuspxBEesibq
+	jmp	.L_16_blocks_ok_590
 
-.L_16_blocks_overflow_ECttuspxBEesibq:
+.L_16_blocks_overflow_590:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
-.L_16_blocks_ok_ECttuspxBEesibq:
+.L_16_blocks_ok_590:
 
 
 
@@ -81616,7 +81616,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_ABBqtiyFesxzjAi
+	jl	.L_small_initial_partial_block_591
 
 
 
@@ -81667,8 +81667,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_ABBqtiyFesxzjAi
-.L_small_initial_partial_block_ABBqtiyFesxzjAi:
+	jmp	.L_small_initial_compute_done_591
+.L_small_initial_partial_block_591:
 
 
 
@@ -81724,26 +81724,26 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_ABBqtiyFesxzjAi:
+.L_small_initial_compute_done_591:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_ABBqtiyFesxzjAi
+	je	.L_after_reduction_591
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_ABBqtiyFesxzjAi:
-	jmp	.L_last_blocks_done_oxxaFudqqjGjCEq
-.L_last_num_blocks_is_9_oxxaFudqqjGjCEq:
+.L_after_reduction_591:
+	jmp	.L_last_blocks_done_575
+.L_last_num_blocks_is_9_575:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$247,%r15d
-	jae	.L_16_blocks_overflow_aBsthnaDGwsjEnF
+	jae	.L_16_blocks_overflow_592
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%xmm27,%xmm3,%xmm4
-	jmp	.L_16_blocks_ok_aBsthnaDGwsjEnF
+	jmp	.L_16_blocks_ok_592
 
-.L_16_blocks_overflow_aBsthnaDGwsjEnF:
+.L_16_blocks_overflow_592:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -81752,7 +81752,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%xmm29,%xmm4,%xmm4
-.L_16_blocks_ok_aBsthnaDGwsjEnF:
+.L_16_blocks_ok_592:
 
 
 
@@ -81890,7 +81890,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_xuuGkuwxohgdfpz
+	jl	.L_small_initial_partial_block_593
 
 
 
@@ -81951,8 +81951,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_xuuGkuwxohgdfpz
-.L_small_initial_partial_block_xuuGkuwxohgdfpz:
+	jmp	.L_small_initial_compute_done_593
+.L_small_initial_partial_block_593:
 
 
 
@@ -82006,26 +82006,26 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_xuuGkuwxohgdfpz:
+.L_small_initial_compute_done_593:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_xuuGkuwxohgdfpz
+	je	.L_after_reduction_593
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_xuuGkuwxohgdfpz:
-	jmp	.L_last_blocks_done_oxxaFudqqjGjCEq
-.L_last_num_blocks_is_10_oxxaFudqqjGjCEq:
+.L_after_reduction_593:
+	jmp	.L_last_blocks_done_575
+.L_last_num_blocks_is_10_575:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$246,%r15d
-	jae	.L_16_blocks_overflow_aCifCeeoodaspGd
+	jae	.L_16_blocks_overflow_594
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%ymm27,%ymm3,%ymm4
-	jmp	.L_16_blocks_ok_aCifCeeoodaspGd
+	jmp	.L_16_blocks_ok_594
 
-.L_16_blocks_overflow_aCifCeeoodaspGd:
+.L_16_blocks_overflow_594:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -82034,7 +82034,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%ymm29,%ymm4,%ymm4
-.L_16_blocks_ok_aCifCeeoodaspGd:
+.L_16_blocks_ok_594:
 
 
 
@@ -82172,7 +82172,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_analjDbjemkyfAz
+	jl	.L_small_initial_partial_block_595
 
 
 
@@ -82233,8 +82233,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_analjDbjemkyfAz
-.L_small_initial_partial_block_analjDbjemkyfAz:
+	jmp	.L_small_initial_compute_done_595
+.L_small_initial_partial_block_595:
 
 
 
@@ -82298,26 +82298,26 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_analjDbjemkyfAz:
+.L_small_initial_compute_done_595:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_analjDbjemkyfAz
+	je	.L_after_reduction_595
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_analjDbjemkyfAz:
-	jmp	.L_last_blocks_done_oxxaFudqqjGjCEq
-.L_last_num_blocks_is_11_oxxaFudqqjGjCEq:
+.L_after_reduction_595:
+	jmp	.L_last_blocks_done_575
+.L_last_num_blocks_is_11_575:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$245,%r15d
-	jae	.L_16_blocks_overflow_Guvlcwwhauohknj
+	jae	.L_16_blocks_overflow_596
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
-	jmp	.L_16_blocks_ok_Guvlcwwhauohknj
+	jmp	.L_16_blocks_ok_596
 
-.L_16_blocks_overflow_Guvlcwwhauohknj:
+.L_16_blocks_overflow_596:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -82326,7 +82326,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
-.L_16_blocks_ok_Guvlcwwhauohknj:
+.L_16_blocks_ok_596:
 
 
 
@@ -82464,7 +82464,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_mpDyvAvybrCdFex
+	jl	.L_small_initial_partial_block_597
 
 
 
@@ -82526,8 +82526,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_mpDyvAvybrCdFex
-.L_small_initial_partial_block_mpDyvAvybrCdFex:
+	jmp	.L_small_initial_compute_done_597
+.L_small_initial_partial_block_597:
 
 
 
@@ -82591,26 +82591,26 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_mpDyvAvybrCdFex:
+.L_small_initial_compute_done_597:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_mpDyvAvybrCdFex
+	je	.L_after_reduction_597
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_mpDyvAvybrCdFex:
-	jmp	.L_last_blocks_done_oxxaFudqqjGjCEq
-.L_last_num_blocks_is_12_oxxaFudqqjGjCEq:
+.L_after_reduction_597:
+	jmp	.L_last_blocks_done_575
+.L_last_num_blocks_is_12_575:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$244,%r15d
-	jae	.L_16_blocks_overflow_okuxgcbwameopgh
+	jae	.L_16_blocks_overflow_598
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
-	jmp	.L_16_blocks_ok_okuxgcbwameopgh
+	jmp	.L_16_blocks_ok_598
 
-.L_16_blocks_overflow_okuxgcbwameopgh:
+.L_16_blocks_overflow_598:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -82619,7 +82619,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
-.L_16_blocks_ok_okuxgcbwameopgh:
+.L_16_blocks_ok_598:
 
 
 
@@ -82757,7 +82757,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_nyfdovlmjBsoCFG
+	jl	.L_small_initial_partial_block_599
 
 
 
@@ -82813,8 +82813,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_nyfdovlmjBsoCFG
-.L_small_initial_partial_block_nyfdovlmjBsoCFG:
+	jmp	.L_small_initial_compute_done_599
+.L_small_initial_partial_block_599:
 
 
 
@@ -82879,27 +82879,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_nyfdovlmjBsoCFG:
+.L_small_initial_compute_done_599:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_nyfdovlmjBsoCFG
+	je	.L_after_reduction_599
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_nyfdovlmjBsoCFG:
-	jmp	.L_last_blocks_done_oxxaFudqqjGjCEq
-.L_last_num_blocks_is_13_oxxaFudqqjGjCEq:
+.L_after_reduction_599:
+	jmp	.L_last_blocks_done_575
+.L_last_num_blocks_is_13_575:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$243,%r15d
-	jae	.L_16_blocks_overflow_asCmgxodFhyjlzC
+	jae	.L_16_blocks_overflow_600
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%xmm27,%xmm4,%xmm5
-	jmp	.L_16_blocks_ok_asCmgxodFhyjlzC
+	jmp	.L_16_blocks_ok_600
 
-.L_16_blocks_overflow_asCmgxodFhyjlzC:
+.L_16_blocks_overflow_600:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -82910,7 +82910,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%xmm29,%xmm5,%xmm5
-.L_16_blocks_ok_asCmgxodFhyjlzC:
+.L_16_blocks_ok_600:
 
 
 
@@ -83063,7 +83063,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_aobAzixdovidzCn
+	jl	.L_small_initial_partial_block_601
 
 
 
@@ -83129,8 +83129,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_aobAzixdovidzCn
-.L_small_initial_partial_block_aobAzixdovidzCn:
+	jmp	.L_small_initial_compute_done_601
+.L_small_initial_partial_block_601:
 
 
 
@@ -83189,27 +83189,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_aobAzixdovidzCn:
+.L_small_initial_compute_done_601:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_aobAzixdovidzCn
+	je	.L_after_reduction_601
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_aobAzixdovidzCn:
-	jmp	.L_last_blocks_done_oxxaFudqqjGjCEq
-.L_last_num_blocks_is_14_oxxaFudqqjGjCEq:
+.L_after_reduction_601:
+	jmp	.L_last_blocks_done_575
+.L_last_num_blocks_is_14_575:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$242,%r15d
-	jae	.L_16_blocks_overflow_lxvxnhxjFbwblrh
+	jae	.L_16_blocks_overflow_602
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%ymm27,%ymm4,%ymm5
-	jmp	.L_16_blocks_ok_lxvxnhxjFbwblrh
+	jmp	.L_16_blocks_ok_602
 
-.L_16_blocks_overflow_lxvxnhxjFbwblrh:
+.L_16_blocks_overflow_602:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -83220,7 +83220,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%ymm29,%ymm5,%ymm5
-.L_16_blocks_ok_lxvxnhxjFbwblrh:
+.L_16_blocks_ok_602:
 
 
 
@@ -83373,7 +83373,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_okBnusrliheyGAB
+	jl	.L_small_initial_partial_block_603
 
 
 
@@ -83439,8 +83439,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_okBnusrliheyGAB
-.L_small_initial_partial_block_okBnusrliheyGAB:
+	jmp	.L_small_initial_compute_done_603
+.L_small_initial_partial_block_603:
 
 
 
@@ -83509,27 +83509,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_okBnusrliheyGAB:
+.L_small_initial_compute_done_603:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_okBnusrliheyGAB
+	je	.L_after_reduction_603
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_okBnusrliheyGAB:
-	jmp	.L_last_blocks_done_oxxaFudqqjGjCEq
-.L_last_num_blocks_is_15_oxxaFudqqjGjCEq:
+.L_after_reduction_603:
+	jmp	.L_last_blocks_done_575
+.L_last_num_blocks_is_15_575:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$241,%r15d
-	jae	.L_16_blocks_overflow_GtxcAocbabflsuf
+	jae	.L_16_blocks_overflow_604
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_GtxcAocbabflsuf
+	jmp	.L_16_blocks_ok_604
 
-.L_16_blocks_overflow_GtxcAocbabflsuf:
+.L_16_blocks_overflow_604:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -83540,7 +83540,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_GtxcAocbabflsuf:
+.L_16_blocks_ok_604:
 
 
 
@@ -83693,7 +83693,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_smEGzbmjxgfmarg
+	jl	.L_small_initial_partial_block_605
 
 
 
@@ -83760,8 +83760,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_smEGzbmjxgfmarg
-.L_small_initial_partial_block_smEGzbmjxgfmarg:
+	jmp	.L_small_initial_compute_done_605
+.L_small_initial_partial_block_605:
 
 
 
@@ -83830,27 +83830,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_smEGzbmjxgfmarg:
+.L_small_initial_compute_done_605:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_smEGzbmjxgfmarg
+	je	.L_after_reduction_605
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_smEGzbmjxgfmarg:
-	jmp	.L_last_blocks_done_oxxaFudqqjGjCEq
-.L_last_num_blocks_is_16_oxxaFudqqjGjCEq:
+.L_after_reduction_605:
+	jmp	.L_last_blocks_done_575
+.L_last_num_blocks_is_16_575:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$240,%r15d
-	jae	.L_16_blocks_overflow_AxywvnwCEkqkFya
+	jae	.L_16_blocks_overflow_606
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_AxywvnwCEkqkFya
+	jmp	.L_16_blocks_ok_606
 
-.L_16_blocks_overflow_AxywvnwCEkqkFya:
+.L_16_blocks_overflow_606:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -83861,7 +83861,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_AxywvnwCEkqkFya:
+.L_16_blocks_ok_606:
 
 
 
@@ -84011,7 +84011,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm21,%zmm21
 	vextracti32x4	$3,%zmm21,%xmm7
 	subq	$16 * (16 - 1),%r8
-.L_small_initial_partial_block_eBdDvoCDcfrmcwk:
+.L_small_initial_partial_block_607:
 
 
 
@@ -84081,11 +84081,11 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_eBdDvoCDcfrmcwk:
+.L_small_initial_compute_done_607:
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_eBdDvoCDcfrmcwk:
-	jmp	.L_last_blocks_done_oxxaFudqqjGjCEq
-.L_last_num_blocks_is_0_oxxaFudqqjGjCEq:
+.L_after_reduction_607:
+	jmp	.L_last_blocks_done_575
+.L_last_num_blocks_is_0_575:
 	vmovdqa64	1280(%rsp),%zmm13
 	vmovdqu64	512(%rsp),%zmm12
 	vpclmulqdq	$0x11,%zmm12,%zmm13,%zmm0
@@ -84146,18 +84146,18 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm24,%xmm3,%xmm14
 
-.L_last_blocks_done_oxxaFudqqjGjCEq:
+.L_last_blocks_done_575:
 	vpshufb	%xmm29,%xmm2,%xmm2
-	jmp	.L_ghash_done_kpzgFwDvlzADzny
+	jmp	.L_ghash_done_497
 
-.L_message_below_32_blocks_kpzgFwDvlzADzny:
+.L_message_below_32_blocks_497:
 
 
 	subq	$256,%r8
 	addq	$256,%r11
 	movl	%r8d,%r10d
 	testq	%r14,%r14
-	jnz	.L_skip_hkeys_precomputation_cdviEffqdkykzzz
+	jnz	.L_skip_hkeys_precomputation_608
 	vmovdqu64	640(%rsp),%zmm3
 
 
@@ -84285,7 +84285,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpternlogq	$0x96,%zmm7,%zmm6,%zmm5
 
 	vmovdqu64	%zmm5,256(%rsp)
-.L_skip_hkeys_precomputation_cdviEffqdkykzzz:
+.L_skip_hkeys_precomputation_608:
 	movq	$1,%r14
 	andl	$~15,%r10d
 	movl	$512,%ebx
@@ -84293,61 +84293,61 @@ ossl_aes_gcm_decrypt_avx512:
 	movl	%r8d,%r10d
 	addl	$15,%r10d
 	shrl	$4,%r10d
-	je	.L_last_num_blocks_is_0_DlcGrswzomffbed
+	je	.L_last_num_blocks_is_0_609
 
 	cmpl	$8,%r10d
-	je	.L_last_num_blocks_is_8_DlcGrswzomffbed
-	jb	.L_last_num_blocks_is_7_1_DlcGrswzomffbed
+	je	.L_last_num_blocks_is_8_609
+	jb	.L_last_num_blocks_is_7_1_609
 
 
 	cmpl	$12,%r10d
-	je	.L_last_num_blocks_is_12_DlcGrswzomffbed
-	jb	.L_last_num_blocks_is_11_9_DlcGrswzomffbed
+	je	.L_last_num_blocks_is_12_609
+	jb	.L_last_num_blocks_is_11_9_609
 
 
 	cmpl	$15,%r10d
-	je	.L_last_num_blocks_is_15_DlcGrswzomffbed
-	ja	.L_last_num_blocks_is_16_DlcGrswzomffbed
+	je	.L_last_num_blocks_is_15_609
+	ja	.L_last_num_blocks_is_16_609
 	cmpl	$14,%r10d
-	je	.L_last_num_blocks_is_14_DlcGrswzomffbed
-	jmp	.L_last_num_blocks_is_13_DlcGrswzomffbed
+	je	.L_last_num_blocks_is_14_609
+	jmp	.L_last_num_blocks_is_13_609
 
-.L_last_num_blocks_is_11_9_DlcGrswzomffbed:
+.L_last_num_blocks_is_11_9_609:
 
 	cmpl	$10,%r10d
-	je	.L_last_num_blocks_is_10_DlcGrswzomffbed
-	ja	.L_last_num_blocks_is_11_DlcGrswzomffbed
-	jmp	.L_last_num_blocks_is_9_DlcGrswzomffbed
+	je	.L_last_num_blocks_is_10_609
+	ja	.L_last_num_blocks_is_11_609
+	jmp	.L_last_num_blocks_is_9_609
 
-.L_last_num_blocks_is_7_1_DlcGrswzomffbed:
+.L_last_num_blocks_is_7_1_609:
 	cmpl	$4,%r10d
-	je	.L_last_num_blocks_is_4_DlcGrswzomffbed
-	jb	.L_last_num_blocks_is_3_1_DlcGrswzomffbed
+	je	.L_last_num_blocks_is_4_609
+	jb	.L_last_num_blocks_is_3_1_609
 
 	cmpl	$6,%r10d
-	ja	.L_last_num_blocks_is_7_DlcGrswzomffbed
-	je	.L_last_num_blocks_is_6_DlcGrswzomffbed
-	jmp	.L_last_num_blocks_is_5_DlcGrswzomffbed
+	ja	.L_last_num_blocks_is_7_609
+	je	.L_last_num_blocks_is_6_609
+	jmp	.L_last_num_blocks_is_5_609
 
-.L_last_num_blocks_is_3_1_DlcGrswzomffbed:
+.L_last_num_blocks_is_3_1_609:
 
 	cmpl	$2,%r10d
-	ja	.L_last_num_blocks_is_3_DlcGrswzomffbed
-	je	.L_last_num_blocks_is_2_DlcGrswzomffbed
-.L_last_num_blocks_is_1_DlcGrswzomffbed:
+	ja	.L_last_num_blocks_is_3_609
+	je	.L_last_num_blocks_is_2_609
+.L_last_num_blocks_is_1_609:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$255,%r15d
-	jae	.L_16_blocks_overflow_nkvsbijsrvuuazc
+	jae	.L_16_blocks_overflow_610
 	vpaddd	%xmm28,%xmm2,%xmm0
-	jmp	.L_16_blocks_ok_nkvsbijsrvuuazc
+	jmp	.L_16_blocks_ok_610
 
-.L_16_blocks_overflow_nkvsbijsrvuuazc:
+.L_16_blocks_overflow_610:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%xmm29,%xmm0,%xmm0
-.L_16_blocks_ok_nkvsbijsrvuuazc:
+.L_16_blocks_ok_610:
 
 
 
@@ -84431,7 +84431,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_DFgCElBtBCAajyG
+	jl	.L_small_initial_partial_block_611
 
 
 
@@ -84475,8 +84475,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_DFgCElBtBCAajyG
-.L_small_initial_partial_block_DFgCElBtBCAajyG:
+	jmp	.L_small_initial_compute_done_611
+.L_small_initial_partial_block_611:
 
 
 
@@ -84528,24 +84528,24 @@ ossl_aes_gcm_decrypt_avx512:
 
 	vpxorq	%xmm7,%xmm14,%xmm14
 
-	jmp	.L_after_reduction_DFgCElBtBCAajyG
-.L_small_initial_compute_done_DFgCElBtBCAajyG:
-.L_after_reduction_DFgCElBtBCAajyG:
-	jmp	.L_last_blocks_done_DlcGrswzomffbed
-.L_last_num_blocks_is_2_DlcGrswzomffbed:
+	jmp	.L_after_reduction_611
+.L_small_initial_compute_done_611:
+.L_after_reduction_611:
+	jmp	.L_last_blocks_done_609
+.L_last_num_blocks_is_2_609:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$254,%r15d
-	jae	.L_16_blocks_overflow_FfdvjpwlmxjCbaw
+	jae	.L_16_blocks_overflow_612
 	vpaddd	%ymm28,%ymm2,%ymm0
-	jmp	.L_16_blocks_ok_FfdvjpwlmxjCbaw
+	jmp	.L_16_blocks_ok_612
 
-.L_16_blocks_overflow_FfdvjpwlmxjCbaw:
+.L_16_blocks_overflow_612:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%ymm29,%ymm0,%ymm0
-.L_16_blocks_ok_FfdvjpwlmxjCbaw:
+.L_16_blocks_ok_612:
 
 
 
@@ -84630,7 +84630,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_vEdccjugxcmBinp
+	jl	.L_small_initial_partial_block_613
 
 
 
@@ -84674,8 +84674,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_vEdccjugxcmBinp
-.L_small_initial_partial_block_vEdccjugxcmBinp:
+	jmp	.L_small_initial_compute_done_613
+.L_small_initial_partial_block_613:
 
 
 
@@ -84722,27 +84722,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_vEdccjugxcmBinp:
+.L_small_initial_compute_done_613:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_vEdccjugxcmBinp
+	je	.L_after_reduction_613
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_vEdccjugxcmBinp:
-	jmp	.L_last_blocks_done_DlcGrswzomffbed
-.L_last_num_blocks_is_3_DlcGrswzomffbed:
+.L_after_reduction_613:
+	jmp	.L_last_blocks_done_609
+.L_last_num_blocks_is_3_609:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$253,%r15d
-	jae	.L_16_blocks_overflow_qpAblpGlbiicBgF
+	jae	.L_16_blocks_overflow_614
 	vpaddd	%zmm28,%zmm2,%zmm0
-	jmp	.L_16_blocks_ok_qpAblpGlbiicBgF
+	jmp	.L_16_blocks_ok_614
 
-.L_16_blocks_overflow_qpAblpGlbiicBgF:
+.L_16_blocks_overflow_614:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%zmm29,%zmm0,%zmm0
-.L_16_blocks_ok_qpAblpGlbiicBgF:
+.L_16_blocks_ok_614:
 
 
 
@@ -84827,7 +84827,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_xnjvGhamaAbyDis
+	jl	.L_small_initial_partial_block_615
 
 
 
@@ -84872,8 +84872,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_xnjvGhamaAbyDis
-.L_small_initial_partial_block_xnjvGhamaAbyDis:
+	jmp	.L_small_initial_compute_done_615
+.L_small_initial_partial_block_615:
 
 
 
@@ -84920,27 +84920,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_xnjvGhamaAbyDis:
+.L_small_initial_compute_done_615:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_xnjvGhamaAbyDis
+	je	.L_after_reduction_615
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_xnjvGhamaAbyDis:
-	jmp	.L_last_blocks_done_DlcGrswzomffbed
-.L_last_num_blocks_is_4_DlcGrswzomffbed:
+.L_after_reduction_615:
+	jmp	.L_last_blocks_done_609
+.L_last_num_blocks_is_4_609:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$252,%r15d
-	jae	.L_16_blocks_overflow_eyvumBoDfDnzble
+	jae	.L_16_blocks_overflow_616
 	vpaddd	%zmm28,%zmm2,%zmm0
-	jmp	.L_16_blocks_ok_eyvumBoDfDnzble
+	jmp	.L_16_blocks_ok_616
 
-.L_16_blocks_overflow_eyvumBoDfDnzble:
+.L_16_blocks_overflow_616:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%zmm29,%zmm0,%zmm0
-.L_16_blocks_ok_eyvumBoDfDnzble:
+.L_16_blocks_ok_616:
 
 
 
@@ -85025,7 +85025,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_aknGmwFcqEcwruD
+	jl	.L_small_initial_partial_block_617
 
 
 
@@ -85070,8 +85070,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_aknGmwFcqEcwruD
-.L_small_initial_partial_block_aknGmwFcqEcwruD:
+	jmp	.L_small_initial_compute_done_617
+.L_small_initial_partial_block_617:
 
 
 
@@ -85119,32 +85119,32 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_aknGmwFcqEcwruD:
+.L_small_initial_compute_done_617:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_aknGmwFcqEcwruD
+	je	.L_after_reduction_617
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_aknGmwFcqEcwruD:
-	jmp	.L_last_blocks_done_DlcGrswzomffbed
-.L_last_num_blocks_is_5_DlcGrswzomffbed:
+.L_after_reduction_617:
+	jmp	.L_last_blocks_done_609
+.L_last_num_blocks_is_5_609:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$251,%r15d
-	jae	.L_16_blocks_overflow_bxwhvgtauaBysej
+	jae	.L_16_blocks_overflow_618
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%xmm27,%xmm0,%xmm3
-	jmp	.L_16_blocks_ok_bxwhvgtauaBysej
+	jmp	.L_16_blocks_ok_618
 
-.L_16_blocks_overflow_bxwhvgtauaBysej:
+.L_16_blocks_overflow_618:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%xmm29,%xmm3,%xmm3
-.L_16_blocks_ok_bxwhvgtauaBysej:
+.L_16_blocks_ok_618:
 
 
 
@@ -85244,7 +85244,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_beumqymbcolzarz
+	jl	.L_small_initial_partial_block_619
 
 
 
@@ -85295,8 +85295,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_beumqymbcolzarz
-.L_small_initial_partial_block_beumqymbcolzarz:
+	jmp	.L_small_initial_compute_done_619
+.L_small_initial_partial_block_619:
 
 
 
@@ -85344,32 +85344,32 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_beumqymbcolzarz:
+.L_small_initial_compute_done_619:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_beumqymbcolzarz
+	je	.L_after_reduction_619
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_beumqymbcolzarz:
-	jmp	.L_last_blocks_done_DlcGrswzomffbed
-.L_last_num_blocks_is_6_DlcGrswzomffbed:
+.L_after_reduction_619:
+	jmp	.L_last_blocks_done_609
+.L_last_num_blocks_is_6_609:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$250,%r15d
-	jae	.L_16_blocks_overflow_csECbxsBfheikpF
+	jae	.L_16_blocks_overflow_620
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%ymm27,%ymm0,%ymm3
-	jmp	.L_16_blocks_ok_csECbxsBfheikpF
+	jmp	.L_16_blocks_ok_620
 
-.L_16_blocks_overflow_csECbxsBfheikpF:
+.L_16_blocks_overflow_620:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%ymm29,%ymm3,%ymm3
-.L_16_blocks_ok_csECbxsBfheikpF:
+.L_16_blocks_ok_620:
 
 
 
@@ -85469,7 +85469,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_FazcyvEiEytgdsl
+	jl	.L_small_initial_partial_block_621
 
 
 
@@ -85520,8 +85520,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_FazcyvEiEytgdsl
-.L_small_initial_partial_block_FazcyvEiEytgdsl:
+	jmp	.L_small_initial_compute_done_621
+.L_small_initial_partial_block_621:
 
 
 
@@ -85575,32 +85575,32 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_FazcyvEiEytgdsl:
+.L_small_initial_compute_done_621:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_FazcyvEiEytgdsl
+	je	.L_after_reduction_621
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_FazcyvEiEytgdsl:
-	jmp	.L_last_blocks_done_DlcGrswzomffbed
-.L_last_num_blocks_is_7_DlcGrswzomffbed:
+.L_after_reduction_621:
+	jmp	.L_last_blocks_done_609
+.L_last_num_blocks_is_7_609:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$249,%r15d
-	jae	.L_16_blocks_overflow_emqmlalEkxwndqk
+	jae	.L_16_blocks_overflow_622
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
-	jmp	.L_16_blocks_ok_emqmlalEkxwndqk
+	jmp	.L_16_blocks_ok_622
 
-.L_16_blocks_overflow_emqmlalEkxwndqk:
+.L_16_blocks_overflow_622:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
-.L_16_blocks_ok_emqmlalEkxwndqk:
+.L_16_blocks_ok_622:
 
 
 
@@ -85700,7 +85700,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_luwbasgbGlrGgzG
+	jl	.L_small_initial_partial_block_623
 
 
 
@@ -85752,8 +85752,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_luwbasgbGlrGgzG
-.L_small_initial_partial_block_luwbasgbGlrGgzG:
+	jmp	.L_small_initial_compute_done_623
+.L_small_initial_partial_block_623:
 
 
 
@@ -85807,32 +85807,32 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_luwbasgbGlrGgzG:
+.L_small_initial_compute_done_623:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_luwbasgbGlrGgzG
+	je	.L_after_reduction_623
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_luwbasgbGlrGgzG:
-	jmp	.L_last_blocks_done_DlcGrswzomffbed
-.L_last_num_blocks_is_8_DlcGrswzomffbed:
+.L_after_reduction_623:
+	jmp	.L_last_blocks_done_609
+.L_last_num_blocks_is_8_609:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$248,%r15d
-	jae	.L_16_blocks_overflow_fzDzproroGdpurF
+	jae	.L_16_blocks_overflow_624
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
-	jmp	.L_16_blocks_ok_fzDzproroGdpurF
+	jmp	.L_16_blocks_ok_624
 
-.L_16_blocks_overflow_fzDzproroGdpurF:
+.L_16_blocks_overflow_624:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
-.L_16_blocks_ok_fzDzproroGdpurF:
+.L_16_blocks_ok_624:
 
 
 
@@ -85932,7 +85932,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_gtDlyrvAzGvEjsb
+	jl	.L_small_initial_partial_block_625
 
 
 
@@ -85986,8 +85986,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_gtDlyrvAzGvEjsb
-.L_small_initial_partial_block_gtDlyrvAzGvEjsb:
+	jmp	.L_small_initial_compute_done_625
+.L_small_initial_partial_block_625:
 
 
 
@@ -86042,26 +86042,26 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_gtDlyrvAzGvEjsb:
+.L_small_initial_compute_done_625:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_gtDlyrvAzGvEjsb
+	je	.L_after_reduction_625
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_gtDlyrvAzGvEjsb:
-	jmp	.L_last_blocks_done_DlcGrswzomffbed
-.L_last_num_blocks_is_9_DlcGrswzomffbed:
+.L_after_reduction_625:
+	jmp	.L_last_blocks_done_609
+.L_last_num_blocks_is_9_609:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$247,%r15d
-	jae	.L_16_blocks_overflow_doFEkAzqDqixqAv
+	jae	.L_16_blocks_overflow_626
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%xmm27,%xmm3,%xmm4
-	jmp	.L_16_blocks_ok_doFEkAzqDqixqAv
+	jmp	.L_16_blocks_ok_626
 
-.L_16_blocks_overflow_doFEkAzqDqixqAv:
+.L_16_blocks_overflow_626:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -86070,7 +86070,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%xmm29,%xmm4,%xmm4
-.L_16_blocks_ok_doFEkAzqDqixqAv:
+.L_16_blocks_ok_626:
 
 
 
@@ -86185,7 +86185,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_eynixwBFmnGdDlF
+	jl	.L_small_initial_partial_block_627
 
 
 
@@ -86245,8 +86245,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_eynixwBFmnGdDlF
-.L_small_initial_partial_block_eynixwBFmnGdDlF:
+	jmp	.L_small_initial_compute_done_627
+.L_small_initial_partial_block_627:
 
 
 
@@ -86303,26 +86303,26 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_eynixwBFmnGdDlF:
+.L_small_initial_compute_done_627:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_eynixwBFmnGdDlF
+	je	.L_after_reduction_627
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_eynixwBFmnGdDlF:
-	jmp	.L_last_blocks_done_DlcGrswzomffbed
-.L_last_num_blocks_is_10_DlcGrswzomffbed:
+.L_after_reduction_627:
+	jmp	.L_last_blocks_done_609
+.L_last_num_blocks_is_10_609:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$246,%r15d
-	jae	.L_16_blocks_overflow_FbdyBbfbuqjdFes
+	jae	.L_16_blocks_overflow_628
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%ymm27,%ymm3,%ymm4
-	jmp	.L_16_blocks_ok_FbdyBbfbuqjdFes
+	jmp	.L_16_blocks_ok_628
 
-.L_16_blocks_overflow_FbdyBbfbuqjdFes:
+.L_16_blocks_overflow_628:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -86331,7 +86331,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%ymm29,%ymm4,%ymm4
-.L_16_blocks_ok_FbdyBbfbuqjdFes:
+.L_16_blocks_ok_628:
 
 
 
@@ -86446,7 +86446,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_edcdfnijlltdcoq
+	jl	.L_small_initial_partial_block_629
 
 
 
@@ -86506,8 +86506,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_edcdfnijlltdcoq
-.L_small_initial_partial_block_edcdfnijlltdcoq:
+	jmp	.L_small_initial_compute_done_629
+.L_small_initial_partial_block_629:
 
 
 
@@ -86570,26 +86570,26 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_edcdfnijlltdcoq:
+.L_small_initial_compute_done_629:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_edcdfnijlltdcoq
+	je	.L_after_reduction_629
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_edcdfnijlltdcoq:
-	jmp	.L_last_blocks_done_DlcGrswzomffbed
-.L_last_num_blocks_is_11_DlcGrswzomffbed:
+.L_after_reduction_629:
+	jmp	.L_last_blocks_done_609
+.L_last_num_blocks_is_11_609:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$245,%r15d
-	jae	.L_16_blocks_overflow_zDtgsabrsdBzhpn
+	jae	.L_16_blocks_overflow_630
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
-	jmp	.L_16_blocks_ok_zDtgsabrsdBzhpn
+	jmp	.L_16_blocks_ok_630
 
-.L_16_blocks_overflow_zDtgsabrsdBzhpn:
+.L_16_blocks_overflow_630:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -86598,7 +86598,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
-.L_16_blocks_ok_zDtgsabrsdBzhpn:
+.L_16_blocks_ok_630:
 
 
 
@@ -86713,7 +86713,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_waFDedemeEwFaqe
+	jl	.L_small_initial_partial_block_631
 
 
 
@@ -86774,8 +86774,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_waFDedemeEwFaqe
-.L_small_initial_partial_block_waFDedemeEwFaqe:
+	jmp	.L_small_initial_compute_done_631
+.L_small_initial_partial_block_631:
 
 
 
@@ -86838,26 +86838,26 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_waFDedemeEwFaqe:
+.L_small_initial_compute_done_631:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_waFDedemeEwFaqe
+	je	.L_after_reduction_631
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_waFDedemeEwFaqe:
-	jmp	.L_last_blocks_done_DlcGrswzomffbed
-.L_last_num_blocks_is_12_DlcGrswzomffbed:
+.L_after_reduction_631:
+	jmp	.L_last_blocks_done_609
+.L_last_num_blocks_is_12_609:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$244,%r15d
-	jae	.L_16_blocks_overflow_oExqautfwkwokEB
+	jae	.L_16_blocks_overflow_632
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
-	jmp	.L_16_blocks_ok_oExqautfwkwokEB
+	jmp	.L_16_blocks_ok_632
 
-.L_16_blocks_overflow_oExqautfwkwokEB:
+.L_16_blocks_overflow_632:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -86866,7 +86866,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
-.L_16_blocks_ok_oExqautfwkwokEB:
+.L_16_blocks_ok_632:
 
 
 
@@ -86981,7 +86981,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_DGBGrfFtbtDGuea
+	jl	.L_small_initial_partial_block_633
 
 
 
@@ -87040,8 +87040,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_DGBGrfFtbtDGuea
-.L_small_initial_partial_block_DGBGrfFtbtDGuea:
+	jmp	.L_small_initial_compute_done_633
+.L_small_initial_partial_block_633:
 
 
 
@@ -87105,27 +87105,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_DGBGrfFtbtDGuea:
+.L_small_initial_compute_done_633:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_DGBGrfFtbtDGuea
+	je	.L_after_reduction_633
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_DGBGrfFtbtDGuea:
-	jmp	.L_last_blocks_done_DlcGrswzomffbed
-.L_last_num_blocks_is_13_DlcGrswzomffbed:
+.L_after_reduction_633:
+	jmp	.L_last_blocks_done_609
+.L_last_num_blocks_is_13_609:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$243,%r15d
-	jae	.L_16_blocks_overflow_ohwtArFrtkbhrfh
+	jae	.L_16_blocks_overflow_634
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%xmm27,%xmm4,%xmm5
-	jmp	.L_16_blocks_ok_ohwtArFrtkbhrfh
+	jmp	.L_16_blocks_ok_634
 
-.L_16_blocks_overflow_ohwtArFrtkbhrfh:
+.L_16_blocks_overflow_634:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -87136,7 +87136,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%xmm29,%xmm5,%xmm5
-.L_16_blocks_ok_ohwtArFrtkbhrfh:
+.L_16_blocks_ok_634:
 
 
 
@@ -87266,7 +87266,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_gciAjgCyCslvyxD
+	jl	.L_small_initial_partial_block_635
 
 
 
@@ -87331,8 +87331,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_gciAjgCyCslvyxD
-.L_small_initial_partial_block_gciAjgCyCslvyxD:
+	jmp	.L_small_initial_compute_done_635
+.L_small_initial_partial_block_635:
 
 
 
@@ -87394,27 +87394,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_gciAjgCyCslvyxD:
+.L_small_initial_compute_done_635:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_gciAjgCyCslvyxD
+	je	.L_after_reduction_635
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_gciAjgCyCslvyxD:
-	jmp	.L_last_blocks_done_DlcGrswzomffbed
-.L_last_num_blocks_is_14_DlcGrswzomffbed:
+.L_after_reduction_635:
+	jmp	.L_last_blocks_done_609
+.L_last_num_blocks_is_14_609:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$242,%r15d
-	jae	.L_16_blocks_overflow_tzqtBkzxjBrlBag
+	jae	.L_16_blocks_overflow_636
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%ymm27,%ymm4,%ymm5
-	jmp	.L_16_blocks_ok_tzqtBkzxjBrlBag
+	jmp	.L_16_blocks_ok_636
 
-.L_16_blocks_overflow_tzqtBkzxjBrlBag:
+.L_16_blocks_overflow_636:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -87425,7 +87425,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%ymm29,%ymm5,%ymm5
-.L_16_blocks_ok_tzqtBkzxjBrlBag:
+.L_16_blocks_ok_636:
 
 
 
@@ -87555,7 +87555,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_ryvqbkroifBFpls
+	jl	.L_small_initial_partial_block_637
 
 
 
@@ -87620,8 +87620,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_ryvqbkroifBFpls
-.L_small_initial_partial_block_ryvqbkroifBFpls:
+	jmp	.L_small_initial_compute_done_637
+.L_small_initial_partial_block_637:
 
 
 
@@ -87689,27 +87689,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_ryvqbkroifBFpls:
+.L_small_initial_compute_done_637:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_ryvqbkroifBFpls
+	je	.L_after_reduction_637
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_ryvqbkroifBFpls:
-	jmp	.L_last_blocks_done_DlcGrswzomffbed
-.L_last_num_blocks_is_15_DlcGrswzomffbed:
+.L_after_reduction_637:
+	jmp	.L_last_blocks_done_609
+.L_last_num_blocks_is_15_609:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$241,%r15d
-	jae	.L_16_blocks_overflow_trczcgzdorhDGwA
+	jae	.L_16_blocks_overflow_638
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_trczcgzdorhDGwA
+	jmp	.L_16_blocks_ok_638
 
-.L_16_blocks_overflow_trczcgzdorhDGwA:
+.L_16_blocks_overflow_638:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -87720,7 +87720,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_trczcgzdorhDGwA:
+.L_16_blocks_ok_638:
 
 
 
@@ -87850,7 +87850,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_shkqfGqkgxgsnos
+	jl	.L_small_initial_partial_block_639
 
 
 
@@ -87916,8 +87916,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_shkqfGqkgxgsnos
-.L_small_initial_partial_block_shkqfGqkgxgsnos:
+	jmp	.L_small_initial_compute_done_639
+.L_small_initial_partial_block_639:
 
 
 
@@ -87985,27 +87985,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_shkqfGqkgxgsnos:
+.L_small_initial_compute_done_639:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_shkqfGqkgxgsnos
+	je	.L_after_reduction_639
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_shkqfGqkgxgsnos:
-	jmp	.L_last_blocks_done_DlcGrswzomffbed
-.L_last_num_blocks_is_16_DlcGrswzomffbed:
+.L_after_reduction_639:
+	jmp	.L_last_blocks_done_609
+.L_last_num_blocks_is_16_609:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$240,%r15d
-	jae	.L_16_blocks_overflow_BBvnirsFbDcgesl
+	jae	.L_16_blocks_overflow_640
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_BBvnirsFbDcgesl
+	jmp	.L_16_blocks_ok_640
 
-.L_16_blocks_overflow_BBvnirsFbDcgesl:
+.L_16_blocks_overflow_640:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -88016,7 +88016,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_BBvnirsFbDcgesl:
+.L_16_blocks_ok_640:
 
 
 
@@ -88143,7 +88143,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm21,%zmm21
 	vextracti32x4	$3,%zmm21,%xmm7
 	subq	$16 * (16 - 1),%r8
-.L_small_initial_partial_block_fuyrBhBkcpprxbE:
+.L_small_initial_partial_block_641:
 
 
 
@@ -88212,11 +88212,11 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_fuyrBhBkcpprxbE:
+.L_small_initial_compute_done_641:
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_fuyrBhBkcpprxbE:
-	jmp	.L_last_blocks_done_DlcGrswzomffbed
-.L_last_num_blocks_is_0_DlcGrswzomffbed:
+.L_after_reduction_641:
+	jmp	.L_last_blocks_done_609
+.L_last_num_blocks_is_0_609:
 	vmovdqa64	768(%rsp),%zmm13
 	vpxorq	%zmm14,%zmm13,%zmm13
 	vmovdqu64	0(%rsp,%rbx,1),%zmm12
@@ -88278,65 +88278,65 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm24,%xmm3,%xmm14
 
-.L_last_blocks_done_DlcGrswzomffbed:
+.L_last_blocks_done_609:
 	vpshufb	%xmm29,%xmm2,%xmm2
-	jmp	.L_ghash_done_kpzgFwDvlzADzny
+	jmp	.L_ghash_done_497
 
-.L_message_below_equal_16_blocks_kpzgFwDvlzADzny:
+.L_message_below_equal_16_blocks_497:
 
 
 	movl	%r8d,%r12d
 	addl	$15,%r12d
 	shrl	$4,%r12d
 	cmpq	$8,%r12
-	je	.L_small_initial_num_blocks_is_8_DsqEjAaljoEdzpu
-	jl	.L_small_initial_num_blocks_is_7_1_DsqEjAaljoEdzpu
+	je	.L_small_initial_num_blocks_is_8_642
+	jl	.L_small_initial_num_blocks_is_7_1_642
 
 
 	cmpq	$12,%r12
-	je	.L_small_initial_num_blocks_is_12_DsqEjAaljoEdzpu
-	jl	.L_small_initial_num_blocks_is_11_9_DsqEjAaljoEdzpu
+	je	.L_small_initial_num_blocks_is_12_642
+	jl	.L_small_initial_num_blocks_is_11_9_642
 
 
 	cmpq	$16,%r12
-	je	.L_small_initial_num_blocks_is_16_DsqEjAaljoEdzpu
+	je	.L_small_initial_num_blocks_is_16_642
 	cmpq	$15,%r12
-	je	.L_small_initial_num_blocks_is_15_DsqEjAaljoEdzpu
+	je	.L_small_initial_num_blocks_is_15_642
 	cmpq	$14,%r12
-	je	.L_small_initial_num_blocks_is_14_DsqEjAaljoEdzpu
-	jmp	.L_small_initial_num_blocks_is_13_DsqEjAaljoEdzpu
+	je	.L_small_initial_num_blocks_is_14_642
+	jmp	.L_small_initial_num_blocks_is_13_642
 
-.L_small_initial_num_blocks_is_11_9_DsqEjAaljoEdzpu:
+.L_small_initial_num_blocks_is_11_9_642:
 
 	cmpq	$11,%r12
-	je	.L_small_initial_num_blocks_is_11_DsqEjAaljoEdzpu
+	je	.L_small_initial_num_blocks_is_11_642
 	cmpq	$10,%r12
-	je	.L_small_initial_num_blocks_is_10_DsqEjAaljoEdzpu
-	jmp	.L_small_initial_num_blocks_is_9_DsqEjAaljoEdzpu
+	je	.L_small_initial_num_blocks_is_10_642
+	jmp	.L_small_initial_num_blocks_is_9_642
 
-.L_small_initial_num_blocks_is_7_1_DsqEjAaljoEdzpu:
+.L_small_initial_num_blocks_is_7_1_642:
 	cmpq	$4,%r12
-	je	.L_small_initial_num_blocks_is_4_DsqEjAaljoEdzpu
-	jl	.L_small_initial_num_blocks_is_3_1_DsqEjAaljoEdzpu
+	je	.L_small_initial_num_blocks_is_4_642
+	jl	.L_small_initial_num_blocks_is_3_1_642
 
 	cmpq	$7,%r12
-	je	.L_small_initial_num_blocks_is_7_DsqEjAaljoEdzpu
+	je	.L_small_initial_num_blocks_is_7_642
 	cmpq	$6,%r12
-	je	.L_small_initial_num_blocks_is_6_DsqEjAaljoEdzpu
-	jmp	.L_small_initial_num_blocks_is_5_DsqEjAaljoEdzpu
+	je	.L_small_initial_num_blocks_is_6_642
+	jmp	.L_small_initial_num_blocks_is_5_642
 
-.L_small_initial_num_blocks_is_3_1_DsqEjAaljoEdzpu:
+.L_small_initial_num_blocks_is_3_1_642:
 
 	cmpq	$3,%r12
-	je	.L_small_initial_num_blocks_is_3_DsqEjAaljoEdzpu
+	je	.L_small_initial_num_blocks_is_3_642
 	cmpq	$2,%r12
-	je	.L_small_initial_num_blocks_is_2_DsqEjAaljoEdzpu
+	je	.L_small_initial_num_blocks_is_2_642
 
 
 
 
 
-.L_small_initial_num_blocks_is_1_DsqEjAaljoEdzpu:
+.L_small_initial_num_blocks_is_1_642:
 	vmovdqa64	SHUF_MASK(%rip),%xmm29
 	vpaddd	ONE(%rip),%xmm2,%xmm0
 	leaq	byte64_len_to_mask_table(%rip),%r10
@@ -88377,7 +88377,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_wDrffiCttqvFnAB
+	jl	.L_small_initial_partial_block_643
 
 
 
@@ -88419,8 +88419,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_wDrffiCttqvFnAB
-.L_small_initial_partial_block_wDrffiCttqvFnAB:
+	jmp	.L_small_initial_compute_done_643
+.L_small_initial_partial_block_643:
 
 
 
@@ -88444,11 +88444,11 @@ ossl_aes_gcm_decrypt_avx512:
 
 	vpxorq	%xmm13,%xmm14,%xmm14
 
-	jmp	.L_after_reduction_wDrffiCttqvFnAB
-.L_small_initial_compute_done_wDrffiCttqvFnAB:
-.L_after_reduction_wDrffiCttqvFnAB:
-	jmp	.L_small_initial_blocks_encrypted_DsqEjAaljoEdzpu
-.L_small_initial_num_blocks_is_2_DsqEjAaljoEdzpu:
+	jmp	.L_after_reduction_643
+.L_small_initial_compute_done_643:
+.L_after_reduction_643:
+	jmp	.L_small_initial_blocks_encrypted_642
+.L_small_initial_num_blocks_is_2_642:
 	vmovdqa64	SHUF_MASK(%rip),%ymm29
 	vshufi64x2	$0,%ymm2,%ymm2,%ymm0
 	vpaddd	ddq_add_1234(%rip),%ymm0,%ymm0
@@ -88491,7 +88491,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_dppFolobGnhooBf
+	jl	.L_small_initial_partial_block_644
 
 
 
@@ -88533,8 +88533,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_dppFolobGnhooBf
-.L_small_initial_partial_block_dppFolobGnhooBf:
+	jmp	.L_small_initial_compute_done_644
+.L_small_initial_partial_block_644:
 
 
 
@@ -88579,14 +88579,14 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_dppFolobGnhooBf:
+.L_small_initial_compute_done_644:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_dppFolobGnhooBf
+	je	.L_after_reduction_644
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_dppFolobGnhooBf:
-	jmp	.L_small_initial_blocks_encrypted_DsqEjAaljoEdzpu
-.L_small_initial_num_blocks_is_3_DsqEjAaljoEdzpu:
+.L_after_reduction_644:
+	jmp	.L_small_initial_blocks_encrypted_642
+.L_small_initial_num_blocks_is_3_642:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -88629,7 +88629,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_ifzFszGohGoqoyt
+	jl	.L_small_initial_partial_block_645
 
 
 
@@ -88672,8 +88672,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_ifzFszGohGoqoyt
-.L_small_initial_partial_block_ifzFszGohGoqoyt:
+	jmp	.L_small_initial_compute_done_645
+.L_small_initial_partial_block_645:
 
 
 
@@ -88718,14 +88718,14 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_ifzFszGohGoqoyt:
+.L_small_initial_compute_done_645:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_ifzFszGohGoqoyt
+	je	.L_after_reduction_645
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_ifzFszGohGoqoyt:
-	jmp	.L_small_initial_blocks_encrypted_DsqEjAaljoEdzpu
-.L_small_initial_num_blocks_is_4_DsqEjAaljoEdzpu:
+.L_after_reduction_645:
+	jmp	.L_small_initial_blocks_encrypted_642
+.L_small_initial_num_blocks_is_4_642:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -88768,7 +88768,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_gfnktBbhlaqcEDw
+	jl	.L_small_initial_partial_block_646
 
 
 
@@ -88810,8 +88810,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_gfnktBbhlaqcEDw
-.L_small_initial_partial_block_gfnktBbhlaqcEDw:
+	jmp	.L_small_initial_compute_done_646
+.L_small_initial_partial_block_646:
 
 
 
@@ -88857,14 +88857,14 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_gfnktBbhlaqcEDw:
+.L_small_initial_compute_done_646:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_gfnktBbhlaqcEDw
+	je	.L_after_reduction_646
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_gfnktBbhlaqcEDw:
-	jmp	.L_small_initial_blocks_encrypted_DsqEjAaljoEdzpu
-.L_small_initial_num_blocks_is_5_DsqEjAaljoEdzpu:
+.L_after_reduction_646:
+	jmp	.L_small_initial_blocks_encrypted_642
+.L_small_initial_num_blocks_is_5_642:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -88925,7 +88925,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_CfvjfCGbmkmmhsD
+	jl	.L_small_initial_partial_block_647
 
 
 
@@ -88977,8 +88977,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_CfvjfCGbmkmmhsD
-.L_small_initial_partial_block_CfvjfCGbmkmmhsD:
+	jmp	.L_small_initial_compute_done_647
+.L_small_initial_partial_block_647:
 
 
 
@@ -89023,14 +89023,14 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_CfvjfCGbmkmmhsD:
+.L_small_initial_compute_done_647:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_CfvjfCGbmkmmhsD
+	je	.L_after_reduction_647
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_CfvjfCGbmkmmhsD:
-	jmp	.L_small_initial_blocks_encrypted_DsqEjAaljoEdzpu
-.L_small_initial_num_blocks_is_6_DsqEjAaljoEdzpu:
+.L_after_reduction_647:
+	jmp	.L_small_initial_blocks_encrypted_642
+.L_small_initial_num_blocks_is_6_642:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -89091,7 +89091,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_gjvGlFuqAzhBFgv
+	jl	.L_small_initial_partial_block_648
 
 
 
@@ -89143,8 +89143,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_gjvGlFuqAzhBFgv
-.L_small_initial_partial_block_gjvGlFuqAzhBFgv:
+	jmp	.L_small_initial_compute_done_648
+.L_small_initial_partial_block_648:
 
 
 
@@ -89199,14 +89199,14 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_gjvGlFuqAzhBFgv:
+.L_small_initial_compute_done_648:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_gjvGlFuqAzhBFgv
+	je	.L_after_reduction_648
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_gjvGlFuqAzhBFgv:
-	jmp	.L_small_initial_blocks_encrypted_DsqEjAaljoEdzpu
-.L_small_initial_num_blocks_is_7_DsqEjAaljoEdzpu:
+.L_after_reduction_648:
+	jmp	.L_small_initial_blocks_encrypted_642
+.L_small_initial_num_blocks_is_7_642:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -89267,7 +89267,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_oCkFBafhgBayqmr
+	jl	.L_small_initial_partial_block_649
 
 
 
@@ -89320,8 +89320,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_oCkFBafhgBayqmr
-.L_small_initial_partial_block_oCkFBafhgBayqmr:
+	jmp	.L_small_initial_compute_done_649
+.L_small_initial_partial_block_649:
 
 
 
@@ -89376,14 +89376,14 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_oCkFBafhgBayqmr:
+.L_small_initial_compute_done_649:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_oCkFBafhgBayqmr
+	je	.L_after_reduction_649
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_oCkFBafhgBayqmr:
-	jmp	.L_small_initial_blocks_encrypted_DsqEjAaljoEdzpu
-.L_small_initial_num_blocks_is_8_DsqEjAaljoEdzpu:
+.L_after_reduction_649:
+	jmp	.L_small_initial_blocks_encrypted_642
+.L_small_initial_num_blocks_is_8_642:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -89444,7 +89444,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_ppddyowubrBfAuj
+	jl	.L_small_initial_partial_block_650
 
 
 
@@ -89495,8 +89495,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_ppddyowubrBfAuj
-.L_small_initial_partial_block_ppddyowubrBfAuj:
+	jmp	.L_small_initial_compute_done_650
+.L_small_initial_partial_block_650:
 
 
 
@@ -89552,14 +89552,14 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_ppddyowubrBfAuj:
+.L_small_initial_compute_done_650:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_ppddyowubrBfAuj
+	je	.L_after_reduction_650
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_ppddyowubrBfAuj:
-	jmp	.L_small_initial_blocks_encrypted_DsqEjAaljoEdzpu
-.L_small_initial_num_blocks_is_9_DsqEjAaljoEdzpu:
+.L_after_reduction_650:
+	jmp	.L_small_initial_blocks_encrypted_642
+.L_small_initial_num_blocks_is_9_642:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -89637,7 +89637,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_AgxkjfmFaBsllFt
+	jl	.L_small_initial_partial_block_651
 
 
 
@@ -89698,8 +89698,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_AgxkjfmFaBsllFt
-.L_small_initial_partial_block_AgxkjfmFaBsllFt:
+	jmp	.L_small_initial_compute_done_651
+.L_small_initial_partial_block_651:
 
 
 
@@ -89753,14 +89753,14 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_AgxkjfmFaBsllFt:
+.L_small_initial_compute_done_651:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_AgxkjfmFaBsllFt
+	je	.L_after_reduction_651
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_AgxkjfmFaBsllFt:
-	jmp	.L_small_initial_blocks_encrypted_DsqEjAaljoEdzpu
-.L_small_initial_num_blocks_is_10_DsqEjAaljoEdzpu:
+.L_after_reduction_651:
+	jmp	.L_small_initial_blocks_encrypted_642
+.L_small_initial_num_blocks_is_10_642:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -89838,7 +89838,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_imFdEjbAhqFjrdh
+	jl	.L_small_initial_partial_block_652
 
 
 
@@ -89899,8 +89899,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_imFdEjbAhqFjrdh
-.L_small_initial_partial_block_imFdEjbAhqFjrdh:
+	jmp	.L_small_initial_compute_done_652
+.L_small_initial_partial_block_652:
 
 
 
@@ -89964,14 +89964,14 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_imFdEjbAhqFjrdh:
+.L_small_initial_compute_done_652:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_imFdEjbAhqFjrdh
+	je	.L_after_reduction_652
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_imFdEjbAhqFjrdh:
-	jmp	.L_small_initial_blocks_encrypted_DsqEjAaljoEdzpu
-.L_small_initial_num_blocks_is_11_DsqEjAaljoEdzpu:
+.L_after_reduction_652:
+	jmp	.L_small_initial_blocks_encrypted_642
+.L_small_initial_num_blocks_is_11_642:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -90049,7 +90049,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_fEEAbqEerxwBqBD
+	jl	.L_small_initial_partial_block_653
 
 
 
@@ -90111,8 +90111,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_fEEAbqEerxwBqBD
-.L_small_initial_partial_block_fEEAbqEerxwBqBD:
+	jmp	.L_small_initial_compute_done_653
+.L_small_initial_partial_block_653:
 
 
 
@@ -90176,14 +90176,14 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_fEEAbqEerxwBqBD:
+.L_small_initial_compute_done_653:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_fEEAbqEerxwBqBD
+	je	.L_after_reduction_653
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_fEEAbqEerxwBqBD:
-	jmp	.L_small_initial_blocks_encrypted_DsqEjAaljoEdzpu
-.L_small_initial_num_blocks_is_12_DsqEjAaljoEdzpu:
+.L_after_reduction_653:
+	jmp	.L_small_initial_blocks_encrypted_642
+.L_small_initial_num_blocks_is_12_642:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -90261,7 +90261,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_xkgdevyggkCptEq
+	jl	.L_small_initial_partial_block_654
 
 
 
@@ -90317,8 +90317,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_xkgdevyggkCptEq
-.L_small_initial_partial_block_xkgdevyggkCptEq:
+	jmp	.L_small_initial_compute_done_654
+.L_small_initial_partial_block_654:
 
 
 
@@ -90383,14 +90383,14 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_xkgdevyggkCptEq:
+.L_small_initial_compute_done_654:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_xkgdevyggkCptEq
+	je	.L_after_reduction_654
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_xkgdevyggkCptEq:
-	jmp	.L_small_initial_blocks_encrypted_DsqEjAaljoEdzpu
-.L_small_initial_num_blocks_is_13_DsqEjAaljoEdzpu:
+.L_after_reduction_654:
+	jmp	.L_small_initial_blocks_encrypted_642
+.L_small_initial_num_blocks_is_13_642:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -90485,7 +90485,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_dzvbuuCqsqFAjxi
+	jl	.L_small_initial_partial_block_655
 
 
 
@@ -90551,8 +90551,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_dzvbuuCqsqFAjxi
-.L_small_initial_partial_block_dzvbuuCqsqFAjxi:
+	jmp	.L_small_initial_compute_done_655
+.L_small_initial_partial_block_655:
 
 
 
@@ -90611,14 +90611,14 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_dzvbuuCqsqFAjxi:
+.L_small_initial_compute_done_655:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_dzvbuuCqsqFAjxi
+	je	.L_after_reduction_655
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_dzvbuuCqsqFAjxi:
-	jmp	.L_small_initial_blocks_encrypted_DsqEjAaljoEdzpu
-.L_small_initial_num_blocks_is_14_DsqEjAaljoEdzpu:
+.L_after_reduction_655:
+	jmp	.L_small_initial_blocks_encrypted_642
+.L_small_initial_num_blocks_is_14_642:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -90713,7 +90713,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_hhtqnAhdhxjjDnc
+	jl	.L_small_initial_partial_block_656
 
 
 
@@ -90779,8 +90779,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_hhtqnAhdhxjjDnc
-.L_small_initial_partial_block_hhtqnAhdhxjjDnc:
+	jmp	.L_small_initial_compute_done_656
+.L_small_initial_partial_block_656:
 
 
 
@@ -90849,14 +90849,14 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_hhtqnAhdhxjjDnc:
+.L_small_initial_compute_done_656:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_hhtqnAhdhxjjDnc
+	je	.L_after_reduction_656
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_hhtqnAhdhxjjDnc:
-	jmp	.L_small_initial_blocks_encrypted_DsqEjAaljoEdzpu
-.L_small_initial_num_blocks_is_15_DsqEjAaljoEdzpu:
+.L_after_reduction_656:
+	jmp	.L_small_initial_blocks_encrypted_642
+.L_small_initial_num_blocks_is_15_642:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -90951,7 +90951,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_GagurgckAhoCdcw
+	jl	.L_small_initial_partial_block_657
 
 
 
@@ -91018,8 +91018,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_GagurgckAhoCdcw
-.L_small_initial_partial_block_GagurgckAhoCdcw:
+	jmp	.L_small_initial_compute_done_657
+.L_small_initial_partial_block_657:
 
 
 
@@ -91088,14 +91088,14 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_GagurgckAhoCdcw:
+.L_small_initial_compute_done_657:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_GagurgckAhoCdcw
+	je	.L_after_reduction_657
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_GagurgckAhoCdcw:
-	jmp	.L_small_initial_blocks_encrypted_DsqEjAaljoEdzpu
-.L_small_initial_num_blocks_is_16_DsqEjAaljoEdzpu:
+.L_after_reduction_657:
+	jmp	.L_small_initial_blocks_encrypted_642
+.L_small_initial_num_blocks_is_16_642:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -91187,7 +91187,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm11,%zmm11
 	vextracti32x4	$3,%zmm11,%xmm13
 	subq	$16 * (16 - 1),%r8
-.L_small_initial_partial_block_msiFyqpegCpyxxg:
+.L_small_initial_partial_block_658:
 
 
 
@@ -91257,25 +91257,25 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_msiFyqpegCpyxxg:
+.L_small_initial_compute_done_658:
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_msiFyqpegCpyxxg:
-.L_small_initial_blocks_encrypted_DsqEjAaljoEdzpu:
-.L_ghash_done_kpzgFwDvlzADzny:
+.L_after_reduction_658:
+.L_small_initial_blocks_encrypted_642:
+.L_ghash_done_497:
 	vmovdqu64	%xmm2,0(%rsi)
 	vmovdqu64	%xmm14,64(%rsi)
-.L_enc_dec_done_kpzgFwDvlzADzny:
+.L_enc_dec_done_497:
 	jmp	.Lexit_gcm_decrypt
 .align	32
 .Laes_gcm_decrypt_192_avx512:
 	orq	%r8,%r8
-	je	.L_enc_dec_done_EzeEqCiibleghsn
+	je	.L_enc_dec_done_659
 	xorq	%r14,%r14
 	vmovdqu64	64(%rsi),%xmm14
 
 	movq	(%rdx),%r11
 	orq	%r11,%r11
-	je	.L_partial_block_done_pocxztyqAyxmwtm
+	je	.L_partial_block_done_660
 	movl	$16,%r10d
 	leaq	byte_len_to_mask_table(%rip),%r12
 	cmpq	%r10,%r8
@@ -91299,9 +91299,9 @@ ossl_aes_gcm_decrypt_avx512:
 
 	leaq	(%r8,%r11,1),%r13
 	subq	$16,%r13
-	jge	.L_no_extra_mask_pocxztyqAyxmwtm
+	jge	.L_no_extra_mask_660
 	subq	%r13,%r12
-.L_no_extra_mask_pocxztyqAyxmwtm:
+.L_no_extra_mask_660:
 
 
 
@@ -91312,7 +91312,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%xmm5,%xmm6,%xmm6
 	vpxorq	%xmm6,%xmm14,%xmm14
 	cmpq	$0,%r13
-	jl	.L_partial_incomplete_pocxztyqAyxmwtm
+	jl	.L_partial_incomplete_660
 
 	vpclmulqdq	$0x11,%xmm4,%xmm14,%xmm7
 	vpclmulqdq	$0x00,%xmm4,%xmm14,%xmm10
@@ -91347,13 +91347,13 @@ ossl_aes_gcm_decrypt_avx512:
 	movq	%r11,%r12
 	movq	$16,%r11
 	subq	%r12,%r11
-	jmp	.L_enc_dec_done_pocxztyqAyxmwtm
+	jmp	.L_enc_dec_done_660
 
-.L_partial_incomplete_pocxztyqAyxmwtm:
+.L_partial_incomplete_660:
 	addq	%r8,(%rdx)
 	movq	%r8,%r11
 
-.L_enc_dec_done_pocxztyqAyxmwtm:
+.L_enc_dec_done_660:
 
 
 	leaq	byte_len_to_mask_table(%rip),%r12
@@ -91361,12 +91361,12 @@ ossl_aes_gcm_decrypt_avx512:
 	vmovdqu64	%xmm14,64(%rsi)
 	movq	%r9,%r12
 	vmovdqu8	%xmm3,(%r12){%k1}
-.L_partial_block_done_pocxztyqAyxmwtm:
+.L_partial_block_done_660:
 	vmovdqu64	0(%rsi),%xmm2
 	subq	%r11,%r8
-	je	.L_enc_dec_done_EzeEqCiibleghsn
+	je	.L_enc_dec_done_659
 	cmpq	$256,%r8
-	jbe	.L_message_below_equal_16_blocks_EzeEqCiibleghsn
+	jbe	.L_message_below_equal_16_blocks_659
 
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vmovdqa64	ddq_addbe_4444(%rip),%zmm27
@@ -91386,13 +91386,13 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpb	$240,%r15b
-	jae	.L_next_16_overflow_ieDmAmkljrpjbff
+	jae	.L_next_16_overflow_661
 	vpaddd	%zmm28,%zmm2,%zmm7
 	vpaddd	%zmm27,%zmm7,%zmm10
 	vpaddd	%zmm27,%zmm10,%zmm11
 	vpaddd	%zmm27,%zmm11,%zmm12
-	jmp	.L_next_16_ok_ieDmAmkljrpjbff
-.L_next_16_overflow_ieDmAmkljrpjbff:
+	jmp	.L_next_16_ok_661
+.L_next_16_overflow_661:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vmovdqa64	ddq_add_4444(%rip),%zmm12
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm7
@@ -91403,7 +91403,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm10,%zmm10
 	vpshufb	%zmm29,%zmm11,%zmm11
 	vpshufb	%zmm29,%zmm12,%zmm12
-.L_next_16_ok_ieDmAmkljrpjbff:
+.L_next_16_ok_661:
 	vshufi64x2	$255,%zmm12,%zmm12,%zmm2
 	addb	$16,%r15b
 
@@ -91501,7 +91501,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vmovdqa64	%zmm11,896(%rsp)
 	vmovdqa64	%zmm12,960(%rsp)
 	testq	%r14,%r14
-	jnz	.L_skip_hkeys_precomputation_BGpcsxikchdBGhx
+	jnz	.L_skip_hkeys_precomputation_662
 
 	vmovdqu64	288(%rsi),%zmm0
 	vmovdqu64	%zmm0,704(%rsp)
@@ -91517,20 +91517,20 @@ ossl_aes_gcm_decrypt_avx512:
 
 	vmovdqu64	96(%rsi),%zmm5
 	vmovdqu64	%zmm5,512(%rsp)
-.L_skip_hkeys_precomputation_BGpcsxikchdBGhx:
+.L_skip_hkeys_precomputation_662:
 	cmpq	$512,%r8
-	jb	.L_message_below_32_blocks_EzeEqCiibleghsn
+	jb	.L_message_below_32_blocks_659
 
 
 
 	cmpb	$240,%r15b
-	jae	.L_next_16_overflow_spxfotGswBArhxl
+	jae	.L_next_16_overflow_663
 	vpaddd	%zmm28,%zmm2,%zmm7
 	vpaddd	%zmm27,%zmm7,%zmm10
 	vpaddd	%zmm27,%zmm10,%zmm11
 	vpaddd	%zmm27,%zmm11,%zmm12
-	jmp	.L_next_16_ok_spxfotGswBArhxl
-.L_next_16_overflow_spxfotGswBArhxl:
+	jmp	.L_next_16_ok_663
+.L_next_16_overflow_663:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vmovdqa64	ddq_add_4444(%rip),%zmm12
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm7
@@ -91541,7 +91541,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm10,%zmm10
 	vpshufb	%zmm29,%zmm11,%zmm11
 	vpshufb	%zmm29,%zmm12,%zmm12
-.L_next_16_ok_spxfotGswBArhxl:
+.L_next_16_ok_663:
 	vshufi64x2	$255,%zmm12,%zmm12,%zmm2
 	addb	$16,%r15b
 
@@ -91639,7 +91639,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vmovdqa64	%zmm11,1152(%rsp)
 	vmovdqa64	%zmm12,1216(%rsp)
 	testq	%r14,%r14
-	jnz	.L_skip_hkeys_precomputation_DjDdtxEBzmsFEoE
+	jnz	.L_skip_hkeys_precomputation_664
 	vmovdqu64	640(%rsp),%zmm3
 
 
@@ -91887,22 +91887,22 @@ ossl_aes_gcm_decrypt_avx512:
 	vpternlogq	$0x96,%zmm7,%zmm6,%zmm5
 
 	vmovdqu64	%zmm5,0(%rsp)
-.L_skip_hkeys_precomputation_DjDdtxEBzmsFEoE:
+.L_skip_hkeys_precomputation_664:
 	movq	$1,%r14
 	addq	$512,%r11
 	subq	$512,%r8
 
 	cmpq	$768,%r8
-	jb	.L_no_more_big_nblocks_EzeEqCiibleghsn
-.L_encrypt_big_nblocks_EzeEqCiibleghsn:
+	jb	.L_no_more_big_nblocks_659
+.L_encrypt_big_nblocks_659:
 	cmpb	$240,%r15b
-	jae	.L_16_blocks_overflow_uxeoxcoFtrFyBxG
+	jae	.L_16_blocks_overflow_665
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_uxeoxcoFtrFyBxG
-.L_16_blocks_overflow_uxeoxcoFtrFyBxG:
+	jmp	.L_16_blocks_ok_665
+.L_16_blocks_overflow_665:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -91913,7 +91913,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_uxeoxcoFtrFyBxG:
+.L_16_blocks_ok_665:
 	vbroadcastf64x2	0(%rdi),%zmm30
 	vpxorq	768(%rsp),%zmm14,%zmm8
 	vmovdqu64	0(%rsp),%zmm1
@@ -92089,13 +92089,13 @@ ossl_aes_gcm_decrypt_avx512:
 	vmovdqa64	%zmm4,1408(%rsp)
 	vmovdqa64	%zmm5,1472(%rsp)
 	cmpb	$240,%r15b
-	jae	.L_16_blocks_overflow_nbmbogBBzeFBgAi
+	jae	.L_16_blocks_overflow_666
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_nbmbogBBzeFBgAi
-.L_16_blocks_overflow_nbmbogBBzeFBgAi:
+	jmp	.L_16_blocks_ok_666
+.L_16_blocks_overflow_666:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -92106,7 +92106,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_nbmbogBBzeFBgAi:
+.L_16_blocks_ok_666:
 	vbroadcastf64x2	0(%rdi),%zmm30
 	vmovdqa64	1024(%rsp),%zmm8
 	vmovdqu64	256(%rsp),%zmm1
@@ -92282,13 +92282,13 @@ ossl_aes_gcm_decrypt_avx512:
 	vmovdqa64	%zmm4,896(%rsp)
 	vmovdqa64	%zmm5,960(%rsp)
 	cmpb	$240,%r15b
-	jae	.L_16_blocks_overflow_alEoAwdFvzkfsuG
+	jae	.L_16_blocks_overflow_667
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_alEoAwdFvzkfsuG
-.L_16_blocks_overflow_alEoAwdFvzkfsuG:
+	jmp	.L_16_blocks_ok_667
+.L_16_blocks_overflow_667:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -92299,7 +92299,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_alEoAwdFvzkfsuG:
+.L_16_blocks_ok_667:
 	vbroadcastf64x2	0(%rdi),%zmm30
 	vmovdqa64	1280(%rsp),%zmm8
 	vmovdqu64	512(%rsp),%zmm1
@@ -92505,16 +92505,16 @@ ossl_aes_gcm_decrypt_avx512:
 	addq	$768,%r11
 	subq	$768,%r8
 	cmpq	$768,%r8
-	jae	.L_encrypt_big_nblocks_EzeEqCiibleghsn
+	jae	.L_encrypt_big_nblocks_659
 
-.L_no_more_big_nblocks_EzeEqCiibleghsn:
+.L_no_more_big_nblocks_659:
 
 	cmpq	$512,%r8
-	jae	.L_encrypt_32_blocks_EzeEqCiibleghsn
+	jae	.L_encrypt_32_blocks_659
 
 	cmpq	$256,%r8
-	jae	.L_encrypt_16_blocks_EzeEqCiibleghsn
-.L_encrypt_0_blocks_ghash_32_EzeEqCiibleghsn:
+	jae	.L_encrypt_16_blocks_659
+.L_encrypt_0_blocks_ghash_32_659:
 	movl	%r8d,%r10d
 	andl	$~15,%r10d
 	movl	$256,%ebx
@@ -92557,61 +92557,61 @@ ossl_aes_gcm_decrypt_avx512:
 	movl	%r8d,%r10d
 	addl	$15,%r10d
 	shrl	$4,%r10d
-	je	.L_last_num_blocks_is_0_EtDGBzcxfwaqvwq
+	je	.L_last_num_blocks_is_0_668
 
 	cmpl	$8,%r10d
-	je	.L_last_num_blocks_is_8_EtDGBzcxfwaqvwq
-	jb	.L_last_num_blocks_is_7_1_EtDGBzcxfwaqvwq
+	je	.L_last_num_blocks_is_8_668
+	jb	.L_last_num_blocks_is_7_1_668
 
 
 	cmpl	$12,%r10d
-	je	.L_last_num_blocks_is_12_EtDGBzcxfwaqvwq
-	jb	.L_last_num_blocks_is_11_9_EtDGBzcxfwaqvwq
+	je	.L_last_num_blocks_is_12_668
+	jb	.L_last_num_blocks_is_11_9_668
 
 
 	cmpl	$15,%r10d
-	je	.L_last_num_blocks_is_15_EtDGBzcxfwaqvwq
-	ja	.L_last_num_blocks_is_16_EtDGBzcxfwaqvwq
+	je	.L_last_num_blocks_is_15_668
+	ja	.L_last_num_blocks_is_16_668
 	cmpl	$14,%r10d
-	je	.L_last_num_blocks_is_14_EtDGBzcxfwaqvwq
-	jmp	.L_last_num_blocks_is_13_EtDGBzcxfwaqvwq
+	je	.L_last_num_blocks_is_14_668
+	jmp	.L_last_num_blocks_is_13_668
 
-.L_last_num_blocks_is_11_9_EtDGBzcxfwaqvwq:
+.L_last_num_blocks_is_11_9_668:
 
 	cmpl	$10,%r10d
-	je	.L_last_num_blocks_is_10_EtDGBzcxfwaqvwq
-	ja	.L_last_num_blocks_is_11_EtDGBzcxfwaqvwq
-	jmp	.L_last_num_blocks_is_9_EtDGBzcxfwaqvwq
+	je	.L_last_num_blocks_is_10_668
+	ja	.L_last_num_blocks_is_11_668
+	jmp	.L_last_num_blocks_is_9_668
 
-.L_last_num_blocks_is_7_1_EtDGBzcxfwaqvwq:
+.L_last_num_blocks_is_7_1_668:
 	cmpl	$4,%r10d
-	je	.L_last_num_blocks_is_4_EtDGBzcxfwaqvwq
-	jb	.L_last_num_blocks_is_3_1_EtDGBzcxfwaqvwq
+	je	.L_last_num_blocks_is_4_668
+	jb	.L_last_num_blocks_is_3_1_668
 
 	cmpl	$6,%r10d
-	ja	.L_last_num_blocks_is_7_EtDGBzcxfwaqvwq
-	je	.L_last_num_blocks_is_6_EtDGBzcxfwaqvwq
-	jmp	.L_last_num_blocks_is_5_EtDGBzcxfwaqvwq
+	ja	.L_last_num_blocks_is_7_668
+	je	.L_last_num_blocks_is_6_668
+	jmp	.L_last_num_blocks_is_5_668
 
-.L_last_num_blocks_is_3_1_EtDGBzcxfwaqvwq:
+.L_last_num_blocks_is_3_1_668:
 
 	cmpl	$2,%r10d
-	ja	.L_last_num_blocks_is_3_EtDGBzcxfwaqvwq
-	je	.L_last_num_blocks_is_2_EtDGBzcxfwaqvwq
-.L_last_num_blocks_is_1_EtDGBzcxfwaqvwq:
+	ja	.L_last_num_blocks_is_3_668
+	je	.L_last_num_blocks_is_2_668
+.L_last_num_blocks_is_1_668:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$255,%r15d
-	jae	.L_16_blocks_overflow_emtfasfkmFpqGwC
+	jae	.L_16_blocks_overflow_669
 	vpaddd	%xmm28,%xmm2,%xmm0
-	jmp	.L_16_blocks_ok_emtfasfkmFpqGwC
+	jmp	.L_16_blocks_ok_669
 
-.L_16_blocks_overflow_emtfasfkmFpqGwC:
+.L_16_blocks_overflow_669:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%xmm29,%xmm0,%xmm0
-.L_16_blocks_ok_emtfasfkmFpqGwC:
+.L_16_blocks_ok_669:
 
 
 
@@ -92699,7 +92699,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_DzzcmycigpAuawj
+	jl	.L_small_initial_partial_block_670
 
 
 
@@ -92743,8 +92743,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_DzzcmycigpAuawj
-.L_small_initial_partial_block_DzzcmycigpAuawj:
+	jmp	.L_small_initial_compute_done_670
+.L_small_initial_partial_block_670:
 
 
 
@@ -92796,24 +92796,24 @@ ossl_aes_gcm_decrypt_avx512:
 
 	vpxorq	%xmm7,%xmm14,%xmm14
 
-	jmp	.L_after_reduction_DzzcmycigpAuawj
-.L_small_initial_compute_done_DzzcmycigpAuawj:
-.L_after_reduction_DzzcmycigpAuawj:
-	jmp	.L_last_blocks_done_EtDGBzcxfwaqvwq
-.L_last_num_blocks_is_2_EtDGBzcxfwaqvwq:
+	jmp	.L_after_reduction_670
+.L_small_initial_compute_done_670:
+.L_after_reduction_670:
+	jmp	.L_last_blocks_done_668
+.L_last_num_blocks_is_2_668:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$254,%r15d
-	jae	.L_16_blocks_overflow_gEssdDoywAFyakk
+	jae	.L_16_blocks_overflow_671
 	vpaddd	%ymm28,%ymm2,%ymm0
-	jmp	.L_16_blocks_ok_gEssdDoywAFyakk
+	jmp	.L_16_blocks_ok_671
 
-.L_16_blocks_overflow_gEssdDoywAFyakk:
+.L_16_blocks_overflow_671:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%ymm29,%ymm0,%ymm0
-.L_16_blocks_ok_gEssdDoywAFyakk:
+.L_16_blocks_ok_671:
 
 
 
@@ -92902,7 +92902,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_DbplxubvBmAwufj
+	jl	.L_small_initial_partial_block_672
 
 
 
@@ -92946,8 +92946,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_DbplxubvBmAwufj
-.L_small_initial_partial_block_DbplxubvBmAwufj:
+	jmp	.L_small_initial_compute_done_672
+.L_small_initial_partial_block_672:
 
 
 
@@ -92994,27 +92994,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_DbplxubvBmAwufj:
+.L_small_initial_compute_done_672:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_DbplxubvBmAwufj
+	je	.L_after_reduction_672
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_DbplxubvBmAwufj:
-	jmp	.L_last_blocks_done_EtDGBzcxfwaqvwq
-.L_last_num_blocks_is_3_EtDGBzcxfwaqvwq:
+.L_after_reduction_672:
+	jmp	.L_last_blocks_done_668
+.L_last_num_blocks_is_3_668:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$253,%r15d
-	jae	.L_16_blocks_overflow_uabrGaohoEDrpqh
+	jae	.L_16_blocks_overflow_673
 	vpaddd	%zmm28,%zmm2,%zmm0
-	jmp	.L_16_blocks_ok_uabrGaohoEDrpqh
+	jmp	.L_16_blocks_ok_673
 
-.L_16_blocks_overflow_uabrGaohoEDrpqh:
+.L_16_blocks_overflow_673:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%zmm29,%zmm0,%zmm0
-.L_16_blocks_ok_uabrGaohoEDrpqh:
+.L_16_blocks_ok_673:
 
 
 
@@ -93103,7 +93103,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_vhAmsAgAuuuguvl
+	jl	.L_small_initial_partial_block_674
 
 
 
@@ -93148,8 +93148,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_vhAmsAgAuuuguvl
-.L_small_initial_partial_block_vhAmsAgAuuuguvl:
+	jmp	.L_small_initial_compute_done_674
+.L_small_initial_partial_block_674:
 
 
 
@@ -93196,27 +93196,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_vhAmsAgAuuuguvl:
+.L_small_initial_compute_done_674:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_vhAmsAgAuuuguvl
+	je	.L_after_reduction_674
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_vhAmsAgAuuuguvl:
-	jmp	.L_last_blocks_done_EtDGBzcxfwaqvwq
-.L_last_num_blocks_is_4_EtDGBzcxfwaqvwq:
+.L_after_reduction_674:
+	jmp	.L_last_blocks_done_668
+.L_last_num_blocks_is_4_668:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$252,%r15d
-	jae	.L_16_blocks_overflow_FycAihaCDpEefhy
+	jae	.L_16_blocks_overflow_675
 	vpaddd	%zmm28,%zmm2,%zmm0
-	jmp	.L_16_blocks_ok_FycAihaCDpEefhy
+	jmp	.L_16_blocks_ok_675
 
-.L_16_blocks_overflow_FycAihaCDpEefhy:
+.L_16_blocks_overflow_675:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%zmm29,%zmm0,%zmm0
-.L_16_blocks_ok_FycAihaCDpEefhy:
+.L_16_blocks_ok_675:
 
 
 
@@ -93305,7 +93305,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_BDpnskmakFrmdmj
+	jl	.L_small_initial_partial_block_676
 
 
 
@@ -93350,8 +93350,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_BDpnskmakFrmdmj
-.L_small_initial_partial_block_BDpnskmakFrmdmj:
+	jmp	.L_small_initial_compute_done_676
+.L_small_initial_partial_block_676:
 
 
 
@@ -93399,32 +93399,32 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_BDpnskmakFrmdmj:
+.L_small_initial_compute_done_676:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_BDpnskmakFrmdmj
+	je	.L_after_reduction_676
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_BDpnskmakFrmdmj:
-	jmp	.L_last_blocks_done_EtDGBzcxfwaqvwq
-.L_last_num_blocks_is_5_EtDGBzcxfwaqvwq:
+.L_after_reduction_676:
+	jmp	.L_last_blocks_done_668
+.L_last_num_blocks_is_5_668:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$251,%r15d
-	jae	.L_16_blocks_overflow_nCmmkacdueAtaoF
+	jae	.L_16_blocks_overflow_677
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%xmm27,%xmm0,%xmm3
-	jmp	.L_16_blocks_ok_nCmmkacdueAtaoF
+	jmp	.L_16_blocks_ok_677
 
-.L_16_blocks_overflow_nCmmkacdueAtaoF:
+.L_16_blocks_overflow_677:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%xmm29,%xmm3,%xmm3
-.L_16_blocks_ok_nCmmkacdueAtaoF:
+.L_16_blocks_ok_677:
 
 
 
@@ -93530,7 +93530,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_oDgGkzrGfgvGdwk
+	jl	.L_small_initial_partial_block_678
 
 
 
@@ -93581,8 +93581,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_oDgGkzrGfgvGdwk
-.L_small_initial_partial_block_oDgGkzrGfgvGdwk:
+	jmp	.L_small_initial_compute_done_678
+.L_small_initial_partial_block_678:
 
 
 
@@ -93630,32 +93630,32 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_oDgGkzrGfgvGdwk:
+.L_small_initial_compute_done_678:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_oDgGkzrGfgvGdwk
+	je	.L_after_reduction_678
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_oDgGkzrGfgvGdwk:
-	jmp	.L_last_blocks_done_EtDGBzcxfwaqvwq
-.L_last_num_blocks_is_6_EtDGBzcxfwaqvwq:
+.L_after_reduction_678:
+	jmp	.L_last_blocks_done_668
+.L_last_num_blocks_is_6_668:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$250,%r15d
-	jae	.L_16_blocks_overflow_palkiliGxbhbFAC
+	jae	.L_16_blocks_overflow_679
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%ymm27,%ymm0,%ymm3
-	jmp	.L_16_blocks_ok_palkiliGxbhbFAC
+	jmp	.L_16_blocks_ok_679
 
-.L_16_blocks_overflow_palkiliGxbhbFAC:
+.L_16_blocks_overflow_679:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%ymm29,%ymm3,%ymm3
-.L_16_blocks_ok_palkiliGxbhbFAC:
+.L_16_blocks_ok_679:
 
 
 
@@ -93761,7 +93761,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_umCjlCCFasAvtzn
+	jl	.L_small_initial_partial_block_680
 
 
 
@@ -93812,8 +93812,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_umCjlCCFasAvtzn
-.L_small_initial_partial_block_umCjlCCFasAvtzn:
+	jmp	.L_small_initial_compute_done_680
+.L_small_initial_partial_block_680:
 
 
 
@@ -93867,32 +93867,32 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_umCjlCCFasAvtzn:
+.L_small_initial_compute_done_680:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_umCjlCCFasAvtzn
+	je	.L_after_reduction_680
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_umCjlCCFasAvtzn:
-	jmp	.L_last_blocks_done_EtDGBzcxfwaqvwq
-.L_last_num_blocks_is_7_EtDGBzcxfwaqvwq:
+.L_after_reduction_680:
+	jmp	.L_last_blocks_done_668
+.L_last_num_blocks_is_7_668:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$249,%r15d
-	jae	.L_16_blocks_overflow_tnGCjqdzshaDAbm
+	jae	.L_16_blocks_overflow_681
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
-	jmp	.L_16_blocks_ok_tnGCjqdzshaDAbm
+	jmp	.L_16_blocks_ok_681
 
-.L_16_blocks_overflow_tnGCjqdzshaDAbm:
+.L_16_blocks_overflow_681:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
-.L_16_blocks_ok_tnGCjqdzshaDAbm:
+.L_16_blocks_ok_681:
 
 
 
@@ -93998,7 +93998,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_yCGvvmGrsrmcfjx
+	jl	.L_small_initial_partial_block_682
 
 
 
@@ -94050,8 +94050,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_yCGvvmGrsrmcfjx
-.L_small_initial_partial_block_yCGvvmGrsrmcfjx:
+	jmp	.L_small_initial_compute_done_682
+.L_small_initial_partial_block_682:
 
 
 
@@ -94105,32 +94105,32 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_yCGvvmGrsrmcfjx:
+.L_small_initial_compute_done_682:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_yCGvvmGrsrmcfjx
+	je	.L_after_reduction_682
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_yCGvvmGrsrmcfjx:
-	jmp	.L_last_blocks_done_EtDGBzcxfwaqvwq
-.L_last_num_blocks_is_8_EtDGBzcxfwaqvwq:
+.L_after_reduction_682:
+	jmp	.L_last_blocks_done_668
+.L_last_num_blocks_is_8_668:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$248,%r15d
-	jae	.L_16_blocks_overflow_vnEbhBvuovesEqt
+	jae	.L_16_blocks_overflow_683
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
-	jmp	.L_16_blocks_ok_vnEbhBvuovesEqt
+	jmp	.L_16_blocks_ok_683
 
-.L_16_blocks_overflow_vnEbhBvuovesEqt:
+.L_16_blocks_overflow_683:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
-.L_16_blocks_ok_vnEbhBvuovesEqt:
+.L_16_blocks_ok_683:
 
 
 
@@ -94236,7 +94236,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_hgobxynnyhyvFEu
+	jl	.L_small_initial_partial_block_684
 
 
 
@@ -94290,8 +94290,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_hgobxynnyhyvFEu
-.L_small_initial_partial_block_hgobxynnyhyvFEu:
+	jmp	.L_small_initial_compute_done_684
+.L_small_initial_partial_block_684:
 
 
 
@@ -94346,26 +94346,26 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_hgobxynnyhyvFEu:
+.L_small_initial_compute_done_684:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_hgobxynnyhyvFEu
+	je	.L_after_reduction_684
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_hgobxynnyhyvFEu:
-	jmp	.L_last_blocks_done_EtDGBzcxfwaqvwq
-.L_last_num_blocks_is_9_EtDGBzcxfwaqvwq:
+.L_after_reduction_684:
+	jmp	.L_last_blocks_done_668
+.L_last_num_blocks_is_9_668:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$247,%r15d
-	jae	.L_16_blocks_overflow_vbfizqxwtwrzByC
+	jae	.L_16_blocks_overflow_685
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%xmm27,%xmm3,%xmm4
-	jmp	.L_16_blocks_ok_vbfizqxwtwrzByC
+	jmp	.L_16_blocks_ok_685
 
-.L_16_blocks_overflow_vbfizqxwtwrzByC:
+.L_16_blocks_overflow_685:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -94374,7 +94374,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%xmm29,%xmm4,%xmm4
-.L_16_blocks_ok_vbfizqxwtwrzByC:
+.L_16_blocks_ok_685:
 
 
 
@@ -94497,7 +94497,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_pwxrwgquughvsdb
+	jl	.L_small_initial_partial_block_686
 
 
 
@@ -94557,8 +94557,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_pwxrwgquughvsdb
-.L_small_initial_partial_block_pwxrwgquughvsdb:
+	jmp	.L_small_initial_compute_done_686
+.L_small_initial_partial_block_686:
 
 
 
@@ -94615,26 +94615,26 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_pwxrwgquughvsdb:
+.L_small_initial_compute_done_686:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_pwxrwgquughvsdb
+	je	.L_after_reduction_686
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_pwxrwgquughvsdb:
-	jmp	.L_last_blocks_done_EtDGBzcxfwaqvwq
-.L_last_num_blocks_is_10_EtDGBzcxfwaqvwq:
+.L_after_reduction_686:
+	jmp	.L_last_blocks_done_668
+.L_last_num_blocks_is_10_668:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$246,%r15d
-	jae	.L_16_blocks_overflow_buoEAkakxdqjsuk
+	jae	.L_16_blocks_overflow_687
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%ymm27,%ymm3,%ymm4
-	jmp	.L_16_blocks_ok_buoEAkakxdqjsuk
+	jmp	.L_16_blocks_ok_687
 
-.L_16_blocks_overflow_buoEAkakxdqjsuk:
+.L_16_blocks_overflow_687:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -94643,7 +94643,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%ymm29,%ymm4,%ymm4
-.L_16_blocks_ok_buoEAkakxdqjsuk:
+.L_16_blocks_ok_687:
 
 
 
@@ -94766,7 +94766,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_ibbqcmezxDorlzw
+	jl	.L_small_initial_partial_block_688
 
 
 
@@ -94826,8 +94826,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_ibbqcmezxDorlzw
-.L_small_initial_partial_block_ibbqcmezxDorlzw:
+	jmp	.L_small_initial_compute_done_688
+.L_small_initial_partial_block_688:
 
 
 
@@ -94890,26 +94890,26 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_ibbqcmezxDorlzw:
+.L_small_initial_compute_done_688:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_ibbqcmezxDorlzw
+	je	.L_after_reduction_688
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_ibbqcmezxDorlzw:
-	jmp	.L_last_blocks_done_EtDGBzcxfwaqvwq
-.L_last_num_blocks_is_11_EtDGBzcxfwaqvwq:
+.L_after_reduction_688:
+	jmp	.L_last_blocks_done_668
+.L_last_num_blocks_is_11_668:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$245,%r15d
-	jae	.L_16_blocks_overflow_EGvivBgfdydbuzD
+	jae	.L_16_blocks_overflow_689
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
-	jmp	.L_16_blocks_ok_EGvivBgfdydbuzD
+	jmp	.L_16_blocks_ok_689
 
-.L_16_blocks_overflow_EGvivBgfdydbuzD:
+.L_16_blocks_overflow_689:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -94918,7 +94918,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
-.L_16_blocks_ok_EGvivBgfdydbuzD:
+.L_16_blocks_ok_689:
 
 
 
@@ -95041,7 +95041,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_dhoriADdDwBlxCB
+	jl	.L_small_initial_partial_block_690
 
 
 
@@ -95102,8 +95102,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_dhoriADdDwBlxCB
-.L_small_initial_partial_block_dhoriADdDwBlxCB:
+	jmp	.L_small_initial_compute_done_690
+.L_small_initial_partial_block_690:
 
 
 
@@ -95166,26 +95166,26 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_dhoriADdDwBlxCB:
+.L_small_initial_compute_done_690:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_dhoriADdDwBlxCB
+	je	.L_after_reduction_690
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_dhoriADdDwBlxCB:
-	jmp	.L_last_blocks_done_EtDGBzcxfwaqvwq
-.L_last_num_blocks_is_12_EtDGBzcxfwaqvwq:
+.L_after_reduction_690:
+	jmp	.L_last_blocks_done_668
+.L_last_num_blocks_is_12_668:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$244,%r15d
-	jae	.L_16_blocks_overflow_gyobuGFejkEsifA
+	jae	.L_16_blocks_overflow_691
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
-	jmp	.L_16_blocks_ok_gyobuGFejkEsifA
+	jmp	.L_16_blocks_ok_691
 
-.L_16_blocks_overflow_gyobuGFejkEsifA:
+.L_16_blocks_overflow_691:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -95194,7 +95194,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
-.L_16_blocks_ok_gyobuGFejkEsifA:
+.L_16_blocks_ok_691:
 
 
 
@@ -95317,7 +95317,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_aCtmxmnypmbdnlG
+	jl	.L_small_initial_partial_block_692
 
 
 
@@ -95376,8 +95376,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_aCtmxmnypmbdnlG
-.L_small_initial_partial_block_aCtmxmnypmbdnlG:
+	jmp	.L_small_initial_compute_done_692
+.L_small_initial_partial_block_692:
 
 
 
@@ -95441,27 +95441,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_aCtmxmnypmbdnlG:
+.L_small_initial_compute_done_692:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_aCtmxmnypmbdnlG
+	je	.L_after_reduction_692
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_aCtmxmnypmbdnlG:
-	jmp	.L_last_blocks_done_EtDGBzcxfwaqvwq
-.L_last_num_blocks_is_13_EtDGBzcxfwaqvwq:
+.L_after_reduction_692:
+	jmp	.L_last_blocks_done_668
+.L_last_num_blocks_is_13_668:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$243,%r15d
-	jae	.L_16_blocks_overflow_taFnwxshgpAGqGv
+	jae	.L_16_blocks_overflow_693
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%xmm27,%xmm4,%xmm5
-	jmp	.L_16_blocks_ok_taFnwxshgpAGqGv
+	jmp	.L_16_blocks_ok_693
 
-.L_16_blocks_overflow_taFnwxshgpAGqGv:
+.L_16_blocks_overflow_693:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -95472,7 +95472,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%xmm29,%xmm5,%xmm5
-.L_16_blocks_ok_taFnwxshgpAGqGv:
+.L_16_blocks_ok_693:
 
 
 
@@ -95612,7 +95612,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_snqyptpnCrnsjCe
+	jl	.L_small_initial_partial_block_694
 
 
 
@@ -95677,8 +95677,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_snqyptpnCrnsjCe
-.L_small_initial_partial_block_snqyptpnCrnsjCe:
+	jmp	.L_small_initial_compute_done_694
+.L_small_initial_partial_block_694:
 
 
 
@@ -95740,27 +95740,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_snqyptpnCrnsjCe:
+.L_small_initial_compute_done_694:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_snqyptpnCrnsjCe
+	je	.L_after_reduction_694
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_snqyptpnCrnsjCe:
-	jmp	.L_last_blocks_done_EtDGBzcxfwaqvwq
-.L_last_num_blocks_is_14_EtDGBzcxfwaqvwq:
+.L_after_reduction_694:
+	jmp	.L_last_blocks_done_668
+.L_last_num_blocks_is_14_668:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$242,%r15d
-	jae	.L_16_blocks_overflow_oglwgnsskgyfFsh
+	jae	.L_16_blocks_overflow_695
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%ymm27,%ymm4,%ymm5
-	jmp	.L_16_blocks_ok_oglwgnsskgyfFsh
+	jmp	.L_16_blocks_ok_695
 
-.L_16_blocks_overflow_oglwgnsskgyfFsh:
+.L_16_blocks_overflow_695:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -95771,7 +95771,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%ymm29,%ymm5,%ymm5
-.L_16_blocks_ok_oglwgnsskgyfFsh:
+.L_16_blocks_ok_695:
 
 
 
@@ -95911,7 +95911,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_wftlFGlgwbgBqlw
+	jl	.L_small_initial_partial_block_696
 
 
 
@@ -95976,8 +95976,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_wftlFGlgwbgBqlw
-.L_small_initial_partial_block_wftlFGlgwbgBqlw:
+	jmp	.L_small_initial_compute_done_696
+.L_small_initial_partial_block_696:
 
 
 
@@ -96045,27 +96045,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_wftlFGlgwbgBqlw:
+.L_small_initial_compute_done_696:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_wftlFGlgwbgBqlw
+	je	.L_after_reduction_696
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_wftlFGlgwbgBqlw:
-	jmp	.L_last_blocks_done_EtDGBzcxfwaqvwq
-.L_last_num_blocks_is_15_EtDGBzcxfwaqvwq:
+.L_after_reduction_696:
+	jmp	.L_last_blocks_done_668
+.L_last_num_blocks_is_15_668:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$241,%r15d
-	jae	.L_16_blocks_overflow_AAAoijaFeouxBhg
+	jae	.L_16_blocks_overflow_697
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_AAAoijaFeouxBhg
+	jmp	.L_16_blocks_ok_697
 
-.L_16_blocks_overflow_AAAoijaFeouxBhg:
+.L_16_blocks_overflow_697:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -96076,7 +96076,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_AAAoijaFeouxBhg:
+.L_16_blocks_ok_697:
 
 
 
@@ -96216,7 +96216,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_EACeBkmeriiasmr
+	jl	.L_small_initial_partial_block_698
 
 
 
@@ -96282,8 +96282,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_EACeBkmeriiasmr
-.L_small_initial_partial_block_EACeBkmeriiasmr:
+	jmp	.L_small_initial_compute_done_698
+.L_small_initial_partial_block_698:
 
 
 
@@ -96351,27 +96351,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_EACeBkmeriiasmr:
+.L_small_initial_compute_done_698:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_EACeBkmeriiasmr
+	je	.L_after_reduction_698
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_EACeBkmeriiasmr:
-	jmp	.L_last_blocks_done_EtDGBzcxfwaqvwq
-.L_last_num_blocks_is_16_EtDGBzcxfwaqvwq:
+.L_after_reduction_698:
+	jmp	.L_last_blocks_done_668
+.L_last_num_blocks_is_16_668:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$240,%r15d
-	jae	.L_16_blocks_overflow_juadzxekinxtnGm
+	jae	.L_16_blocks_overflow_699
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_juadzxekinxtnGm
+	jmp	.L_16_blocks_ok_699
 
-.L_16_blocks_overflow_juadzxekinxtnGm:
+.L_16_blocks_overflow_699:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -96382,7 +96382,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_juadzxekinxtnGm:
+.L_16_blocks_ok_699:
 
 
 
@@ -96519,7 +96519,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm21,%zmm21
 	vextracti32x4	$3,%zmm21,%xmm7
 	subq	$16 * (16 - 1),%r8
-.L_small_initial_partial_block_qiEozgpltoFunBi:
+.L_small_initial_partial_block_700:
 
 
 
@@ -96588,11 +96588,11 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_qiEozgpltoFunBi:
+.L_small_initial_compute_done_700:
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_qiEozgpltoFunBi:
-	jmp	.L_last_blocks_done_EtDGBzcxfwaqvwq
-.L_last_num_blocks_is_0_EtDGBzcxfwaqvwq:
+.L_after_reduction_700:
+	jmp	.L_last_blocks_done_668
+.L_last_num_blocks_is_0_668:
 	vmovdqa64	1024(%rsp),%zmm13
 	vmovdqu64	0(%rsp,%rbx,1),%zmm12
 	vpclmulqdq	$0x11,%zmm12,%zmm13,%zmm0
@@ -96653,18 +96653,18 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm24,%xmm3,%xmm14
 
-.L_last_blocks_done_EtDGBzcxfwaqvwq:
+.L_last_blocks_done_668:
 	vpshufb	%xmm29,%xmm2,%xmm2
-	jmp	.L_ghash_done_EzeEqCiibleghsn
-.L_encrypt_32_blocks_EzeEqCiibleghsn:
+	jmp	.L_ghash_done_659
+.L_encrypt_32_blocks_659:
 	cmpb	$240,%r15b
-	jae	.L_16_blocks_overflow_umgxFkoonxsadya
+	jae	.L_16_blocks_overflow_701
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_umgxFkoonxsadya
-.L_16_blocks_overflow_umgxFkoonxsadya:
+	jmp	.L_16_blocks_ok_701
+.L_16_blocks_overflow_701:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -96675,7 +96675,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_umgxFkoonxsadya:
+.L_16_blocks_ok_701:
 	vbroadcastf64x2	0(%rdi),%zmm30
 	vpxorq	768(%rsp),%zmm14,%zmm8
 	vmovdqu64	0(%rsp),%zmm1
@@ -96851,13 +96851,13 @@ ossl_aes_gcm_decrypt_avx512:
 	vmovdqa64	%zmm4,1408(%rsp)
 	vmovdqa64	%zmm5,1472(%rsp)
 	cmpb	$240,%r15b
-	jae	.L_16_blocks_overflow_tfmnhiGDkehnasm
+	jae	.L_16_blocks_overflow_702
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_tfmnhiGDkehnasm
-.L_16_blocks_overflow_tfmnhiGDkehnasm:
+	jmp	.L_16_blocks_ok_702
+.L_16_blocks_overflow_702:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -96868,7 +96868,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_tfmnhiGDkehnasm:
+.L_16_blocks_ok_702:
 	vbroadcastf64x2	0(%rdi),%zmm30
 	vmovdqa64	1024(%rsp),%zmm8
 	vmovdqu64	256(%rsp),%zmm1
@@ -97112,61 +97112,61 @@ ossl_aes_gcm_decrypt_avx512:
 	movl	%r8d,%r10d
 	addl	$15,%r10d
 	shrl	$4,%r10d
-	je	.L_last_num_blocks_is_0_eFaDobhDcadAiew
+	je	.L_last_num_blocks_is_0_703
 
 	cmpl	$8,%r10d
-	je	.L_last_num_blocks_is_8_eFaDobhDcadAiew
-	jb	.L_last_num_blocks_is_7_1_eFaDobhDcadAiew
+	je	.L_last_num_blocks_is_8_703
+	jb	.L_last_num_blocks_is_7_1_703
 
 
 	cmpl	$12,%r10d
-	je	.L_last_num_blocks_is_12_eFaDobhDcadAiew
-	jb	.L_last_num_blocks_is_11_9_eFaDobhDcadAiew
+	je	.L_last_num_blocks_is_12_703
+	jb	.L_last_num_blocks_is_11_9_703
 
 
 	cmpl	$15,%r10d
-	je	.L_last_num_blocks_is_15_eFaDobhDcadAiew
-	ja	.L_last_num_blocks_is_16_eFaDobhDcadAiew
+	je	.L_last_num_blocks_is_15_703
+	ja	.L_last_num_blocks_is_16_703
 	cmpl	$14,%r10d
-	je	.L_last_num_blocks_is_14_eFaDobhDcadAiew
-	jmp	.L_last_num_blocks_is_13_eFaDobhDcadAiew
+	je	.L_last_num_blocks_is_14_703
+	jmp	.L_last_num_blocks_is_13_703
 
-.L_last_num_blocks_is_11_9_eFaDobhDcadAiew:
+.L_last_num_blocks_is_11_9_703:
 
 	cmpl	$10,%r10d
-	je	.L_last_num_blocks_is_10_eFaDobhDcadAiew
-	ja	.L_last_num_blocks_is_11_eFaDobhDcadAiew
-	jmp	.L_last_num_blocks_is_9_eFaDobhDcadAiew
+	je	.L_last_num_blocks_is_10_703
+	ja	.L_last_num_blocks_is_11_703
+	jmp	.L_last_num_blocks_is_9_703
 
-.L_last_num_blocks_is_7_1_eFaDobhDcadAiew:
+.L_last_num_blocks_is_7_1_703:
 	cmpl	$4,%r10d
-	je	.L_last_num_blocks_is_4_eFaDobhDcadAiew
-	jb	.L_last_num_blocks_is_3_1_eFaDobhDcadAiew
+	je	.L_last_num_blocks_is_4_703
+	jb	.L_last_num_blocks_is_3_1_703
 
 	cmpl	$6,%r10d
-	ja	.L_last_num_blocks_is_7_eFaDobhDcadAiew
-	je	.L_last_num_blocks_is_6_eFaDobhDcadAiew
-	jmp	.L_last_num_blocks_is_5_eFaDobhDcadAiew
+	ja	.L_last_num_blocks_is_7_703
+	je	.L_last_num_blocks_is_6_703
+	jmp	.L_last_num_blocks_is_5_703
 
-.L_last_num_blocks_is_3_1_eFaDobhDcadAiew:
+.L_last_num_blocks_is_3_1_703:
 
 	cmpl	$2,%r10d
-	ja	.L_last_num_blocks_is_3_eFaDobhDcadAiew
-	je	.L_last_num_blocks_is_2_eFaDobhDcadAiew
-.L_last_num_blocks_is_1_eFaDobhDcadAiew:
+	ja	.L_last_num_blocks_is_3_703
+	je	.L_last_num_blocks_is_2_703
+.L_last_num_blocks_is_1_703:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$255,%r15d
-	jae	.L_16_blocks_overflow_jAmvpArrgcBDchj
+	jae	.L_16_blocks_overflow_704
 	vpaddd	%xmm28,%xmm2,%xmm0
-	jmp	.L_16_blocks_ok_jAmvpArrgcBDchj
+	jmp	.L_16_blocks_ok_704
 
-.L_16_blocks_overflow_jAmvpArrgcBDchj:
+.L_16_blocks_overflow_704:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%xmm29,%xmm0,%xmm0
-.L_16_blocks_ok_jAmvpArrgcBDchj:
+.L_16_blocks_ok_704:
 
 
 
@@ -97254,7 +97254,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_kmhBhcmgnbwiyhq
+	jl	.L_small_initial_partial_block_705
 
 
 
@@ -97298,8 +97298,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_kmhBhcmgnbwiyhq
-.L_small_initial_partial_block_kmhBhcmgnbwiyhq:
+	jmp	.L_small_initial_compute_done_705
+.L_small_initial_partial_block_705:
 
 
 
@@ -97351,24 +97351,24 @@ ossl_aes_gcm_decrypt_avx512:
 
 	vpxorq	%xmm7,%xmm14,%xmm14
 
-	jmp	.L_after_reduction_kmhBhcmgnbwiyhq
-.L_small_initial_compute_done_kmhBhcmgnbwiyhq:
-.L_after_reduction_kmhBhcmgnbwiyhq:
-	jmp	.L_last_blocks_done_eFaDobhDcadAiew
-.L_last_num_blocks_is_2_eFaDobhDcadAiew:
+	jmp	.L_after_reduction_705
+.L_small_initial_compute_done_705:
+.L_after_reduction_705:
+	jmp	.L_last_blocks_done_703
+.L_last_num_blocks_is_2_703:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$254,%r15d
-	jae	.L_16_blocks_overflow_qrrktncehlzzmhc
+	jae	.L_16_blocks_overflow_706
 	vpaddd	%ymm28,%ymm2,%ymm0
-	jmp	.L_16_blocks_ok_qrrktncehlzzmhc
+	jmp	.L_16_blocks_ok_706
 
-.L_16_blocks_overflow_qrrktncehlzzmhc:
+.L_16_blocks_overflow_706:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%ymm29,%ymm0,%ymm0
-.L_16_blocks_ok_qrrktncehlzzmhc:
+.L_16_blocks_ok_706:
 
 
 
@@ -97457,7 +97457,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_CjbFEfcksDuGtzc
+	jl	.L_small_initial_partial_block_707
 
 
 
@@ -97501,8 +97501,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_CjbFEfcksDuGtzc
-.L_small_initial_partial_block_CjbFEfcksDuGtzc:
+	jmp	.L_small_initial_compute_done_707
+.L_small_initial_partial_block_707:
 
 
 
@@ -97549,27 +97549,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_CjbFEfcksDuGtzc:
+.L_small_initial_compute_done_707:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_CjbFEfcksDuGtzc
+	je	.L_after_reduction_707
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_CjbFEfcksDuGtzc:
-	jmp	.L_last_blocks_done_eFaDobhDcadAiew
-.L_last_num_blocks_is_3_eFaDobhDcadAiew:
+.L_after_reduction_707:
+	jmp	.L_last_blocks_done_703
+.L_last_num_blocks_is_3_703:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$253,%r15d
-	jae	.L_16_blocks_overflow_ajAowpxEqljEBmp
+	jae	.L_16_blocks_overflow_708
 	vpaddd	%zmm28,%zmm2,%zmm0
-	jmp	.L_16_blocks_ok_ajAowpxEqljEBmp
+	jmp	.L_16_blocks_ok_708
 
-.L_16_blocks_overflow_ajAowpxEqljEBmp:
+.L_16_blocks_overflow_708:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%zmm29,%zmm0,%zmm0
-.L_16_blocks_ok_ajAowpxEqljEBmp:
+.L_16_blocks_ok_708:
 
 
 
@@ -97658,7 +97658,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_duchEjElhyEebmG
+	jl	.L_small_initial_partial_block_709
 
 
 
@@ -97703,8 +97703,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_duchEjElhyEebmG
-.L_small_initial_partial_block_duchEjElhyEebmG:
+	jmp	.L_small_initial_compute_done_709
+.L_small_initial_partial_block_709:
 
 
 
@@ -97751,27 +97751,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_duchEjElhyEebmG:
+.L_small_initial_compute_done_709:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_duchEjElhyEebmG
+	je	.L_after_reduction_709
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_duchEjElhyEebmG:
-	jmp	.L_last_blocks_done_eFaDobhDcadAiew
-.L_last_num_blocks_is_4_eFaDobhDcadAiew:
+.L_after_reduction_709:
+	jmp	.L_last_blocks_done_703
+.L_last_num_blocks_is_4_703:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$252,%r15d
-	jae	.L_16_blocks_overflow_jzeBqbkAzdfywvg
+	jae	.L_16_blocks_overflow_710
 	vpaddd	%zmm28,%zmm2,%zmm0
-	jmp	.L_16_blocks_ok_jzeBqbkAzdfywvg
+	jmp	.L_16_blocks_ok_710
 
-.L_16_blocks_overflow_jzeBqbkAzdfywvg:
+.L_16_blocks_overflow_710:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%zmm29,%zmm0,%zmm0
-.L_16_blocks_ok_jzeBqbkAzdfywvg:
+.L_16_blocks_ok_710:
 
 
 
@@ -97860,7 +97860,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_CudjcBuhoGulDFa
+	jl	.L_small_initial_partial_block_711
 
 
 
@@ -97905,8 +97905,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_CudjcBuhoGulDFa
-.L_small_initial_partial_block_CudjcBuhoGulDFa:
+	jmp	.L_small_initial_compute_done_711
+.L_small_initial_partial_block_711:
 
 
 
@@ -97954,32 +97954,32 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_CudjcBuhoGulDFa:
+.L_small_initial_compute_done_711:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_CudjcBuhoGulDFa
+	je	.L_after_reduction_711
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_CudjcBuhoGulDFa:
-	jmp	.L_last_blocks_done_eFaDobhDcadAiew
-.L_last_num_blocks_is_5_eFaDobhDcadAiew:
+.L_after_reduction_711:
+	jmp	.L_last_blocks_done_703
+.L_last_num_blocks_is_5_703:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$251,%r15d
-	jae	.L_16_blocks_overflow_ojzaExBznEnewaC
+	jae	.L_16_blocks_overflow_712
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%xmm27,%xmm0,%xmm3
-	jmp	.L_16_blocks_ok_ojzaExBznEnewaC
+	jmp	.L_16_blocks_ok_712
 
-.L_16_blocks_overflow_ojzaExBznEnewaC:
+.L_16_blocks_overflow_712:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%xmm29,%xmm3,%xmm3
-.L_16_blocks_ok_ojzaExBznEnewaC:
+.L_16_blocks_ok_712:
 
 
 
@@ -98085,7 +98085,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_qvszBimGsckkGyu
+	jl	.L_small_initial_partial_block_713
 
 
 
@@ -98136,8 +98136,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_qvszBimGsckkGyu
-.L_small_initial_partial_block_qvszBimGsckkGyu:
+	jmp	.L_small_initial_compute_done_713
+.L_small_initial_partial_block_713:
 
 
 
@@ -98185,32 +98185,32 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_qvszBimGsckkGyu:
+.L_small_initial_compute_done_713:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_qvszBimGsckkGyu
+	je	.L_after_reduction_713
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_qvszBimGsckkGyu:
-	jmp	.L_last_blocks_done_eFaDobhDcadAiew
-.L_last_num_blocks_is_6_eFaDobhDcadAiew:
+.L_after_reduction_713:
+	jmp	.L_last_blocks_done_703
+.L_last_num_blocks_is_6_703:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$250,%r15d
-	jae	.L_16_blocks_overflow_apDaAGbgiFxffdq
+	jae	.L_16_blocks_overflow_714
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%ymm27,%ymm0,%ymm3
-	jmp	.L_16_blocks_ok_apDaAGbgiFxffdq
+	jmp	.L_16_blocks_ok_714
 
-.L_16_blocks_overflow_apDaAGbgiFxffdq:
+.L_16_blocks_overflow_714:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%ymm29,%ymm3,%ymm3
-.L_16_blocks_ok_apDaAGbgiFxffdq:
+.L_16_blocks_ok_714:
 
 
 
@@ -98316,7 +98316,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_xegeCthCandioit
+	jl	.L_small_initial_partial_block_715
 
 
 
@@ -98367,8 +98367,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_xegeCthCandioit
-.L_small_initial_partial_block_xegeCthCandioit:
+	jmp	.L_small_initial_compute_done_715
+.L_small_initial_partial_block_715:
 
 
 
@@ -98422,32 +98422,32 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_xegeCthCandioit:
+.L_small_initial_compute_done_715:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_xegeCthCandioit
+	je	.L_after_reduction_715
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_xegeCthCandioit:
-	jmp	.L_last_blocks_done_eFaDobhDcadAiew
-.L_last_num_blocks_is_7_eFaDobhDcadAiew:
+.L_after_reduction_715:
+	jmp	.L_last_blocks_done_703
+.L_last_num_blocks_is_7_703:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$249,%r15d
-	jae	.L_16_blocks_overflow_pzrtiFljlwyuEdt
+	jae	.L_16_blocks_overflow_716
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
-	jmp	.L_16_blocks_ok_pzrtiFljlwyuEdt
+	jmp	.L_16_blocks_ok_716
 
-.L_16_blocks_overflow_pzrtiFljlwyuEdt:
+.L_16_blocks_overflow_716:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
-.L_16_blocks_ok_pzrtiFljlwyuEdt:
+.L_16_blocks_ok_716:
 
 
 
@@ -98553,7 +98553,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_CxxyFnmdqCDsirp
+	jl	.L_small_initial_partial_block_717
 
 
 
@@ -98605,8 +98605,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_CxxyFnmdqCDsirp
-.L_small_initial_partial_block_CxxyFnmdqCDsirp:
+	jmp	.L_small_initial_compute_done_717
+.L_small_initial_partial_block_717:
 
 
 
@@ -98660,32 +98660,32 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_CxxyFnmdqCDsirp:
+.L_small_initial_compute_done_717:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_CxxyFnmdqCDsirp
+	je	.L_after_reduction_717
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_CxxyFnmdqCDsirp:
-	jmp	.L_last_blocks_done_eFaDobhDcadAiew
-.L_last_num_blocks_is_8_eFaDobhDcadAiew:
+.L_after_reduction_717:
+	jmp	.L_last_blocks_done_703
+.L_last_num_blocks_is_8_703:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$248,%r15d
-	jae	.L_16_blocks_overflow_inyvFGkdcjfgxsd
+	jae	.L_16_blocks_overflow_718
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
-	jmp	.L_16_blocks_ok_inyvFGkdcjfgxsd
+	jmp	.L_16_blocks_ok_718
 
-.L_16_blocks_overflow_inyvFGkdcjfgxsd:
+.L_16_blocks_overflow_718:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
-.L_16_blocks_ok_inyvFGkdcjfgxsd:
+.L_16_blocks_ok_718:
 
 
 
@@ -98791,7 +98791,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_syzmcEAsnpBbzab
+	jl	.L_small_initial_partial_block_719
 
 
 
@@ -98845,8 +98845,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_syzmcEAsnpBbzab
-.L_small_initial_partial_block_syzmcEAsnpBbzab:
+	jmp	.L_small_initial_compute_done_719
+.L_small_initial_partial_block_719:
 
 
 
@@ -98901,26 +98901,26 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_syzmcEAsnpBbzab:
+.L_small_initial_compute_done_719:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_syzmcEAsnpBbzab
+	je	.L_after_reduction_719
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_syzmcEAsnpBbzab:
-	jmp	.L_last_blocks_done_eFaDobhDcadAiew
-.L_last_num_blocks_is_9_eFaDobhDcadAiew:
+.L_after_reduction_719:
+	jmp	.L_last_blocks_done_703
+.L_last_num_blocks_is_9_703:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$247,%r15d
-	jae	.L_16_blocks_overflow_fjDrcchaiBakAAF
+	jae	.L_16_blocks_overflow_720
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%xmm27,%xmm3,%xmm4
-	jmp	.L_16_blocks_ok_fjDrcchaiBakAAF
+	jmp	.L_16_blocks_ok_720
 
-.L_16_blocks_overflow_fjDrcchaiBakAAF:
+.L_16_blocks_overflow_720:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -98929,7 +98929,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%xmm29,%xmm4,%xmm4
-.L_16_blocks_ok_fjDrcchaiBakAAF:
+.L_16_blocks_ok_720:
 
 
 
@@ -99052,7 +99052,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_fBmmvCByqAnbllk
+	jl	.L_small_initial_partial_block_721
 
 
 
@@ -99112,8 +99112,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_fBmmvCByqAnbllk
-.L_small_initial_partial_block_fBmmvCByqAnbllk:
+	jmp	.L_small_initial_compute_done_721
+.L_small_initial_partial_block_721:
 
 
 
@@ -99170,26 +99170,26 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_fBmmvCByqAnbllk:
+.L_small_initial_compute_done_721:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_fBmmvCByqAnbllk
+	je	.L_after_reduction_721
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_fBmmvCByqAnbllk:
-	jmp	.L_last_blocks_done_eFaDobhDcadAiew
-.L_last_num_blocks_is_10_eFaDobhDcadAiew:
+.L_after_reduction_721:
+	jmp	.L_last_blocks_done_703
+.L_last_num_blocks_is_10_703:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$246,%r15d
-	jae	.L_16_blocks_overflow_sGBgmBdhxxaBuyG
+	jae	.L_16_blocks_overflow_722
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%ymm27,%ymm3,%ymm4
-	jmp	.L_16_blocks_ok_sGBgmBdhxxaBuyG
+	jmp	.L_16_blocks_ok_722
 
-.L_16_blocks_overflow_sGBgmBdhxxaBuyG:
+.L_16_blocks_overflow_722:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -99198,7 +99198,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%ymm29,%ymm4,%ymm4
-.L_16_blocks_ok_sGBgmBdhxxaBuyG:
+.L_16_blocks_ok_722:
 
 
 
@@ -99321,7 +99321,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_kGoywspckFGlFlm
+	jl	.L_small_initial_partial_block_723
 
 
 
@@ -99381,8 +99381,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_kGoywspckFGlFlm
-.L_small_initial_partial_block_kGoywspckFGlFlm:
+	jmp	.L_small_initial_compute_done_723
+.L_small_initial_partial_block_723:
 
 
 
@@ -99445,26 +99445,26 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_kGoywspckFGlFlm:
+.L_small_initial_compute_done_723:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_kGoywspckFGlFlm
+	je	.L_after_reduction_723
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_kGoywspckFGlFlm:
-	jmp	.L_last_blocks_done_eFaDobhDcadAiew
-.L_last_num_blocks_is_11_eFaDobhDcadAiew:
+.L_after_reduction_723:
+	jmp	.L_last_blocks_done_703
+.L_last_num_blocks_is_11_703:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$245,%r15d
-	jae	.L_16_blocks_overflow_jpnxiiwAmlwyGlm
+	jae	.L_16_blocks_overflow_724
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
-	jmp	.L_16_blocks_ok_jpnxiiwAmlwyGlm
+	jmp	.L_16_blocks_ok_724
 
-.L_16_blocks_overflow_jpnxiiwAmlwyGlm:
+.L_16_blocks_overflow_724:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -99473,7 +99473,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
-.L_16_blocks_ok_jpnxiiwAmlwyGlm:
+.L_16_blocks_ok_724:
 
 
 
@@ -99596,7 +99596,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_hAFivtCFrjhrutC
+	jl	.L_small_initial_partial_block_725
 
 
 
@@ -99657,8 +99657,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_hAFivtCFrjhrutC
-.L_small_initial_partial_block_hAFivtCFrjhrutC:
+	jmp	.L_small_initial_compute_done_725
+.L_small_initial_partial_block_725:
 
 
 
@@ -99721,26 +99721,26 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_hAFivtCFrjhrutC:
+.L_small_initial_compute_done_725:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_hAFivtCFrjhrutC
+	je	.L_after_reduction_725
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_hAFivtCFrjhrutC:
-	jmp	.L_last_blocks_done_eFaDobhDcadAiew
-.L_last_num_blocks_is_12_eFaDobhDcadAiew:
+.L_after_reduction_725:
+	jmp	.L_last_blocks_done_703
+.L_last_num_blocks_is_12_703:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$244,%r15d
-	jae	.L_16_blocks_overflow_owekkBumCcpvlbo
+	jae	.L_16_blocks_overflow_726
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
-	jmp	.L_16_blocks_ok_owekkBumCcpvlbo
+	jmp	.L_16_blocks_ok_726
 
-.L_16_blocks_overflow_owekkBumCcpvlbo:
+.L_16_blocks_overflow_726:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -99749,7 +99749,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
-.L_16_blocks_ok_owekkBumCcpvlbo:
+.L_16_blocks_ok_726:
 
 
 
@@ -99872,7 +99872,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_FwoAGhlEfmfanez
+	jl	.L_small_initial_partial_block_727
 
 
 
@@ -99931,8 +99931,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_FwoAGhlEfmfanez
-.L_small_initial_partial_block_FwoAGhlEfmfanez:
+	jmp	.L_small_initial_compute_done_727
+.L_small_initial_partial_block_727:
 
 
 
@@ -99996,27 +99996,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_FwoAGhlEfmfanez:
+.L_small_initial_compute_done_727:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_FwoAGhlEfmfanez
+	je	.L_after_reduction_727
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_FwoAGhlEfmfanez:
-	jmp	.L_last_blocks_done_eFaDobhDcadAiew
-.L_last_num_blocks_is_13_eFaDobhDcadAiew:
+.L_after_reduction_727:
+	jmp	.L_last_blocks_done_703
+.L_last_num_blocks_is_13_703:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$243,%r15d
-	jae	.L_16_blocks_overflow_etnEggBiycuvyzx
+	jae	.L_16_blocks_overflow_728
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%xmm27,%xmm4,%xmm5
-	jmp	.L_16_blocks_ok_etnEggBiycuvyzx
+	jmp	.L_16_blocks_ok_728
 
-.L_16_blocks_overflow_etnEggBiycuvyzx:
+.L_16_blocks_overflow_728:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -100027,7 +100027,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%xmm29,%xmm5,%xmm5
-.L_16_blocks_ok_etnEggBiycuvyzx:
+.L_16_blocks_ok_728:
 
 
 
@@ -100167,7 +100167,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_rCdlcescGhEnawl
+	jl	.L_small_initial_partial_block_729
 
 
 
@@ -100232,8 +100232,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_rCdlcescGhEnawl
-.L_small_initial_partial_block_rCdlcescGhEnawl:
+	jmp	.L_small_initial_compute_done_729
+.L_small_initial_partial_block_729:
 
 
 
@@ -100295,27 +100295,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_rCdlcescGhEnawl:
+.L_small_initial_compute_done_729:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_rCdlcescGhEnawl
+	je	.L_after_reduction_729
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_rCdlcescGhEnawl:
-	jmp	.L_last_blocks_done_eFaDobhDcadAiew
-.L_last_num_blocks_is_14_eFaDobhDcadAiew:
+.L_after_reduction_729:
+	jmp	.L_last_blocks_done_703
+.L_last_num_blocks_is_14_703:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$242,%r15d
-	jae	.L_16_blocks_overflow_sjiAcpDCgjcudFy
+	jae	.L_16_blocks_overflow_730
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%ymm27,%ymm4,%ymm5
-	jmp	.L_16_blocks_ok_sjiAcpDCgjcudFy
+	jmp	.L_16_blocks_ok_730
 
-.L_16_blocks_overflow_sjiAcpDCgjcudFy:
+.L_16_blocks_overflow_730:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -100326,7 +100326,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%ymm29,%ymm5,%ymm5
-.L_16_blocks_ok_sjiAcpDCgjcudFy:
+.L_16_blocks_ok_730:
 
 
 
@@ -100466,7 +100466,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_sAkdufvaxEErlbv
+	jl	.L_small_initial_partial_block_731
 
 
 
@@ -100531,8 +100531,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_sAkdufvaxEErlbv
-.L_small_initial_partial_block_sAkdufvaxEErlbv:
+	jmp	.L_small_initial_compute_done_731
+.L_small_initial_partial_block_731:
 
 
 
@@ -100600,27 +100600,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_sAkdufvaxEErlbv:
+.L_small_initial_compute_done_731:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_sAkdufvaxEErlbv
+	je	.L_after_reduction_731
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_sAkdufvaxEErlbv:
-	jmp	.L_last_blocks_done_eFaDobhDcadAiew
-.L_last_num_blocks_is_15_eFaDobhDcadAiew:
+.L_after_reduction_731:
+	jmp	.L_last_blocks_done_703
+.L_last_num_blocks_is_15_703:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$241,%r15d
-	jae	.L_16_blocks_overflow_EgBemkwFGrAmmql
+	jae	.L_16_blocks_overflow_732
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_EgBemkwFGrAmmql
+	jmp	.L_16_blocks_ok_732
 
-.L_16_blocks_overflow_EgBemkwFGrAmmql:
+.L_16_blocks_overflow_732:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -100631,7 +100631,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_EgBemkwFGrAmmql:
+.L_16_blocks_ok_732:
 
 
 
@@ -100771,7 +100771,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_BesuiwjpdsGkEvd
+	jl	.L_small_initial_partial_block_733
 
 
 
@@ -100837,8 +100837,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_BesuiwjpdsGkEvd
-.L_small_initial_partial_block_BesuiwjpdsGkEvd:
+	jmp	.L_small_initial_compute_done_733
+.L_small_initial_partial_block_733:
 
 
 
@@ -100906,27 +100906,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_BesuiwjpdsGkEvd:
+.L_small_initial_compute_done_733:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_BesuiwjpdsGkEvd
+	je	.L_after_reduction_733
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_BesuiwjpdsGkEvd:
-	jmp	.L_last_blocks_done_eFaDobhDcadAiew
-.L_last_num_blocks_is_16_eFaDobhDcadAiew:
+.L_after_reduction_733:
+	jmp	.L_last_blocks_done_703
+.L_last_num_blocks_is_16_703:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$240,%r15d
-	jae	.L_16_blocks_overflow_icczkgxjcnsrGDl
+	jae	.L_16_blocks_overflow_734
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_icczkgxjcnsrGDl
+	jmp	.L_16_blocks_ok_734
 
-.L_16_blocks_overflow_icczkgxjcnsrGDl:
+.L_16_blocks_overflow_734:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -100937,7 +100937,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_icczkgxjcnsrGDl:
+.L_16_blocks_ok_734:
 
 
 
@@ -101074,7 +101074,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm21,%zmm21
 	vextracti32x4	$3,%zmm21,%xmm7
 	subq	$16 * (16 - 1),%r8
-.L_small_initial_partial_block_gsGgrBxtsonlyFd:
+.L_small_initial_partial_block_735:
 
 
 
@@ -101143,11 +101143,11 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_gsGgrBxtsonlyFd:
+.L_small_initial_compute_done_735:
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_gsGgrBxtsonlyFd:
-	jmp	.L_last_blocks_done_eFaDobhDcadAiew
-.L_last_num_blocks_is_0_eFaDobhDcadAiew:
+.L_after_reduction_735:
+	jmp	.L_last_blocks_done_703
+.L_last_num_blocks_is_0_703:
 	vmovdqa64	768(%rsp),%zmm13
 	vpxorq	%zmm14,%zmm13,%zmm13
 	vmovdqu64	0(%rsp,%rbx,1),%zmm12
@@ -101209,18 +101209,18 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm24,%xmm3,%xmm14
 
-.L_last_blocks_done_eFaDobhDcadAiew:
+.L_last_blocks_done_703:
 	vpshufb	%xmm29,%xmm2,%xmm2
-	jmp	.L_ghash_done_EzeEqCiibleghsn
-.L_encrypt_16_blocks_EzeEqCiibleghsn:
+	jmp	.L_ghash_done_659
+.L_encrypt_16_blocks_659:
 	cmpb	$240,%r15b
-	jae	.L_16_blocks_overflow_zhzpdDwgFryjdGp
+	jae	.L_16_blocks_overflow_736
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_zhzpdDwgFryjdGp
-.L_16_blocks_overflow_zhzpdDwgFryjdGp:
+	jmp	.L_16_blocks_ok_736
+.L_16_blocks_overflow_736:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -101231,7 +101231,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_zhzpdDwgFryjdGp:
+.L_16_blocks_ok_736:
 	vbroadcastf64x2	0(%rdi),%zmm30
 	vpxorq	768(%rsp),%zmm14,%zmm8
 	vmovdqu64	0(%rsp),%zmm1
@@ -101444,61 +101444,61 @@ ossl_aes_gcm_decrypt_avx512:
 	movl	%r8d,%r10d
 	addl	$15,%r10d
 	shrl	$4,%r10d
-	je	.L_last_num_blocks_is_0_bwqbqEyzFmathAc
+	je	.L_last_num_blocks_is_0_737
 
 	cmpl	$8,%r10d
-	je	.L_last_num_blocks_is_8_bwqbqEyzFmathAc
-	jb	.L_last_num_blocks_is_7_1_bwqbqEyzFmathAc
+	je	.L_last_num_blocks_is_8_737
+	jb	.L_last_num_blocks_is_7_1_737
 
 
 	cmpl	$12,%r10d
-	je	.L_last_num_blocks_is_12_bwqbqEyzFmathAc
-	jb	.L_last_num_blocks_is_11_9_bwqbqEyzFmathAc
+	je	.L_last_num_blocks_is_12_737
+	jb	.L_last_num_blocks_is_11_9_737
 
 
 	cmpl	$15,%r10d
-	je	.L_last_num_blocks_is_15_bwqbqEyzFmathAc
-	ja	.L_last_num_blocks_is_16_bwqbqEyzFmathAc
+	je	.L_last_num_blocks_is_15_737
+	ja	.L_last_num_blocks_is_16_737
 	cmpl	$14,%r10d
-	je	.L_last_num_blocks_is_14_bwqbqEyzFmathAc
-	jmp	.L_last_num_blocks_is_13_bwqbqEyzFmathAc
+	je	.L_last_num_blocks_is_14_737
+	jmp	.L_last_num_blocks_is_13_737
 
-.L_last_num_blocks_is_11_9_bwqbqEyzFmathAc:
+.L_last_num_blocks_is_11_9_737:
 
 	cmpl	$10,%r10d
-	je	.L_last_num_blocks_is_10_bwqbqEyzFmathAc
-	ja	.L_last_num_blocks_is_11_bwqbqEyzFmathAc
-	jmp	.L_last_num_blocks_is_9_bwqbqEyzFmathAc
+	je	.L_last_num_blocks_is_10_737
+	ja	.L_last_num_blocks_is_11_737
+	jmp	.L_last_num_blocks_is_9_737
 
-.L_last_num_blocks_is_7_1_bwqbqEyzFmathAc:
+.L_last_num_blocks_is_7_1_737:
 	cmpl	$4,%r10d
-	je	.L_last_num_blocks_is_4_bwqbqEyzFmathAc
-	jb	.L_last_num_blocks_is_3_1_bwqbqEyzFmathAc
+	je	.L_last_num_blocks_is_4_737
+	jb	.L_last_num_blocks_is_3_1_737
 
 	cmpl	$6,%r10d
-	ja	.L_last_num_blocks_is_7_bwqbqEyzFmathAc
-	je	.L_last_num_blocks_is_6_bwqbqEyzFmathAc
-	jmp	.L_last_num_blocks_is_5_bwqbqEyzFmathAc
+	ja	.L_last_num_blocks_is_7_737
+	je	.L_last_num_blocks_is_6_737
+	jmp	.L_last_num_blocks_is_5_737
 
-.L_last_num_blocks_is_3_1_bwqbqEyzFmathAc:
+.L_last_num_blocks_is_3_1_737:
 
 	cmpl	$2,%r10d
-	ja	.L_last_num_blocks_is_3_bwqbqEyzFmathAc
-	je	.L_last_num_blocks_is_2_bwqbqEyzFmathAc
-.L_last_num_blocks_is_1_bwqbqEyzFmathAc:
+	ja	.L_last_num_blocks_is_3_737
+	je	.L_last_num_blocks_is_2_737
+.L_last_num_blocks_is_1_737:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$255,%r15d
-	jae	.L_16_blocks_overflow_noBcCsBAsqmejBq
+	jae	.L_16_blocks_overflow_738
 	vpaddd	%xmm28,%xmm2,%xmm0
-	jmp	.L_16_blocks_ok_noBcCsBAsqmejBq
+	jmp	.L_16_blocks_ok_738
 
-.L_16_blocks_overflow_noBcCsBAsqmejBq:
+.L_16_blocks_overflow_738:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%xmm29,%xmm0,%xmm0
-.L_16_blocks_ok_noBcCsBAsqmejBq:
+.L_16_blocks_ok_738:
 
 
 
@@ -101609,7 +101609,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_jFhlaidzulpDGCd
+	jl	.L_small_initial_partial_block_739
 
 
 
@@ -101651,8 +101651,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_jFhlaidzulpDGCd
-.L_small_initial_partial_block_jFhlaidzulpDGCd:
+	jmp	.L_small_initial_compute_done_739
+.L_small_initial_partial_block_739:
 
 
 
@@ -101676,24 +101676,24 @@ ossl_aes_gcm_decrypt_avx512:
 
 	vpxorq	%xmm7,%xmm14,%xmm14
 
-	jmp	.L_after_reduction_jFhlaidzulpDGCd
-.L_small_initial_compute_done_jFhlaidzulpDGCd:
-.L_after_reduction_jFhlaidzulpDGCd:
-	jmp	.L_last_blocks_done_bwqbqEyzFmathAc
-.L_last_num_blocks_is_2_bwqbqEyzFmathAc:
+	jmp	.L_after_reduction_739
+.L_small_initial_compute_done_739:
+.L_after_reduction_739:
+	jmp	.L_last_blocks_done_737
+.L_last_num_blocks_is_2_737:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$254,%r15d
-	jae	.L_16_blocks_overflow_iEpseqdunDqjwuD
+	jae	.L_16_blocks_overflow_740
 	vpaddd	%ymm28,%ymm2,%ymm0
-	jmp	.L_16_blocks_ok_iEpseqdunDqjwuD
+	jmp	.L_16_blocks_ok_740
 
-.L_16_blocks_overflow_iEpseqdunDqjwuD:
+.L_16_blocks_overflow_740:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%ymm29,%ymm0,%ymm0
-.L_16_blocks_ok_iEpseqdunDqjwuD:
+.L_16_blocks_ok_740:
 
 
 
@@ -101805,7 +101805,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_nGbBoglibCAmdGh
+	jl	.L_small_initial_partial_block_741
 
 
 
@@ -101847,8 +101847,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_nGbBoglibCAmdGh
-.L_small_initial_partial_block_nGbBoglibCAmdGh:
+	jmp	.L_small_initial_compute_done_741
+.L_small_initial_partial_block_741:
 
 
 
@@ -101893,27 +101893,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_nGbBoglibCAmdGh:
+.L_small_initial_compute_done_741:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_nGbBoglibCAmdGh
+	je	.L_after_reduction_741
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_nGbBoglibCAmdGh:
-	jmp	.L_last_blocks_done_bwqbqEyzFmathAc
-.L_last_num_blocks_is_3_bwqbqEyzFmathAc:
+.L_after_reduction_741:
+	jmp	.L_last_blocks_done_737
+.L_last_num_blocks_is_3_737:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$253,%r15d
-	jae	.L_16_blocks_overflow_EGvjniuajyeqctm
+	jae	.L_16_blocks_overflow_742
 	vpaddd	%zmm28,%zmm2,%zmm0
-	jmp	.L_16_blocks_ok_EGvjniuajyeqctm
+	jmp	.L_16_blocks_ok_742
 
-.L_16_blocks_overflow_EGvjniuajyeqctm:
+.L_16_blocks_overflow_742:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%zmm29,%zmm0,%zmm0
-.L_16_blocks_ok_EGvjniuajyeqctm:
+.L_16_blocks_ok_742:
 
 
 
@@ -102025,7 +102025,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_xchbrvFuemGBuyh
+	jl	.L_small_initial_partial_block_743
 
 
 
@@ -102068,8 +102068,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_xchbrvFuemGBuyh
-.L_small_initial_partial_block_xchbrvFuemGBuyh:
+	jmp	.L_small_initial_compute_done_743
+.L_small_initial_partial_block_743:
 
 
 
@@ -102114,27 +102114,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_xchbrvFuemGBuyh:
+.L_small_initial_compute_done_743:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_xchbrvFuemGBuyh
+	je	.L_after_reduction_743
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_xchbrvFuemGBuyh:
-	jmp	.L_last_blocks_done_bwqbqEyzFmathAc
-.L_last_num_blocks_is_4_bwqbqEyzFmathAc:
+.L_after_reduction_743:
+	jmp	.L_last_blocks_done_737
+.L_last_num_blocks_is_4_737:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$252,%r15d
-	jae	.L_16_blocks_overflow_cmglGrwhwemdEFx
+	jae	.L_16_blocks_overflow_744
 	vpaddd	%zmm28,%zmm2,%zmm0
-	jmp	.L_16_blocks_ok_cmglGrwhwemdEFx
+	jmp	.L_16_blocks_ok_744
 
-.L_16_blocks_overflow_cmglGrwhwemdEFx:
+.L_16_blocks_overflow_744:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%zmm29,%zmm0,%zmm0
-.L_16_blocks_ok_cmglGrwhwemdEFx:
+.L_16_blocks_ok_744:
 
 
 
@@ -102246,7 +102246,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_wedqGjdukEgkrmc
+	jl	.L_small_initial_partial_block_745
 
 
 
@@ -102288,8 +102288,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_wedqGjdukEgkrmc
-.L_small_initial_partial_block_wedqGjdukEgkrmc:
+	jmp	.L_small_initial_compute_done_745
+.L_small_initial_partial_block_745:
 
 
 
@@ -102335,32 +102335,32 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_wedqGjdukEgkrmc:
+.L_small_initial_compute_done_745:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_wedqGjdukEgkrmc
+	je	.L_after_reduction_745
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_wedqGjdukEgkrmc:
-	jmp	.L_last_blocks_done_bwqbqEyzFmathAc
-.L_last_num_blocks_is_5_bwqbqEyzFmathAc:
+.L_after_reduction_745:
+	jmp	.L_last_blocks_done_737
+.L_last_num_blocks_is_5_737:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$251,%r15d
-	jae	.L_16_blocks_overflow_yjzxGqovvuoamgo
+	jae	.L_16_blocks_overflow_746
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%xmm27,%xmm0,%xmm3
-	jmp	.L_16_blocks_ok_yjzxGqovvuoamgo
+	jmp	.L_16_blocks_ok_746
 
-.L_16_blocks_overflow_yjzxGqovvuoamgo:
+.L_16_blocks_overflow_746:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%xmm29,%xmm3,%xmm3
-.L_16_blocks_ok_yjzxGqovvuoamgo:
+.L_16_blocks_ok_746:
 
 
 
@@ -102489,7 +102489,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_ArigDhBhjlkpiio
+	jl	.L_small_initial_partial_block_747
 
 
 
@@ -102541,8 +102541,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_ArigDhBhjlkpiio
-.L_small_initial_partial_block_ArigDhBhjlkpiio:
+	jmp	.L_small_initial_compute_done_747
+.L_small_initial_partial_block_747:
 
 
 
@@ -102587,32 +102587,32 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_ArigDhBhjlkpiio:
+.L_small_initial_compute_done_747:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_ArigDhBhjlkpiio
+	je	.L_after_reduction_747
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_ArigDhBhjlkpiio:
-	jmp	.L_last_blocks_done_bwqbqEyzFmathAc
-.L_last_num_blocks_is_6_bwqbqEyzFmathAc:
+.L_after_reduction_747:
+	jmp	.L_last_blocks_done_737
+.L_last_num_blocks_is_6_737:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$250,%r15d
-	jae	.L_16_blocks_overflow_cevAbulmkyCqrGr
+	jae	.L_16_blocks_overflow_748
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%ymm27,%ymm0,%ymm3
-	jmp	.L_16_blocks_ok_cevAbulmkyCqrGr
+	jmp	.L_16_blocks_ok_748
 
-.L_16_blocks_overflow_cevAbulmkyCqrGr:
+.L_16_blocks_overflow_748:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%ymm29,%ymm3,%ymm3
-.L_16_blocks_ok_cevAbulmkyCqrGr:
+.L_16_blocks_ok_748:
 
 
 
@@ -102741,7 +102741,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_cllzGbwvqfDeqnA
+	jl	.L_small_initial_partial_block_749
 
 
 
@@ -102793,8 +102793,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_cllzGbwvqfDeqnA
-.L_small_initial_partial_block_cllzGbwvqfDeqnA:
+	jmp	.L_small_initial_compute_done_749
+.L_small_initial_partial_block_749:
 
 
 
@@ -102849,32 +102849,32 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_cllzGbwvqfDeqnA:
+.L_small_initial_compute_done_749:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_cllzGbwvqfDeqnA
+	je	.L_after_reduction_749
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_cllzGbwvqfDeqnA:
-	jmp	.L_last_blocks_done_bwqbqEyzFmathAc
-.L_last_num_blocks_is_7_bwqbqEyzFmathAc:
+.L_after_reduction_749:
+	jmp	.L_last_blocks_done_737
+.L_last_num_blocks_is_7_737:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$249,%r15d
-	jae	.L_16_blocks_overflow_xcdBmyyjeBtljpq
+	jae	.L_16_blocks_overflow_750
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
-	jmp	.L_16_blocks_ok_xcdBmyyjeBtljpq
+	jmp	.L_16_blocks_ok_750
 
-.L_16_blocks_overflow_xcdBmyyjeBtljpq:
+.L_16_blocks_overflow_750:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
-.L_16_blocks_ok_xcdBmyyjeBtljpq:
+.L_16_blocks_ok_750:
 
 
 
@@ -103003,7 +103003,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_feBjctGjsioyvuu
+	jl	.L_small_initial_partial_block_751
 
 
 
@@ -103056,8 +103056,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_feBjctGjsioyvuu
-.L_small_initial_partial_block_feBjctGjsioyvuu:
+	jmp	.L_small_initial_compute_done_751
+.L_small_initial_partial_block_751:
 
 
 
@@ -103112,32 +103112,32 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_feBjctGjsioyvuu:
+.L_small_initial_compute_done_751:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_feBjctGjsioyvuu
+	je	.L_after_reduction_751
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_feBjctGjsioyvuu:
-	jmp	.L_last_blocks_done_bwqbqEyzFmathAc
-.L_last_num_blocks_is_8_bwqbqEyzFmathAc:
+.L_after_reduction_751:
+	jmp	.L_last_blocks_done_737
+.L_last_num_blocks_is_8_737:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$248,%r15d
-	jae	.L_16_blocks_overflow_qxiGphGbulsiedD
+	jae	.L_16_blocks_overflow_752
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
-	jmp	.L_16_blocks_ok_qxiGphGbulsiedD
+	jmp	.L_16_blocks_ok_752
 
-.L_16_blocks_overflow_qxiGphGbulsiedD:
+.L_16_blocks_overflow_752:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
-.L_16_blocks_ok_qxiGphGbulsiedD:
+.L_16_blocks_ok_752:
 
 
 
@@ -103266,7 +103266,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_htvGBouGqqzDlBb
+	jl	.L_small_initial_partial_block_753
 
 
 
@@ -103317,8 +103317,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_htvGBouGqqzDlBb
-.L_small_initial_partial_block_htvGBouGqqzDlBb:
+	jmp	.L_small_initial_compute_done_753
+.L_small_initial_partial_block_753:
 
 
 
@@ -103374,26 +103374,26 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_htvGBouGqqzDlBb:
+.L_small_initial_compute_done_753:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_htvGBouGqqzDlBb
+	je	.L_after_reduction_753
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_htvGBouGqqzDlBb:
-	jmp	.L_last_blocks_done_bwqbqEyzFmathAc
-.L_last_num_blocks_is_9_bwqbqEyzFmathAc:
+.L_after_reduction_753:
+	jmp	.L_last_blocks_done_737
+.L_last_num_blocks_is_9_737:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$247,%r15d
-	jae	.L_16_blocks_overflow_ktotEBtjyxoohrx
+	jae	.L_16_blocks_overflow_754
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%xmm27,%xmm3,%xmm4
-	jmp	.L_16_blocks_ok_ktotEBtjyxoohrx
+	jmp	.L_16_blocks_ok_754
 
-.L_16_blocks_overflow_ktotEBtjyxoohrx:
+.L_16_blocks_overflow_754:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -103402,7 +103402,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%xmm29,%xmm4,%xmm4
-.L_16_blocks_ok_ktotEBtjyxoohrx:
+.L_16_blocks_ok_754:
 
 
 
@@ -103548,7 +103548,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_hqzgjgjowmukfzv
+	jl	.L_small_initial_partial_block_755
 
 
 
@@ -103609,8 +103609,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_hqzgjgjowmukfzv
-.L_small_initial_partial_block_hqzgjgjowmukfzv:
+	jmp	.L_small_initial_compute_done_755
+.L_small_initial_partial_block_755:
 
 
 
@@ -103664,26 +103664,26 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_hqzgjgjowmukfzv:
+.L_small_initial_compute_done_755:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_hqzgjgjowmukfzv
+	je	.L_after_reduction_755
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_hqzgjgjowmukfzv:
-	jmp	.L_last_blocks_done_bwqbqEyzFmathAc
-.L_last_num_blocks_is_10_bwqbqEyzFmathAc:
+.L_after_reduction_755:
+	jmp	.L_last_blocks_done_737
+.L_last_num_blocks_is_10_737:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$246,%r15d
-	jae	.L_16_blocks_overflow_drbjgopABaEbFAr
+	jae	.L_16_blocks_overflow_756
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%ymm27,%ymm3,%ymm4
-	jmp	.L_16_blocks_ok_drbjgopABaEbFAr
+	jmp	.L_16_blocks_ok_756
 
-.L_16_blocks_overflow_drbjgopABaEbFAr:
+.L_16_blocks_overflow_756:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -103692,7 +103692,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%ymm29,%ymm4,%ymm4
-.L_16_blocks_ok_drbjgopABaEbFAr:
+.L_16_blocks_ok_756:
 
 
 
@@ -103838,7 +103838,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_wzkyiuDzrsjncvj
+	jl	.L_small_initial_partial_block_757
 
 
 
@@ -103899,8 +103899,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_wzkyiuDzrsjncvj
-.L_small_initial_partial_block_wzkyiuDzrsjncvj:
+	jmp	.L_small_initial_compute_done_757
+.L_small_initial_partial_block_757:
 
 
 
@@ -103964,26 +103964,26 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_wzkyiuDzrsjncvj:
+.L_small_initial_compute_done_757:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_wzkyiuDzrsjncvj
+	je	.L_after_reduction_757
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_wzkyiuDzrsjncvj:
-	jmp	.L_last_blocks_done_bwqbqEyzFmathAc
-.L_last_num_blocks_is_11_bwqbqEyzFmathAc:
+.L_after_reduction_757:
+	jmp	.L_last_blocks_done_737
+.L_last_num_blocks_is_11_737:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$245,%r15d
-	jae	.L_16_blocks_overflow_kftbmbxwoCkdapz
+	jae	.L_16_blocks_overflow_758
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
-	jmp	.L_16_blocks_ok_kftbmbxwoCkdapz
+	jmp	.L_16_blocks_ok_758
 
-.L_16_blocks_overflow_kftbmbxwoCkdapz:
+.L_16_blocks_overflow_758:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -103992,7 +103992,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
-.L_16_blocks_ok_kftbmbxwoCkdapz:
+.L_16_blocks_ok_758:
 
 
 
@@ -104138,7 +104138,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_aqqvCravpvthbdg
+	jl	.L_small_initial_partial_block_759
 
 
 
@@ -104200,8 +104200,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_aqqvCravpvthbdg
-.L_small_initial_partial_block_aqqvCravpvthbdg:
+	jmp	.L_small_initial_compute_done_759
+.L_small_initial_partial_block_759:
 
 
 
@@ -104265,26 +104265,26 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_aqqvCravpvthbdg:
+.L_small_initial_compute_done_759:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_aqqvCravpvthbdg
+	je	.L_after_reduction_759
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_aqqvCravpvthbdg:
-	jmp	.L_last_blocks_done_bwqbqEyzFmathAc
-.L_last_num_blocks_is_12_bwqbqEyzFmathAc:
+.L_after_reduction_759:
+	jmp	.L_last_blocks_done_737
+.L_last_num_blocks_is_12_737:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$244,%r15d
-	jae	.L_16_blocks_overflow_fpkdjwiDFqbDpBv
+	jae	.L_16_blocks_overflow_760
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
-	jmp	.L_16_blocks_ok_fpkdjwiDFqbDpBv
+	jmp	.L_16_blocks_ok_760
 
-.L_16_blocks_overflow_fpkdjwiDFqbDpBv:
+.L_16_blocks_overflow_760:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -104293,7 +104293,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
-.L_16_blocks_ok_fpkdjwiDFqbDpBv:
+.L_16_blocks_ok_760:
 
 
 
@@ -104439,7 +104439,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_pdqcGCjmglydxBD
+	jl	.L_small_initial_partial_block_761
 
 
 
@@ -104495,8 +104495,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_pdqcGCjmglydxBD
-.L_small_initial_partial_block_pdqcGCjmglydxBD:
+	jmp	.L_small_initial_compute_done_761
+.L_small_initial_partial_block_761:
 
 
 
@@ -104561,27 +104561,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_pdqcGCjmglydxBD:
+.L_small_initial_compute_done_761:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_pdqcGCjmglydxBD
+	je	.L_after_reduction_761
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_pdqcGCjmglydxBD:
-	jmp	.L_last_blocks_done_bwqbqEyzFmathAc
-.L_last_num_blocks_is_13_bwqbqEyzFmathAc:
+.L_after_reduction_761:
+	jmp	.L_last_blocks_done_737
+.L_last_num_blocks_is_13_737:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$243,%r15d
-	jae	.L_16_blocks_overflow_lGvnecyekofwDpb
+	jae	.L_16_blocks_overflow_762
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%xmm27,%xmm4,%xmm5
-	jmp	.L_16_blocks_ok_lGvnecyekofwDpb
+	jmp	.L_16_blocks_ok_762
 
-.L_16_blocks_overflow_lGvnecyekofwDpb:
+.L_16_blocks_overflow_762:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -104592,7 +104592,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%xmm29,%xmm5,%xmm5
-.L_16_blocks_ok_lGvnecyekofwDpb:
+.L_16_blocks_ok_762:
 
 
 
@@ -104755,7 +104755,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_zgbmiyFCtlbureD
+	jl	.L_small_initial_partial_block_763
 
 
 
@@ -104821,8 +104821,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_zgbmiyFCtlbureD
-.L_small_initial_partial_block_zgbmiyFCtlbureD:
+	jmp	.L_small_initial_compute_done_763
+.L_small_initial_partial_block_763:
 
 
 
@@ -104881,27 +104881,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_zgbmiyFCtlbureD:
+.L_small_initial_compute_done_763:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_zgbmiyFCtlbureD
+	je	.L_after_reduction_763
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_zgbmiyFCtlbureD:
-	jmp	.L_last_blocks_done_bwqbqEyzFmathAc
-.L_last_num_blocks_is_14_bwqbqEyzFmathAc:
+.L_after_reduction_763:
+	jmp	.L_last_blocks_done_737
+.L_last_num_blocks_is_14_737:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$242,%r15d
-	jae	.L_16_blocks_overflow_byEdAxiimBnthvk
+	jae	.L_16_blocks_overflow_764
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%ymm27,%ymm4,%ymm5
-	jmp	.L_16_blocks_ok_byEdAxiimBnthvk
+	jmp	.L_16_blocks_ok_764
 
-.L_16_blocks_overflow_byEdAxiimBnthvk:
+.L_16_blocks_overflow_764:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -104912,7 +104912,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%ymm29,%ymm5,%ymm5
-.L_16_blocks_ok_byEdAxiimBnthvk:
+.L_16_blocks_ok_764:
 
 
 
@@ -105075,7 +105075,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_qEpDnApAfqpDjdq
+	jl	.L_small_initial_partial_block_765
 
 
 
@@ -105141,8 +105141,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_qEpDnApAfqpDjdq
-.L_small_initial_partial_block_qEpDnApAfqpDjdq:
+	jmp	.L_small_initial_compute_done_765
+.L_small_initial_partial_block_765:
 
 
 
@@ -105211,27 +105211,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_qEpDnApAfqpDjdq:
+.L_small_initial_compute_done_765:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_qEpDnApAfqpDjdq
+	je	.L_after_reduction_765
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_qEpDnApAfqpDjdq:
-	jmp	.L_last_blocks_done_bwqbqEyzFmathAc
-.L_last_num_blocks_is_15_bwqbqEyzFmathAc:
+.L_after_reduction_765:
+	jmp	.L_last_blocks_done_737
+.L_last_num_blocks_is_15_737:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$241,%r15d
-	jae	.L_16_blocks_overflow_FmgpviBGEycEFEA
+	jae	.L_16_blocks_overflow_766
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_FmgpviBGEycEFEA
+	jmp	.L_16_blocks_ok_766
 
-.L_16_blocks_overflow_FmgpviBGEycEFEA:
+.L_16_blocks_overflow_766:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -105242,7 +105242,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_FmgpviBGEycEFEA:
+.L_16_blocks_ok_766:
 
 
 
@@ -105405,7 +105405,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_fyxgFpaDexAibhj
+	jl	.L_small_initial_partial_block_767
 
 
 
@@ -105472,8 +105472,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_fyxgFpaDexAibhj
-.L_small_initial_partial_block_fyxgFpaDexAibhj:
+	jmp	.L_small_initial_compute_done_767
+.L_small_initial_partial_block_767:
 
 
 
@@ -105542,27 +105542,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_fyxgFpaDexAibhj:
+.L_small_initial_compute_done_767:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_fyxgFpaDexAibhj
+	je	.L_after_reduction_767
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_fyxgFpaDexAibhj:
-	jmp	.L_last_blocks_done_bwqbqEyzFmathAc
-.L_last_num_blocks_is_16_bwqbqEyzFmathAc:
+.L_after_reduction_767:
+	jmp	.L_last_blocks_done_737
+.L_last_num_blocks_is_16_737:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$240,%r15d
-	jae	.L_16_blocks_overflow_xCirgbdmwFadphq
+	jae	.L_16_blocks_overflow_768
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_xCirgbdmwFadphq
+	jmp	.L_16_blocks_ok_768
 
-.L_16_blocks_overflow_xCirgbdmwFadphq:
+.L_16_blocks_overflow_768:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -105573,7 +105573,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_xCirgbdmwFadphq:
+.L_16_blocks_ok_768:
 
 
 
@@ -105733,7 +105733,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm21,%zmm21
 	vextracti32x4	$3,%zmm21,%xmm7
 	subq	$16 * (16 - 1),%r8
-.L_small_initial_partial_block_AFdzygrAdvxioki:
+.L_small_initial_partial_block_769:
 
 
 
@@ -105803,11 +105803,11 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_AFdzygrAdvxioki:
+.L_small_initial_compute_done_769:
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_AFdzygrAdvxioki:
-	jmp	.L_last_blocks_done_bwqbqEyzFmathAc
-.L_last_num_blocks_is_0_bwqbqEyzFmathAc:
+.L_after_reduction_769:
+	jmp	.L_last_blocks_done_737
+.L_last_num_blocks_is_0_737:
 	vmovdqa64	1280(%rsp),%zmm13
 	vmovdqu64	512(%rsp),%zmm12
 	vpclmulqdq	$0x11,%zmm12,%zmm13,%zmm0
@@ -105868,18 +105868,18 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm24,%xmm3,%xmm14
 
-.L_last_blocks_done_bwqbqEyzFmathAc:
+.L_last_blocks_done_737:
 	vpshufb	%xmm29,%xmm2,%xmm2
-	jmp	.L_ghash_done_EzeEqCiibleghsn
+	jmp	.L_ghash_done_659
 
-.L_message_below_32_blocks_EzeEqCiibleghsn:
+.L_message_below_32_blocks_659:
 
 
 	subq	$256,%r8
 	addq	$256,%r11
 	movl	%r8d,%r10d
 	testq	%r14,%r14
-	jnz	.L_skip_hkeys_precomputation_AtroafBEsdEFCdm
+	jnz	.L_skip_hkeys_precomputation_770
 	vmovdqu64	640(%rsp),%zmm3
 
 
@@ -106007,7 +106007,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpternlogq	$0x96,%zmm7,%zmm6,%zmm5
 
 	vmovdqu64	%zmm5,256(%rsp)
-.L_skip_hkeys_precomputation_AtroafBEsdEFCdm:
+.L_skip_hkeys_precomputation_770:
 	movq	$1,%r14
 	andl	$~15,%r10d
 	movl	$512,%ebx
@@ -106015,61 +106015,61 @@ ossl_aes_gcm_decrypt_avx512:
 	movl	%r8d,%r10d
 	addl	$15,%r10d
 	shrl	$4,%r10d
-	je	.L_last_num_blocks_is_0_zGdCBEiybwnDAAi
+	je	.L_last_num_blocks_is_0_771
 
 	cmpl	$8,%r10d
-	je	.L_last_num_blocks_is_8_zGdCBEiybwnDAAi
-	jb	.L_last_num_blocks_is_7_1_zGdCBEiybwnDAAi
+	je	.L_last_num_blocks_is_8_771
+	jb	.L_last_num_blocks_is_7_1_771
 
 
 	cmpl	$12,%r10d
-	je	.L_last_num_blocks_is_12_zGdCBEiybwnDAAi
-	jb	.L_last_num_blocks_is_11_9_zGdCBEiybwnDAAi
+	je	.L_last_num_blocks_is_12_771
+	jb	.L_last_num_blocks_is_11_9_771
 
 
 	cmpl	$15,%r10d
-	je	.L_last_num_blocks_is_15_zGdCBEiybwnDAAi
-	ja	.L_last_num_blocks_is_16_zGdCBEiybwnDAAi
+	je	.L_last_num_blocks_is_15_771
+	ja	.L_last_num_blocks_is_16_771
 	cmpl	$14,%r10d
-	je	.L_last_num_blocks_is_14_zGdCBEiybwnDAAi
-	jmp	.L_last_num_blocks_is_13_zGdCBEiybwnDAAi
+	je	.L_last_num_blocks_is_14_771
+	jmp	.L_last_num_blocks_is_13_771
 
-.L_last_num_blocks_is_11_9_zGdCBEiybwnDAAi:
+.L_last_num_blocks_is_11_9_771:
 
 	cmpl	$10,%r10d
-	je	.L_last_num_blocks_is_10_zGdCBEiybwnDAAi
-	ja	.L_last_num_blocks_is_11_zGdCBEiybwnDAAi
-	jmp	.L_last_num_blocks_is_9_zGdCBEiybwnDAAi
+	je	.L_last_num_blocks_is_10_771
+	ja	.L_last_num_blocks_is_11_771
+	jmp	.L_last_num_blocks_is_9_771
 
-.L_last_num_blocks_is_7_1_zGdCBEiybwnDAAi:
+.L_last_num_blocks_is_7_1_771:
 	cmpl	$4,%r10d
-	je	.L_last_num_blocks_is_4_zGdCBEiybwnDAAi
-	jb	.L_last_num_blocks_is_3_1_zGdCBEiybwnDAAi
+	je	.L_last_num_blocks_is_4_771
+	jb	.L_last_num_blocks_is_3_1_771
 
 	cmpl	$6,%r10d
-	ja	.L_last_num_blocks_is_7_zGdCBEiybwnDAAi
-	je	.L_last_num_blocks_is_6_zGdCBEiybwnDAAi
-	jmp	.L_last_num_blocks_is_5_zGdCBEiybwnDAAi
+	ja	.L_last_num_blocks_is_7_771
+	je	.L_last_num_blocks_is_6_771
+	jmp	.L_last_num_blocks_is_5_771
 
-.L_last_num_blocks_is_3_1_zGdCBEiybwnDAAi:
+.L_last_num_blocks_is_3_1_771:
 
 	cmpl	$2,%r10d
-	ja	.L_last_num_blocks_is_3_zGdCBEiybwnDAAi
-	je	.L_last_num_blocks_is_2_zGdCBEiybwnDAAi
-.L_last_num_blocks_is_1_zGdCBEiybwnDAAi:
+	ja	.L_last_num_blocks_is_3_771
+	je	.L_last_num_blocks_is_2_771
+.L_last_num_blocks_is_1_771:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$255,%r15d
-	jae	.L_16_blocks_overflow_FxEDroEsbrnkdut
+	jae	.L_16_blocks_overflow_772
 	vpaddd	%xmm28,%xmm2,%xmm0
-	jmp	.L_16_blocks_ok_FxEDroEsbrnkdut
+	jmp	.L_16_blocks_ok_772
 
-.L_16_blocks_overflow_FxEDroEsbrnkdut:
+.L_16_blocks_overflow_772:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%xmm29,%xmm0,%xmm0
-.L_16_blocks_ok_FxEDroEsbrnkdut:
+.L_16_blocks_ok_772:
 
 
 
@@ -106157,7 +106157,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_palkagzprgooilA
+	jl	.L_small_initial_partial_block_773
 
 
 
@@ -106201,8 +106201,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_palkagzprgooilA
-.L_small_initial_partial_block_palkagzprgooilA:
+	jmp	.L_small_initial_compute_done_773
+.L_small_initial_partial_block_773:
 
 
 
@@ -106254,24 +106254,24 @@ ossl_aes_gcm_decrypt_avx512:
 
 	vpxorq	%xmm7,%xmm14,%xmm14
 
-	jmp	.L_after_reduction_palkagzprgooilA
-.L_small_initial_compute_done_palkagzprgooilA:
-.L_after_reduction_palkagzprgooilA:
-	jmp	.L_last_blocks_done_zGdCBEiybwnDAAi
-.L_last_num_blocks_is_2_zGdCBEiybwnDAAi:
+	jmp	.L_after_reduction_773
+.L_small_initial_compute_done_773:
+.L_after_reduction_773:
+	jmp	.L_last_blocks_done_771
+.L_last_num_blocks_is_2_771:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$254,%r15d
-	jae	.L_16_blocks_overflow_fDgGAqoaaCbaAwa
+	jae	.L_16_blocks_overflow_774
 	vpaddd	%ymm28,%ymm2,%ymm0
-	jmp	.L_16_blocks_ok_fDgGAqoaaCbaAwa
+	jmp	.L_16_blocks_ok_774
 
-.L_16_blocks_overflow_fDgGAqoaaCbaAwa:
+.L_16_blocks_overflow_774:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%ymm29,%ymm0,%ymm0
-.L_16_blocks_ok_fDgGAqoaaCbaAwa:
+.L_16_blocks_ok_774:
 
 
 
@@ -106360,7 +106360,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_EoCmzsFcvzjdcie
+	jl	.L_small_initial_partial_block_775
 
 
 
@@ -106404,8 +106404,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_EoCmzsFcvzjdcie
-.L_small_initial_partial_block_EoCmzsFcvzjdcie:
+	jmp	.L_small_initial_compute_done_775
+.L_small_initial_partial_block_775:
 
 
 
@@ -106452,27 +106452,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_EoCmzsFcvzjdcie:
+.L_small_initial_compute_done_775:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_EoCmzsFcvzjdcie
+	je	.L_after_reduction_775
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_EoCmzsFcvzjdcie:
-	jmp	.L_last_blocks_done_zGdCBEiybwnDAAi
-.L_last_num_blocks_is_3_zGdCBEiybwnDAAi:
+.L_after_reduction_775:
+	jmp	.L_last_blocks_done_771
+.L_last_num_blocks_is_3_771:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$253,%r15d
-	jae	.L_16_blocks_overflow_xoDrrDymqemfidA
+	jae	.L_16_blocks_overflow_776
 	vpaddd	%zmm28,%zmm2,%zmm0
-	jmp	.L_16_blocks_ok_xoDrrDymqemfidA
+	jmp	.L_16_blocks_ok_776
 
-.L_16_blocks_overflow_xoDrrDymqemfidA:
+.L_16_blocks_overflow_776:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%zmm29,%zmm0,%zmm0
-.L_16_blocks_ok_xoDrrDymqemfidA:
+.L_16_blocks_ok_776:
 
 
 
@@ -106561,7 +106561,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_nkkigkEpFfvxyif
+	jl	.L_small_initial_partial_block_777
 
 
 
@@ -106606,8 +106606,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_nkkigkEpFfvxyif
-.L_small_initial_partial_block_nkkigkEpFfvxyif:
+	jmp	.L_small_initial_compute_done_777
+.L_small_initial_partial_block_777:
 
 
 
@@ -106654,27 +106654,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_nkkigkEpFfvxyif:
+.L_small_initial_compute_done_777:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_nkkigkEpFfvxyif
+	je	.L_after_reduction_777
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_nkkigkEpFfvxyif:
-	jmp	.L_last_blocks_done_zGdCBEiybwnDAAi
-.L_last_num_blocks_is_4_zGdCBEiybwnDAAi:
+.L_after_reduction_777:
+	jmp	.L_last_blocks_done_771
+.L_last_num_blocks_is_4_771:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$252,%r15d
-	jae	.L_16_blocks_overflow_EnoxEoGzqplnFab
+	jae	.L_16_blocks_overflow_778
 	vpaddd	%zmm28,%zmm2,%zmm0
-	jmp	.L_16_blocks_ok_EnoxEoGzqplnFab
+	jmp	.L_16_blocks_ok_778
 
-.L_16_blocks_overflow_EnoxEoGzqplnFab:
+.L_16_blocks_overflow_778:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%zmm29,%zmm0,%zmm0
-.L_16_blocks_ok_EnoxEoGzqplnFab:
+.L_16_blocks_ok_778:
 
 
 
@@ -106763,7 +106763,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_kzcejezBzAcfpqE
+	jl	.L_small_initial_partial_block_779
 
 
 
@@ -106808,8 +106808,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_kzcejezBzAcfpqE
-.L_small_initial_partial_block_kzcejezBzAcfpqE:
+	jmp	.L_small_initial_compute_done_779
+.L_small_initial_partial_block_779:
 
 
 
@@ -106857,32 +106857,32 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_kzcejezBzAcfpqE:
+.L_small_initial_compute_done_779:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_kzcejezBzAcfpqE
+	je	.L_after_reduction_779
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_kzcejezBzAcfpqE:
-	jmp	.L_last_blocks_done_zGdCBEiybwnDAAi
-.L_last_num_blocks_is_5_zGdCBEiybwnDAAi:
+.L_after_reduction_779:
+	jmp	.L_last_blocks_done_771
+.L_last_num_blocks_is_5_771:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$251,%r15d
-	jae	.L_16_blocks_overflow_rEkrwgvFnDbtylf
+	jae	.L_16_blocks_overflow_780
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%xmm27,%xmm0,%xmm3
-	jmp	.L_16_blocks_ok_rEkrwgvFnDbtylf
+	jmp	.L_16_blocks_ok_780
 
-.L_16_blocks_overflow_rEkrwgvFnDbtylf:
+.L_16_blocks_overflow_780:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%xmm29,%xmm3,%xmm3
-.L_16_blocks_ok_rEkrwgvFnDbtylf:
+.L_16_blocks_ok_780:
 
 
 
@@ -106988,7 +106988,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_smfinaaqEdcwblk
+	jl	.L_small_initial_partial_block_781
 
 
 
@@ -107039,8 +107039,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_smfinaaqEdcwblk
-.L_small_initial_partial_block_smfinaaqEdcwblk:
+	jmp	.L_small_initial_compute_done_781
+.L_small_initial_partial_block_781:
 
 
 
@@ -107088,32 +107088,32 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_smfinaaqEdcwblk:
+.L_small_initial_compute_done_781:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_smfinaaqEdcwblk
+	je	.L_after_reduction_781
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_smfinaaqEdcwblk:
-	jmp	.L_last_blocks_done_zGdCBEiybwnDAAi
-.L_last_num_blocks_is_6_zGdCBEiybwnDAAi:
+.L_after_reduction_781:
+	jmp	.L_last_blocks_done_771
+.L_last_num_blocks_is_6_771:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$250,%r15d
-	jae	.L_16_blocks_overflow_CrdzmtEcpFvFqBv
+	jae	.L_16_blocks_overflow_782
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%ymm27,%ymm0,%ymm3
-	jmp	.L_16_blocks_ok_CrdzmtEcpFvFqBv
+	jmp	.L_16_blocks_ok_782
 
-.L_16_blocks_overflow_CrdzmtEcpFvFqBv:
+.L_16_blocks_overflow_782:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%ymm29,%ymm3,%ymm3
-.L_16_blocks_ok_CrdzmtEcpFvFqBv:
+.L_16_blocks_ok_782:
 
 
 
@@ -107219,7 +107219,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_gFdgvdpwnBsABEj
+	jl	.L_small_initial_partial_block_783
 
 
 
@@ -107270,8 +107270,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_gFdgvdpwnBsABEj
-.L_small_initial_partial_block_gFdgvdpwnBsABEj:
+	jmp	.L_small_initial_compute_done_783
+.L_small_initial_partial_block_783:
 
 
 
@@ -107325,32 +107325,32 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_gFdgvdpwnBsABEj:
+.L_small_initial_compute_done_783:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_gFdgvdpwnBsABEj
+	je	.L_after_reduction_783
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_gFdgvdpwnBsABEj:
-	jmp	.L_last_blocks_done_zGdCBEiybwnDAAi
-.L_last_num_blocks_is_7_zGdCBEiybwnDAAi:
+.L_after_reduction_783:
+	jmp	.L_last_blocks_done_771
+.L_last_num_blocks_is_7_771:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$249,%r15d
-	jae	.L_16_blocks_overflow_yuqvqtDduqymroe
+	jae	.L_16_blocks_overflow_784
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
-	jmp	.L_16_blocks_ok_yuqvqtDduqymroe
+	jmp	.L_16_blocks_ok_784
 
-.L_16_blocks_overflow_yuqvqtDduqymroe:
+.L_16_blocks_overflow_784:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
-.L_16_blocks_ok_yuqvqtDduqymroe:
+.L_16_blocks_ok_784:
 
 
 
@@ -107456,7 +107456,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_rGwpfyGGtjkjFzB
+	jl	.L_small_initial_partial_block_785
 
 
 
@@ -107508,8 +107508,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_rGwpfyGGtjkjFzB
-.L_small_initial_partial_block_rGwpfyGGtjkjFzB:
+	jmp	.L_small_initial_compute_done_785
+.L_small_initial_partial_block_785:
 
 
 
@@ -107563,32 +107563,32 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_rGwpfyGGtjkjFzB:
+.L_small_initial_compute_done_785:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_rGwpfyGGtjkjFzB
+	je	.L_after_reduction_785
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_rGwpfyGGtjkjFzB:
-	jmp	.L_last_blocks_done_zGdCBEiybwnDAAi
-.L_last_num_blocks_is_8_zGdCBEiybwnDAAi:
+.L_after_reduction_785:
+	jmp	.L_last_blocks_done_771
+.L_last_num_blocks_is_8_771:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$248,%r15d
-	jae	.L_16_blocks_overflow_lGaCtfFwxiurgAm
+	jae	.L_16_blocks_overflow_786
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
-	jmp	.L_16_blocks_ok_lGaCtfFwxiurgAm
+	jmp	.L_16_blocks_ok_786
 
-.L_16_blocks_overflow_lGaCtfFwxiurgAm:
+.L_16_blocks_overflow_786:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
-.L_16_blocks_ok_lGaCtfFwxiurgAm:
+.L_16_blocks_ok_786:
 
 
 
@@ -107694,7 +107694,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_qFhucfqqplyubxA
+	jl	.L_small_initial_partial_block_787
 
 
 
@@ -107748,8 +107748,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_qFhucfqqplyubxA
-.L_small_initial_partial_block_qFhucfqqplyubxA:
+	jmp	.L_small_initial_compute_done_787
+.L_small_initial_partial_block_787:
 
 
 
@@ -107804,26 +107804,26 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_qFhucfqqplyubxA:
+.L_small_initial_compute_done_787:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_qFhucfqqplyubxA
+	je	.L_after_reduction_787
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_qFhucfqqplyubxA:
-	jmp	.L_last_blocks_done_zGdCBEiybwnDAAi
-.L_last_num_blocks_is_9_zGdCBEiybwnDAAi:
+.L_after_reduction_787:
+	jmp	.L_last_blocks_done_771
+.L_last_num_blocks_is_9_771:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$247,%r15d
-	jae	.L_16_blocks_overflow_mvfnjafesEvrtuw
+	jae	.L_16_blocks_overflow_788
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%xmm27,%xmm3,%xmm4
-	jmp	.L_16_blocks_ok_mvfnjafesEvrtuw
+	jmp	.L_16_blocks_ok_788
 
-.L_16_blocks_overflow_mvfnjafesEvrtuw:
+.L_16_blocks_overflow_788:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -107832,7 +107832,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%xmm29,%xmm4,%xmm4
-.L_16_blocks_ok_mvfnjafesEvrtuw:
+.L_16_blocks_ok_788:
 
 
 
@@ -107955,7 +107955,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_ujidCgdvCmrxtpa
+	jl	.L_small_initial_partial_block_789
 
 
 
@@ -108015,8 +108015,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_ujidCgdvCmrxtpa
-.L_small_initial_partial_block_ujidCgdvCmrxtpa:
+	jmp	.L_small_initial_compute_done_789
+.L_small_initial_partial_block_789:
 
 
 
@@ -108073,26 +108073,26 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_ujidCgdvCmrxtpa:
+.L_small_initial_compute_done_789:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_ujidCgdvCmrxtpa
+	je	.L_after_reduction_789
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_ujidCgdvCmrxtpa:
-	jmp	.L_last_blocks_done_zGdCBEiybwnDAAi
-.L_last_num_blocks_is_10_zGdCBEiybwnDAAi:
+.L_after_reduction_789:
+	jmp	.L_last_blocks_done_771
+.L_last_num_blocks_is_10_771:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$246,%r15d
-	jae	.L_16_blocks_overflow_sijCiuycdzDtGqi
+	jae	.L_16_blocks_overflow_790
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%ymm27,%ymm3,%ymm4
-	jmp	.L_16_blocks_ok_sijCiuycdzDtGqi
+	jmp	.L_16_blocks_ok_790
 
-.L_16_blocks_overflow_sijCiuycdzDtGqi:
+.L_16_blocks_overflow_790:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -108101,7 +108101,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%ymm29,%ymm4,%ymm4
-.L_16_blocks_ok_sijCiuycdzDtGqi:
+.L_16_blocks_ok_790:
 
 
 
@@ -108224,7 +108224,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_nooiDGzikEfhFfe
+	jl	.L_small_initial_partial_block_791
 
 
 
@@ -108284,8 +108284,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_nooiDGzikEfhFfe
-.L_small_initial_partial_block_nooiDGzikEfhFfe:
+	jmp	.L_small_initial_compute_done_791
+.L_small_initial_partial_block_791:
 
 
 
@@ -108348,26 +108348,26 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_nooiDGzikEfhFfe:
+.L_small_initial_compute_done_791:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_nooiDGzikEfhFfe
+	je	.L_after_reduction_791
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_nooiDGzikEfhFfe:
-	jmp	.L_last_blocks_done_zGdCBEiybwnDAAi
-.L_last_num_blocks_is_11_zGdCBEiybwnDAAi:
+.L_after_reduction_791:
+	jmp	.L_last_blocks_done_771
+.L_last_num_blocks_is_11_771:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$245,%r15d
-	jae	.L_16_blocks_overflow_hamipvoftkFkjot
+	jae	.L_16_blocks_overflow_792
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
-	jmp	.L_16_blocks_ok_hamipvoftkFkjot
+	jmp	.L_16_blocks_ok_792
 
-.L_16_blocks_overflow_hamipvoftkFkjot:
+.L_16_blocks_overflow_792:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -108376,7 +108376,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
-.L_16_blocks_ok_hamipvoftkFkjot:
+.L_16_blocks_ok_792:
 
 
 
@@ -108499,7 +108499,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_exmwiyddrbifrsk
+	jl	.L_small_initial_partial_block_793
 
 
 
@@ -108560,8 +108560,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_exmwiyddrbifrsk
-.L_small_initial_partial_block_exmwiyddrbifrsk:
+	jmp	.L_small_initial_compute_done_793
+.L_small_initial_partial_block_793:
 
 
 
@@ -108624,26 +108624,26 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_exmwiyddrbifrsk:
+.L_small_initial_compute_done_793:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_exmwiyddrbifrsk
+	je	.L_after_reduction_793
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_exmwiyddrbifrsk:
-	jmp	.L_last_blocks_done_zGdCBEiybwnDAAi
-.L_last_num_blocks_is_12_zGdCBEiybwnDAAi:
+.L_after_reduction_793:
+	jmp	.L_last_blocks_done_771
+.L_last_num_blocks_is_12_771:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$244,%r15d
-	jae	.L_16_blocks_overflow_parbDFFrzfqvBtt
+	jae	.L_16_blocks_overflow_794
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
-	jmp	.L_16_blocks_ok_parbDFFrzfqvBtt
+	jmp	.L_16_blocks_ok_794
 
-.L_16_blocks_overflow_parbDFFrzfqvBtt:
+.L_16_blocks_overflow_794:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -108652,7 +108652,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
-.L_16_blocks_ok_parbDFFrzfqvBtt:
+.L_16_blocks_ok_794:
 
 
 
@@ -108775,7 +108775,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_nxnitznegvbvbhh
+	jl	.L_small_initial_partial_block_795
 
 
 
@@ -108834,8 +108834,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_nxnitznegvbvbhh
-.L_small_initial_partial_block_nxnitznegvbvbhh:
+	jmp	.L_small_initial_compute_done_795
+.L_small_initial_partial_block_795:
 
 
 
@@ -108899,27 +108899,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_nxnitznegvbvbhh:
+.L_small_initial_compute_done_795:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_nxnitznegvbvbhh
+	je	.L_after_reduction_795
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_nxnitznegvbvbhh:
-	jmp	.L_last_blocks_done_zGdCBEiybwnDAAi
-.L_last_num_blocks_is_13_zGdCBEiybwnDAAi:
+.L_after_reduction_795:
+	jmp	.L_last_blocks_done_771
+.L_last_num_blocks_is_13_771:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$243,%r15d
-	jae	.L_16_blocks_overflow_FzmhbidkDCCseqs
+	jae	.L_16_blocks_overflow_796
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%xmm27,%xmm4,%xmm5
-	jmp	.L_16_blocks_ok_FzmhbidkDCCseqs
+	jmp	.L_16_blocks_ok_796
 
-.L_16_blocks_overflow_FzmhbidkDCCseqs:
+.L_16_blocks_overflow_796:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -108930,7 +108930,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%xmm29,%xmm5,%xmm5
-.L_16_blocks_ok_FzmhbidkDCCseqs:
+.L_16_blocks_ok_796:
 
 
 
@@ -109070,7 +109070,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_svqhisjwzDCCnBD
+	jl	.L_small_initial_partial_block_797
 
 
 
@@ -109135,8 +109135,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_svqhisjwzDCCnBD
-.L_small_initial_partial_block_svqhisjwzDCCnBD:
+	jmp	.L_small_initial_compute_done_797
+.L_small_initial_partial_block_797:
 
 
 
@@ -109198,27 +109198,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_svqhisjwzDCCnBD:
+.L_small_initial_compute_done_797:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_svqhisjwzDCCnBD
+	je	.L_after_reduction_797
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_svqhisjwzDCCnBD:
-	jmp	.L_last_blocks_done_zGdCBEiybwnDAAi
-.L_last_num_blocks_is_14_zGdCBEiybwnDAAi:
+.L_after_reduction_797:
+	jmp	.L_last_blocks_done_771
+.L_last_num_blocks_is_14_771:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$242,%r15d
-	jae	.L_16_blocks_overflow_qbhvnxrnqEaGcrC
+	jae	.L_16_blocks_overflow_798
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%ymm27,%ymm4,%ymm5
-	jmp	.L_16_blocks_ok_qbhvnxrnqEaGcrC
+	jmp	.L_16_blocks_ok_798
 
-.L_16_blocks_overflow_qbhvnxrnqEaGcrC:
+.L_16_blocks_overflow_798:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -109229,7 +109229,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%ymm29,%ymm5,%ymm5
-.L_16_blocks_ok_qbhvnxrnqEaGcrC:
+.L_16_blocks_ok_798:
 
 
 
@@ -109369,7 +109369,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_GlkerxBnwFqnhbB
+	jl	.L_small_initial_partial_block_799
 
 
 
@@ -109434,8 +109434,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_GlkerxBnwFqnhbB
-.L_small_initial_partial_block_GlkerxBnwFqnhbB:
+	jmp	.L_small_initial_compute_done_799
+.L_small_initial_partial_block_799:
 
 
 
@@ -109503,27 +109503,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_GlkerxBnwFqnhbB:
+.L_small_initial_compute_done_799:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_GlkerxBnwFqnhbB
+	je	.L_after_reduction_799
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_GlkerxBnwFqnhbB:
-	jmp	.L_last_blocks_done_zGdCBEiybwnDAAi
-.L_last_num_blocks_is_15_zGdCBEiybwnDAAi:
+.L_after_reduction_799:
+	jmp	.L_last_blocks_done_771
+.L_last_num_blocks_is_15_771:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$241,%r15d
-	jae	.L_16_blocks_overflow_kEncwwyhDatAzmA
+	jae	.L_16_blocks_overflow_800
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_kEncwwyhDatAzmA
+	jmp	.L_16_blocks_ok_800
 
-.L_16_blocks_overflow_kEncwwyhDatAzmA:
+.L_16_blocks_overflow_800:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -109534,7 +109534,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_kEncwwyhDatAzmA:
+.L_16_blocks_ok_800:
 
 
 
@@ -109674,7 +109674,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_jaspjkwCfstGEqE
+	jl	.L_small_initial_partial_block_801
 
 
 
@@ -109740,8 +109740,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_jaspjkwCfstGEqE
-.L_small_initial_partial_block_jaspjkwCfstGEqE:
+	jmp	.L_small_initial_compute_done_801
+.L_small_initial_partial_block_801:
 
 
 
@@ -109809,27 +109809,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_jaspjkwCfstGEqE:
+.L_small_initial_compute_done_801:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_jaspjkwCfstGEqE
+	je	.L_after_reduction_801
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_jaspjkwCfstGEqE:
-	jmp	.L_last_blocks_done_zGdCBEiybwnDAAi
-.L_last_num_blocks_is_16_zGdCBEiybwnDAAi:
+.L_after_reduction_801:
+	jmp	.L_last_blocks_done_771
+.L_last_num_blocks_is_16_771:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$240,%r15d
-	jae	.L_16_blocks_overflow_nqsBrjBbEdouqvv
+	jae	.L_16_blocks_overflow_802
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_nqsBrjBbEdouqvv
+	jmp	.L_16_blocks_ok_802
 
-.L_16_blocks_overflow_nqsBrjBbEdouqvv:
+.L_16_blocks_overflow_802:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -109840,7 +109840,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_nqsBrjBbEdouqvv:
+.L_16_blocks_ok_802:
 
 
 
@@ -109977,7 +109977,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm21,%zmm21
 	vextracti32x4	$3,%zmm21,%xmm7
 	subq	$16 * (16 - 1),%r8
-.L_small_initial_partial_block_vxEhEpzckFefkEh:
+.L_small_initial_partial_block_803:
 
 
 
@@ -110046,11 +110046,11 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_vxEhEpzckFefkEh:
+.L_small_initial_compute_done_803:
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_vxEhEpzckFefkEh:
-	jmp	.L_last_blocks_done_zGdCBEiybwnDAAi
-.L_last_num_blocks_is_0_zGdCBEiybwnDAAi:
+.L_after_reduction_803:
+	jmp	.L_last_blocks_done_771
+.L_last_num_blocks_is_0_771:
 	vmovdqa64	768(%rsp),%zmm13
 	vpxorq	%zmm14,%zmm13,%zmm13
 	vmovdqu64	0(%rsp,%rbx,1),%zmm12
@@ -110112,65 +110112,65 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm24,%xmm3,%xmm14
 
-.L_last_blocks_done_zGdCBEiybwnDAAi:
+.L_last_blocks_done_771:
 	vpshufb	%xmm29,%xmm2,%xmm2
-	jmp	.L_ghash_done_EzeEqCiibleghsn
+	jmp	.L_ghash_done_659
 
-.L_message_below_equal_16_blocks_EzeEqCiibleghsn:
+.L_message_below_equal_16_blocks_659:
 
 
 	movl	%r8d,%r12d
 	addl	$15,%r12d
 	shrl	$4,%r12d
 	cmpq	$8,%r12
-	je	.L_small_initial_num_blocks_is_8_uguocdcokEpnmjy
-	jl	.L_small_initial_num_blocks_is_7_1_uguocdcokEpnmjy
+	je	.L_small_initial_num_blocks_is_8_804
+	jl	.L_small_initial_num_blocks_is_7_1_804
 
 
 	cmpq	$12,%r12
-	je	.L_small_initial_num_blocks_is_12_uguocdcokEpnmjy
-	jl	.L_small_initial_num_blocks_is_11_9_uguocdcokEpnmjy
+	je	.L_small_initial_num_blocks_is_12_804
+	jl	.L_small_initial_num_blocks_is_11_9_804
 
 
 	cmpq	$16,%r12
-	je	.L_small_initial_num_blocks_is_16_uguocdcokEpnmjy
+	je	.L_small_initial_num_blocks_is_16_804
 	cmpq	$15,%r12
-	je	.L_small_initial_num_blocks_is_15_uguocdcokEpnmjy
+	je	.L_small_initial_num_blocks_is_15_804
 	cmpq	$14,%r12
-	je	.L_small_initial_num_blocks_is_14_uguocdcokEpnmjy
-	jmp	.L_small_initial_num_blocks_is_13_uguocdcokEpnmjy
+	je	.L_small_initial_num_blocks_is_14_804
+	jmp	.L_small_initial_num_blocks_is_13_804
 
-.L_small_initial_num_blocks_is_11_9_uguocdcokEpnmjy:
+.L_small_initial_num_blocks_is_11_9_804:
 
 	cmpq	$11,%r12
-	je	.L_small_initial_num_blocks_is_11_uguocdcokEpnmjy
+	je	.L_small_initial_num_blocks_is_11_804
 	cmpq	$10,%r12
-	je	.L_small_initial_num_blocks_is_10_uguocdcokEpnmjy
-	jmp	.L_small_initial_num_blocks_is_9_uguocdcokEpnmjy
+	je	.L_small_initial_num_blocks_is_10_804
+	jmp	.L_small_initial_num_blocks_is_9_804
 
-.L_small_initial_num_blocks_is_7_1_uguocdcokEpnmjy:
+.L_small_initial_num_blocks_is_7_1_804:
 	cmpq	$4,%r12
-	je	.L_small_initial_num_blocks_is_4_uguocdcokEpnmjy
-	jl	.L_small_initial_num_blocks_is_3_1_uguocdcokEpnmjy
+	je	.L_small_initial_num_blocks_is_4_804
+	jl	.L_small_initial_num_blocks_is_3_1_804
 
 	cmpq	$7,%r12
-	je	.L_small_initial_num_blocks_is_7_uguocdcokEpnmjy
+	je	.L_small_initial_num_blocks_is_7_804
 	cmpq	$6,%r12
-	je	.L_small_initial_num_blocks_is_6_uguocdcokEpnmjy
-	jmp	.L_small_initial_num_blocks_is_5_uguocdcokEpnmjy
+	je	.L_small_initial_num_blocks_is_6_804
+	jmp	.L_small_initial_num_blocks_is_5_804
 
-.L_small_initial_num_blocks_is_3_1_uguocdcokEpnmjy:
+.L_small_initial_num_blocks_is_3_1_804:
 
 	cmpq	$3,%r12
-	je	.L_small_initial_num_blocks_is_3_uguocdcokEpnmjy
+	je	.L_small_initial_num_blocks_is_3_804
 	cmpq	$2,%r12
-	je	.L_small_initial_num_blocks_is_2_uguocdcokEpnmjy
+	je	.L_small_initial_num_blocks_is_2_804
 
 
 
 
 
-.L_small_initial_num_blocks_is_1_uguocdcokEpnmjy:
+.L_small_initial_num_blocks_is_1_804:
 	vmovdqa64	SHUF_MASK(%rip),%xmm29
 	vpaddd	ONE(%rip),%xmm2,%xmm0
 	leaq	byte64_len_to_mask_table(%rip),%r10
@@ -110215,7 +110215,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_DeaEuaqwxwliFud
+	jl	.L_small_initial_partial_block_805
 
 
 
@@ -110257,8 +110257,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_DeaEuaqwxwliFud
-.L_small_initial_partial_block_DeaEuaqwxwliFud:
+	jmp	.L_small_initial_compute_done_805
+.L_small_initial_partial_block_805:
 
 
 
@@ -110282,11 +110282,11 @@ ossl_aes_gcm_decrypt_avx512:
 
 	vpxorq	%xmm13,%xmm14,%xmm14
 
-	jmp	.L_after_reduction_DeaEuaqwxwliFud
-.L_small_initial_compute_done_DeaEuaqwxwliFud:
-.L_after_reduction_DeaEuaqwxwliFud:
-	jmp	.L_small_initial_blocks_encrypted_uguocdcokEpnmjy
-.L_small_initial_num_blocks_is_2_uguocdcokEpnmjy:
+	jmp	.L_after_reduction_805
+.L_small_initial_compute_done_805:
+.L_after_reduction_805:
+	jmp	.L_small_initial_blocks_encrypted_804
+.L_small_initial_num_blocks_is_2_804:
 	vmovdqa64	SHUF_MASK(%rip),%ymm29
 	vshufi64x2	$0,%ymm2,%ymm2,%ymm0
 	vpaddd	ddq_add_1234(%rip),%ymm0,%ymm0
@@ -110333,7 +110333,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_zeEGbjlDfqoEeAh
+	jl	.L_small_initial_partial_block_806
 
 
 
@@ -110375,8 +110375,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_zeEGbjlDfqoEeAh
-.L_small_initial_partial_block_zeEGbjlDfqoEeAh:
+	jmp	.L_small_initial_compute_done_806
+.L_small_initial_partial_block_806:
 
 
 
@@ -110421,14 +110421,14 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_zeEGbjlDfqoEeAh:
+.L_small_initial_compute_done_806:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_zeEGbjlDfqoEeAh
+	je	.L_after_reduction_806
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_zeEGbjlDfqoEeAh:
-	jmp	.L_small_initial_blocks_encrypted_uguocdcokEpnmjy
-.L_small_initial_num_blocks_is_3_uguocdcokEpnmjy:
+.L_after_reduction_806:
+	jmp	.L_small_initial_blocks_encrypted_804
+.L_small_initial_num_blocks_is_3_804:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -110475,7 +110475,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_kjmgdlDyFwCbEAu
+	jl	.L_small_initial_partial_block_807
 
 
 
@@ -110518,8 +110518,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_kjmgdlDyFwCbEAu
-.L_small_initial_partial_block_kjmgdlDyFwCbEAu:
+	jmp	.L_small_initial_compute_done_807
+.L_small_initial_partial_block_807:
 
 
 
@@ -110564,14 +110564,14 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_kjmgdlDyFwCbEAu:
+.L_small_initial_compute_done_807:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_kjmgdlDyFwCbEAu
+	je	.L_after_reduction_807
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_kjmgdlDyFwCbEAu:
-	jmp	.L_small_initial_blocks_encrypted_uguocdcokEpnmjy
-.L_small_initial_num_blocks_is_4_uguocdcokEpnmjy:
+.L_after_reduction_807:
+	jmp	.L_small_initial_blocks_encrypted_804
+.L_small_initial_num_blocks_is_4_804:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -110618,7 +110618,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_ybdoAnBdcpmDocn
+	jl	.L_small_initial_partial_block_808
 
 
 
@@ -110660,8 +110660,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_ybdoAnBdcpmDocn
-.L_small_initial_partial_block_ybdoAnBdcpmDocn:
+	jmp	.L_small_initial_compute_done_808
+.L_small_initial_partial_block_808:
 
 
 
@@ -110707,14 +110707,14 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_ybdoAnBdcpmDocn:
+.L_small_initial_compute_done_808:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_ybdoAnBdcpmDocn
+	je	.L_after_reduction_808
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_ybdoAnBdcpmDocn:
-	jmp	.L_small_initial_blocks_encrypted_uguocdcokEpnmjy
-.L_small_initial_num_blocks_is_5_uguocdcokEpnmjy:
+.L_after_reduction_808:
+	jmp	.L_small_initial_blocks_encrypted_804
+.L_small_initial_num_blocks_is_5_804:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -110781,7 +110781,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_CsqvrAcxlBrwGxv
+	jl	.L_small_initial_partial_block_809
 
 
 
@@ -110833,8 +110833,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_CsqvrAcxlBrwGxv
-.L_small_initial_partial_block_CsqvrAcxlBrwGxv:
+	jmp	.L_small_initial_compute_done_809
+.L_small_initial_partial_block_809:
 
 
 
@@ -110879,14 +110879,14 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_CsqvrAcxlBrwGxv:
+.L_small_initial_compute_done_809:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_CsqvrAcxlBrwGxv
+	je	.L_after_reduction_809
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_CsqvrAcxlBrwGxv:
-	jmp	.L_small_initial_blocks_encrypted_uguocdcokEpnmjy
-.L_small_initial_num_blocks_is_6_uguocdcokEpnmjy:
+.L_after_reduction_809:
+	jmp	.L_small_initial_blocks_encrypted_804
+.L_small_initial_num_blocks_is_6_804:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -110953,7 +110953,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_icixbolBvgdkdCa
+	jl	.L_small_initial_partial_block_810
 
 
 
@@ -111005,8 +111005,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_icixbolBvgdkdCa
-.L_small_initial_partial_block_icixbolBvgdkdCa:
+	jmp	.L_small_initial_compute_done_810
+.L_small_initial_partial_block_810:
 
 
 
@@ -111061,14 +111061,14 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_icixbolBvgdkdCa:
+.L_small_initial_compute_done_810:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_icixbolBvgdkdCa
+	je	.L_after_reduction_810
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_icixbolBvgdkdCa:
-	jmp	.L_small_initial_blocks_encrypted_uguocdcokEpnmjy
-.L_small_initial_num_blocks_is_7_uguocdcokEpnmjy:
+.L_after_reduction_810:
+	jmp	.L_small_initial_blocks_encrypted_804
+.L_small_initial_num_blocks_is_7_804:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -111135,7 +111135,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_tolGblpuEEldpux
+	jl	.L_small_initial_partial_block_811
 
 
 
@@ -111188,8 +111188,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_tolGblpuEEldpux
-.L_small_initial_partial_block_tolGblpuEEldpux:
+	jmp	.L_small_initial_compute_done_811
+.L_small_initial_partial_block_811:
 
 
 
@@ -111244,14 +111244,14 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_tolGblpuEEldpux:
+.L_small_initial_compute_done_811:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_tolGblpuEEldpux
+	je	.L_after_reduction_811
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_tolGblpuEEldpux:
-	jmp	.L_small_initial_blocks_encrypted_uguocdcokEpnmjy
-.L_small_initial_num_blocks_is_8_uguocdcokEpnmjy:
+.L_after_reduction_811:
+	jmp	.L_small_initial_blocks_encrypted_804
+.L_small_initial_num_blocks_is_8_804:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -111318,7 +111318,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_fitvEFDkloczDFj
+	jl	.L_small_initial_partial_block_812
 
 
 
@@ -111369,8 +111369,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_fitvEFDkloczDFj
-.L_small_initial_partial_block_fitvEFDkloczDFj:
+	jmp	.L_small_initial_compute_done_812
+.L_small_initial_partial_block_812:
 
 
 
@@ -111426,14 +111426,14 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_fitvEFDkloczDFj:
+.L_small_initial_compute_done_812:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_fitvEFDkloczDFj
+	je	.L_after_reduction_812
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_fitvEFDkloczDFj:
-	jmp	.L_small_initial_blocks_encrypted_uguocdcokEpnmjy
-.L_small_initial_num_blocks_is_9_uguocdcokEpnmjy:
+.L_after_reduction_812:
+	jmp	.L_small_initial_blocks_encrypted_804
+.L_small_initial_num_blocks_is_9_804:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -111519,7 +111519,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_xehjqAqfvmmecxy
+	jl	.L_small_initial_partial_block_813
 
 
 
@@ -111580,8 +111580,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_xehjqAqfvmmecxy
-.L_small_initial_partial_block_xehjqAqfvmmecxy:
+	jmp	.L_small_initial_compute_done_813
+.L_small_initial_partial_block_813:
 
 
 
@@ -111635,14 +111635,14 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_xehjqAqfvmmecxy:
+.L_small_initial_compute_done_813:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_xehjqAqfvmmecxy
+	je	.L_after_reduction_813
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_xehjqAqfvmmecxy:
-	jmp	.L_small_initial_blocks_encrypted_uguocdcokEpnmjy
-.L_small_initial_num_blocks_is_10_uguocdcokEpnmjy:
+.L_after_reduction_813:
+	jmp	.L_small_initial_blocks_encrypted_804
+.L_small_initial_num_blocks_is_10_804:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -111728,7 +111728,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_CjfugwxsApdsbuj
+	jl	.L_small_initial_partial_block_814
 
 
 
@@ -111789,8 +111789,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_CjfugwxsApdsbuj
-.L_small_initial_partial_block_CjfugwxsApdsbuj:
+	jmp	.L_small_initial_compute_done_814
+.L_small_initial_partial_block_814:
 
 
 
@@ -111854,14 +111854,14 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_CjfugwxsApdsbuj:
+.L_small_initial_compute_done_814:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_CjfugwxsApdsbuj
+	je	.L_after_reduction_814
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_CjfugwxsApdsbuj:
-	jmp	.L_small_initial_blocks_encrypted_uguocdcokEpnmjy
-.L_small_initial_num_blocks_is_11_uguocdcokEpnmjy:
+.L_after_reduction_814:
+	jmp	.L_small_initial_blocks_encrypted_804
+.L_small_initial_num_blocks_is_11_804:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -111947,7 +111947,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_hBmdnqrsjgblCED
+	jl	.L_small_initial_partial_block_815
 
 
 
@@ -112009,8 +112009,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_hBmdnqrsjgblCED
-.L_small_initial_partial_block_hBmdnqrsjgblCED:
+	jmp	.L_small_initial_compute_done_815
+.L_small_initial_partial_block_815:
 
 
 
@@ -112074,14 +112074,14 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_hBmdnqrsjgblCED:
+.L_small_initial_compute_done_815:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_hBmdnqrsjgblCED
+	je	.L_after_reduction_815
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_hBmdnqrsjgblCED:
-	jmp	.L_small_initial_blocks_encrypted_uguocdcokEpnmjy
-.L_small_initial_num_blocks_is_12_uguocdcokEpnmjy:
+.L_after_reduction_815:
+	jmp	.L_small_initial_blocks_encrypted_804
+.L_small_initial_num_blocks_is_12_804:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -112167,7 +112167,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_AqeGbibuyaosGju
+	jl	.L_small_initial_partial_block_816
 
 
 
@@ -112223,8 +112223,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_AqeGbibuyaosGju
-.L_small_initial_partial_block_AqeGbibuyaosGju:
+	jmp	.L_small_initial_compute_done_816
+.L_small_initial_partial_block_816:
 
 
 
@@ -112289,14 +112289,14 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_AqeGbibuyaosGju:
+.L_small_initial_compute_done_816:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_AqeGbibuyaosGju
+	je	.L_after_reduction_816
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_AqeGbibuyaosGju:
-	jmp	.L_small_initial_blocks_encrypted_uguocdcokEpnmjy
-.L_small_initial_num_blocks_is_13_uguocdcokEpnmjy:
+.L_after_reduction_816:
+	jmp	.L_small_initial_blocks_encrypted_804
+.L_small_initial_num_blocks_is_13_804:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -112401,7 +112401,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_DejowidehECliyC
+	jl	.L_small_initial_partial_block_817
 
 
 
@@ -112467,8 +112467,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_DejowidehECliyC
-.L_small_initial_partial_block_DejowidehECliyC:
+	jmp	.L_small_initial_compute_done_817
+.L_small_initial_partial_block_817:
 
 
 
@@ -112527,14 +112527,14 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_DejowidehECliyC:
+.L_small_initial_compute_done_817:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_DejowidehECliyC
+	je	.L_after_reduction_817
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_DejowidehECliyC:
-	jmp	.L_small_initial_blocks_encrypted_uguocdcokEpnmjy
-.L_small_initial_num_blocks_is_14_uguocdcokEpnmjy:
+.L_after_reduction_817:
+	jmp	.L_small_initial_blocks_encrypted_804
+.L_small_initial_num_blocks_is_14_804:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -112639,7 +112639,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_qxftApipErlhoBp
+	jl	.L_small_initial_partial_block_818
 
 
 
@@ -112705,8 +112705,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_qxftApipErlhoBp
-.L_small_initial_partial_block_qxftApipErlhoBp:
+	jmp	.L_small_initial_compute_done_818
+.L_small_initial_partial_block_818:
 
 
 
@@ -112775,14 +112775,14 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_qxftApipErlhoBp:
+.L_small_initial_compute_done_818:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_qxftApipErlhoBp
+	je	.L_after_reduction_818
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_qxftApipErlhoBp:
-	jmp	.L_small_initial_blocks_encrypted_uguocdcokEpnmjy
-.L_small_initial_num_blocks_is_15_uguocdcokEpnmjy:
+.L_after_reduction_818:
+	jmp	.L_small_initial_blocks_encrypted_804
+.L_small_initial_num_blocks_is_15_804:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -112887,7 +112887,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_FDxdndErhhsmFuD
+	jl	.L_small_initial_partial_block_819
 
 
 
@@ -112954,8 +112954,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_FDxdndErhhsmFuD
-.L_small_initial_partial_block_FDxdndErhhsmFuD:
+	jmp	.L_small_initial_compute_done_819
+.L_small_initial_partial_block_819:
 
 
 
@@ -113024,14 +113024,14 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_FDxdndErhhsmFuD:
+.L_small_initial_compute_done_819:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_FDxdndErhhsmFuD
+	je	.L_after_reduction_819
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_FDxdndErhhsmFuD:
-	jmp	.L_small_initial_blocks_encrypted_uguocdcokEpnmjy
-.L_small_initial_num_blocks_is_16_uguocdcokEpnmjy:
+.L_after_reduction_819:
+	jmp	.L_small_initial_blocks_encrypted_804
+.L_small_initial_num_blocks_is_16_804:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -113133,7 +113133,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm11,%zmm11
 	vextracti32x4	$3,%zmm11,%xmm13
 	subq	$16 * (16 - 1),%r8
-.L_small_initial_partial_block_drBwqslxDntwvlz:
+.L_small_initial_partial_block_820:
 
 
 
@@ -113203,25 +113203,25 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_drBwqslxDntwvlz:
+.L_small_initial_compute_done_820:
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_drBwqslxDntwvlz:
-.L_small_initial_blocks_encrypted_uguocdcokEpnmjy:
-.L_ghash_done_EzeEqCiibleghsn:
+.L_after_reduction_820:
+.L_small_initial_blocks_encrypted_804:
+.L_ghash_done_659:
 	vmovdqu64	%xmm2,0(%rsi)
 	vmovdqu64	%xmm14,64(%rsi)
-.L_enc_dec_done_EzeEqCiibleghsn:
+.L_enc_dec_done_659:
 	jmp	.Lexit_gcm_decrypt
 .align	32
 .Laes_gcm_decrypt_256_avx512:
 	orq	%r8,%r8
-	je	.L_enc_dec_done_BgFfAgFalCBiqtf
+	je	.L_enc_dec_done_821
 	xorq	%r14,%r14
 	vmovdqu64	64(%rsi),%xmm14
 
 	movq	(%rdx),%r11
 	orq	%r11,%r11
-	je	.L_partial_block_done_ietExhhcgDljsFr
+	je	.L_partial_block_done_822
 	movl	$16,%r10d
 	leaq	byte_len_to_mask_table(%rip),%r12
 	cmpq	%r10,%r8
@@ -113245,9 +113245,9 @@ ossl_aes_gcm_decrypt_avx512:
 
 	leaq	(%r8,%r11,1),%r13
 	subq	$16,%r13
-	jge	.L_no_extra_mask_ietExhhcgDljsFr
+	jge	.L_no_extra_mask_822
 	subq	%r13,%r12
-.L_no_extra_mask_ietExhhcgDljsFr:
+.L_no_extra_mask_822:
 
 
 
@@ -113258,7 +113258,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%xmm5,%xmm6,%xmm6
 	vpxorq	%xmm6,%xmm14,%xmm14
 	cmpq	$0,%r13
-	jl	.L_partial_incomplete_ietExhhcgDljsFr
+	jl	.L_partial_incomplete_822
 
 	vpclmulqdq	$0x11,%xmm4,%xmm14,%xmm7
 	vpclmulqdq	$0x00,%xmm4,%xmm14,%xmm10
@@ -113293,13 +113293,13 @@ ossl_aes_gcm_decrypt_avx512:
 	movq	%r11,%r12
 	movq	$16,%r11
 	subq	%r12,%r11
-	jmp	.L_enc_dec_done_ietExhhcgDljsFr
+	jmp	.L_enc_dec_done_822
 
-.L_partial_incomplete_ietExhhcgDljsFr:
+.L_partial_incomplete_822:
 	addq	%r8,(%rdx)
 	movq	%r8,%r11
 
-.L_enc_dec_done_ietExhhcgDljsFr:
+.L_enc_dec_done_822:
 
 
 	leaq	byte_len_to_mask_table(%rip),%r12
@@ -113307,12 +113307,12 @@ ossl_aes_gcm_decrypt_avx512:
 	vmovdqu64	%xmm14,64(%rsi)
 	movq	%r9,%r12
 	vmovdqu8	%xmm3,(%r12){%k1}
-.L_partial_block_done_ietExhhcgDljsFr:
+.L_partial_block_done_822:
 	vmovdqu64	0(%rsi),%xmm2
 	subq	%r11,%r8
-	je	.L_enc_dec_done_BgFfAgFalCBiqtf
+	je	.L_enc_dec_done_821
 	cmpq	$256,%r8
-	jbe	.L_message_below_equal_16_blocks_BgFfAgFalCBiqtf
+	jbe	.L_message_below_equal_16_blocks_821
 
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vmovdqa64	ddq_addbe_4444(%rip),%zmm27
@@ -113332,13 +113332,13 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpb	$240,%r15b
-	jae	.L_next_16_overflow_lmvpiqbBrlurcnA
+	jae	.L_next_16_overflow_823
 	vpaddd	%zmm28,%zmm2,%zmm7
 	vpaddd	%zmm27,%zmm7,%zmm10
 	vpaddd	%zmm27,%zmm10,%zmm11
 	vpaddd	%zmm27,%zmm11,%zmm12
-	jmp	.L_next_16_ok_lmvpiqbBrlurcnA
-.L_next_16_overflow_lmvpiqbBrlurcnA:
+	jmp	.L_next_16_ok_823
+.L_next_16_overflow_823:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vmovdqa64	ddq_add_4444(%rip),%zmm12
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm7
@@ -113349,7 +113349,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm10,%zmm10
 	vpshufb	%zmm29,%zmm11,%zmm11
 	vpshufb	%zmm29,%zmm12,%zmm12
-.L_next_16_ok_lmvpiqbBrlurcnA:
+.L_next_16_ok_823:
 	vshufi64x2	$255,%zmm12,%zmm12,%zmm2
 	addb	$16,%r15b
 
@@ -113457,7 +113457,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vmovdqa64	%zmm11,896(%rsp)
 	vmovdqa64	%zmm12,960(%rsp)
 	testq	%r14,%r14
-	jnz	.L_skip_hkeys_precomputation_kzephFbcxwFaFnk
+	jnz	.L_skip_hkeys_precomputation_824
 
 	vmovdqu64	288(%rsi),%zmm0
 	vmovdqu64	%zmm0,704(%rsp)
@@ -113473,20 +113473,20 @@ ossl_aes_gcm_decrypt_avx512:
 
 	vmovdqu64	96(%rsi),%zmm5
 	vmovdqu64	%zmm5,512(%rsp)
-.L_skip_hkeys_precomputation_kzephFbcxwFaFnk:
+.L_skip_hkeys_precomputation_824:
 	cmpq	$512,%r8
-	jb	.L_message_below_32_blocks_BgFfAgFalCBiqtf
+	jb	.L_message_below_32_blocks_821
 
 
 
 	cmpb	$240,%r15b
-	jae	.L_next_16_overflow_FEGbovkkcgjGrGw
+	jae	.L_next_16_overflow_825
 	vpaddd	%zmm28,%zmm2,%zmm7
 	vpaddd	%zmm27,%zmm7,%zmm10
 	vpaddd	%zmm27,%zmm10,%zmm11
 	vpaddd	%zmm27,%zmm11,%zmm12
-	jmp	.L_next_16_ok_FEGbovkkcgjGrGw
-.L_next_16_overflow_FEGbovkkcgjGrGw:
+	jmp	.L_next_16_ok_825
+.L_next_16_overflow_825:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vmovdqa64	ddq_add_4444(%rip),%zmm12
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm7
@@ -113497,7 +113497,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm10,%zmm10
 	vpshufb	%zmm29,%zmm11,%zmm11
 	vpshufb	%zmm29,%zmm12,%zmm12
-.L_next_16_ok_FEGbovkkcgjGrGw:
+.L_next_16_ok_825:
 	vshufi64x2	$255,%zmm12,%zmm12,%zmm2
 	addb	$16,%r15b
 
@@ -113605,7 +113605,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vmovdqa64	%zmm11,1152(%rsp)
 	vmovdqa64	%zmm12,1216(%rsp)
 	testq	%r14,%r14
-	jnz	.L_skip_hkeys_precomputation_GbbBjkinxxqFykE
+	jnz	.L_skip_hkeys_precomputation_826
 	vmovdqu64	640(%rsp),%zmm3
 
 
@@ -113853,22 +113853,22 @@ ossl_aes_gcm_decrypt_avx512:
 	vpternlogq	$0x96,%zmm7,%zmm6,%zmm5
 
 	vmovdqu64	%zmm5,0(%rsp)
-.L_skip_hkeys_precomputation_GbbBjkinxxqFykE:
+.L_skip_hkeys_precomputation_826:
 	movq	$1,%r14
 	addq	$512,%r11
 	subq	$512,%r8
 
 	cmpq	$768,%r8
-	jb	.L_no_more_big_nblocks_BgFfAgFalCBiqtf
-.L_encrypt_big_nblocks_BgFfAgFalCBiqtf:
+	jb	.L_no_more_big_nblocks_821
+.L_encrypt_big_nblocks_821:
 	cmpb	$240,%r15b
-	jae	.L_16_blocks_overflow_GjhrlamdEjDqito
+	jae	.L_16_blocks_overflow_827
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_GjhrlamdEjDqito
-.L_16_blocks_overflow_GjhrlamdEjDqito:
+	jmp	.L_16_blocks_ok_827
+.L_16_blocks_overflow_827:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -113879,7 +113879,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_GjhrlamdEjDqito:
+.L_16_blocks_ok_827:
 	vbroadcastf64x2	0(%rdi),%zmm30
 	vpxorq	768(%rsp),%zmm14,%zmm8
 	vmovdqu64	0(%rsp),%zmm1
@@ -114067,13 +114067,13 @@ ossl_aes_gcm_decrypt_avx512:
 	vmovdqa64	%zmm4,1408(%rsp)
 	vmovdqa64	%zmm5,1472(%rsp)
 	cmpb	$240,%r15b
-	jae	.L_16_blocks_overflow_bhgtflwnesEFDEG
+	jae	.L_16_blocks_overflow_828
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_bhgtflwnesEFDEG
-.L_16_blocks_overflow_bhgtflwnesEFDEG:
+	jmp	.L_16_blocks_ok_828
+.L_16_blocks_overflow_828:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -114084,7 +114084,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_bhgtflwnesEFDEG:
+.L_16_blocks_ok_828:
 	vbroadcastf64x2	0(%rdi),%zmm30
 	vmovdqa64	1024(%rsp),%zmm8
 	vmovdqu64	256(%rsp),%zmm1
@@ -114272,13 +114272,13 @@ ossl_aes_gcm_decrypt_avx512:
 	vmovdqa64	%zmm4,896(%rsp)
 	vmovdqa64	%zmm5,960(%rsp)
 	cmpb	$240,%r15b
-	jae	.L_16_blocks_overflow_nckpabxFgacrijF
+	jae	.L_16_blocks_overflow_829
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_nckpabxFgacrijF
-.L_16_blocks_overflow_nckpabxFgacrijF:
+	jmp	.L_16_blocks_ok_829
+.L_16_blocks_overflow_829:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -114289,7 +114289,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_nckpabxFgacrijF:
+.L_16_blocks_ok_829:
 	vbroadcastf64x2	0(%rdi),%zmm30
 	vmovdqa64	1280(%rsp),%zmm8
 	vmovdqu64	512(%rsp),%zmm1
@@ -114507,16 +114507,16 @@ ossl_aes_gcm_decrypt_avx512:
 	addq	$768,%r11
 	subq	$768,%r8
 	cmpq	$768,%r8
-	jae	.L_encrypt_big_nblocks_BgFfAgFalCBiqtf
+	jae	.L_encrypt_big_nblocks_821
 
-.L_no_more_big_nblocks_BgFfAgFalCBiqtf:
+.L_no_more_big_nblocks_821:
 
 	cmpq	$512,%r8
-	jae	.L_encrypt_32_blocks_BgFfAgFalCBiqtf
+	jae	.L_encrypt_32_blocks_821
 
 	cmpq	$256,%r8
-	jae	.L_encrypt_16_blocks_BgFfAgFalCBiqtf
-.L_encrypt_0_blocks_ghash_32_BgFfAgFalCBiqtf:
+	jae	.L_encrypt_16_blocks_821
+.L_encrypt_0_blocks_ghash_32_821:
 	movl	%r8d,%r10d
 	andl	$~15,%r10d
 	movl	$256,%ebx
@@ -114559,61 +114559,61 @@ ossl_aes_gcm_decrypt_avx512:
 	movl	%r8d,%r10d
 	addl	$15,%r10d
 	shrl	$4,%r10d
-	je	.L_last_num_blocks_is_0_obndhAGbhpDwcwD
+	je	.L_last_num_blocks_is_0_830
 
 	cmpl	$8,%r10d
-	je	.L_last_num_blocks_is_8_obndhAGbhpDwcwD
-	jb	.L_last_num_blocks_is_7_1_obndhAGbhpDwcwD
+	je	.L_last_num_blocks_is_8_830
+	jb	.L_last_num_blocks_is_7_1_830
 
 
 	cmpl	$12,%r10d
-	je	.L_last_num_blocks_is_12_obndhAGbhpDwcwD
-	jb	.L_last_num_blocks_is_11_9_obndhAGbhpDwcwD
+	je	.L_last_num_blocks_is_12_830
+	jb	.L_last_num_blocks_is_11_9_830
 
 
 	cmpl	$15,%r10d
-	je	.L_last_num_blocks_is_15_obndhAGbhpDwcwD
-	ja	.L_last_num_blocks_is_16_obndhAGbhpDwcwD
+	je	.L_last_num_blocks_is_15_830
+	ja	.L_last_num_blocks_is_16_830
 	cmpl	$14,%r10d
-	je	.L_last_num_blocks_is_14_obndhAGbhpDwcwD
-	jmp	.L_last_num_blocks_is_13_obndhAGbhpDwcwD
+	je	.L_last_num_blocks_is_14_830
+	jmp	.L_last_num_blocks_is_13_830
 
-.L_last_num_blocks_is_11_9_obndhAGbhpDwcwD:
+.L_last_num_blocks_is_11_9_830:
 
 	cmpl	$10,%r10d
-	je	.L_last_num_blocks_is_10_obndhAGbhpDwcwD
-	ja	.L_last_num_blocks_is_11_obndhAGbhpDwcwD
-	jmp	.L_last_num_blocks_is_9_obndhAGbhpDwcwD
+	je	.L_last_num_blocks_is_10_830
+	ja	.L_last_num_blocks_is_11_830
+	jmp	.L_last_num_blocks_is_9_830
 
-.L_last_num_blocks_is_7_1_obndhAGbhpDwcwD:
+.L_last_num_blocks_is_7_1_830:
 	cmpl	$4,%r10d
-	je	.L_last_num_blocks_is_4_obndhAGbhpDwcwD
-	jb	.L_last_num_blocks_is_3_1_obndhAGbhpDwcwD
+	je	.L_last_num_blocks_is_4_830
+	jb	.L_last_num_blocks_is_3_1_830
 
 	cmpl	$6,%r10d
-	ja	.L_last_num_blocks_is_7_obndhAGbhpDwcwD
-	je	.L_last_num_blocks_is_6_obndhAGbhpDwcwD
-	jmp	.L_last_num_blocks_is_5_obndhAGbhpDwcwD
+	ja	.L_last_num_blocks_is_7_830
+	je	.L_last_num_blocks_is_6_830
+	jmp	.L_last_num_blocks_is_5_830
 
-.L_last_num_blocks_is_3_1_obndhAGbhpDwcwD:
+.L_last_num_blocks_is_3_1_830:
 
 	cmpl	$2,%r10d
-	ja	.L_last_num_blocks_is_3_obndhAGbhpDwcwD
-	je	.L_last_num_blocks_is_2_obndhAGbhpDwcwD
-.L_last_num_blocks_is_1_obndhAGbhpDwcwD:
+	ja	.L_last_num_blocks_is_3_830
+	je	.L_last_num_blocks_is_2_830
+.L_last_num_blocks_is_1_830:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$255,%r15d
-	jae	.L_16_blocks_overflow_epjDmoeulFAzEai
+	jae	.L_16_blocks_overflow_831
 	vpaddd	%xmm28,%xmm2,%xmm0
-	jmp	.L_16_blocks_ok_epjDmoeulFAzEai
+	jmp	.L_16_blocks_ok_831
 
-.L_16_blocks_overflow_epjDmoeulFAzEai:
+.L_16_blocks_overflow_831:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%xmm29,%xmm0,%xmm0
-.L_16_blocks_ok_epjDmoeulFAzEai:
+.L_16_blocks_ok_831:
 
 
 
@@ -114705,7 +114705,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_xEqamgGjbbwccpa
+	jl	.L_small_initial_partial_block_832
 
 
 
@@ -114749,8 +114749,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_xEqamgGjbbwccpa
-.L_small_initial_partial_block_xEqamgGjbbwccpa:
+	jmp	.L_small_initial_compute_done_832
+.L_small_initial_partial_block_832:
 
 
 
@@ -114802,24 +114802,24 @@ ossl_aes_gcm_decrypt_avx512:
 
 	vpxorq	%xmm7,%xmm14,%xmm14
 
-	jmp	.L_after_reduction_xEqamgGjbbwccpa
-.L_small_initial_compute_done_xEqamgGjbbwccpa:
-.L_after_reduction_xEqamgGjbbwccpa:
-	jmp	.L_last_blocks_done_obndhAGbhpDwcwD
-.L_last_num_blocks_is_2_obndhAGbhpDwcwD:
+	jmp	.L_after_reduction_832
+.L_small_initial_compute_done_832:
+.L_after_reduction_832:
+	jmp	.L_last_blocks_done_830
+.L_last_num_blocks_is_2_830:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$254,%r15d
-	jae	.L_16_blocks_overflow_alAtdtziqAhxxcG
+	jae	.L_16_blocks_overflow_833
 	vpaddd	%ymm28,%ymm2,%ymm0
-	jmp	.L_16_blocks_ok_alAtdtziqAhxxcG
+	jmp	.L_16_blocks_ok_833
 
-.L_16_blocks_overflow_alAtdtziqAhxxcG:
+.L_16_blocks_overflow_833:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%ymm29,%ymm0,%ymm0
-.L_16_blocks_ok_alAtdtziqAhxxcG:
+.L_16_blocks_ok_833:
 
 
 
@@ -114912,7 +114912,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_gzbvnvddzhtadwC
+	jl	.L_small_initial_partial_block_834
 
 
 
@@ -114956,8 +114956,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_gzbvnvddzhtadwC
-.L_small_initial_partial_block_gzbvnvddzhtadwC:
+	jmp	.L_small_initial_compute_done_834
+.L_small_initial_partial_block_834:
 
 
 
@@ -115004,27 +115004,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_gzbvnvddzhtadwC:
+.L_small_initial_compute_done_834:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_gzbvnvddzhtadwC
+	je	.L_after_reduction_834
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_gzbvnvddzhtadwC:
-	jmp	.L_last_blocks_done_obndhAGbhpDwcwD
-.L_last_num_blocks_is_3_obndhAGbhpDwcwD:
+.L_after_reduction_834:
+	jmp	.L_last_blocks_done_830
+.L_last_num_blocks_is_3_830:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$253,%r15d
-	jae	.L_16_blocks_overflow_aFomtgvepzvzxiq
+	jae	.L_16_blocks_overflow_835
 	vpaddd	%zmm28,%zmm2,%zmm0
-	jmp	.L_16_blocks_ok_aFomtgvepzvzxiq
+	jmp	.L_16_blocks_ok_835
 
-.L_16_blocks_overflow_aFomtgvepzvzxiq:
+.L_16_blocks_overflow_835:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%zmm29,%zmm0,%zmm0
-.L_16_blocks_ok_aFomtgvepzvzxiq:
+.L_16_blocks_ok_835:
 
 
 
@@ -115117,7 +115117,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_DcACBlvyEkxyepf
+	jl	.L_small_initial_partial_block_836
 
 
 
@@ -115162,8 +115162,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_DcACBlvyEkxyepf
-.L_small_initial_partial_block_DcACBlvyEkxyepf:
+	jmp	.L_small_initial_compute_done_836
+.L_small_initial_partial_block_836:
 
 
 
@@ -115210,27 +115210,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_DcACBlvyEkxyepf:
+.L_small_initial_compute_done_836:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_DcACBlvyEkxyepf
+	je	.L_after_reduction_836
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_DcACBlvyEkxyepf:
-	jmp	.L_last_blocks_done_obndhAGbhpDwcwD
-.L_last_num_blocks_is_4_obndhAGbhpDwcwD:
+.L_after_reduction_836:
+	jmp	.L_last_blocks_done_830
+.L_last_num_blocks_is_4_830:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$252,%r15d
-	jae	.L_16_blocks_overflow_rbFvoGniysnxbfq
+	jae	.L_16_blocks_overflow_837
 	vpaddd	%zmm28,%zmm2,%zmm0
-	jmp	.L_16_blocks_ok_rbFvoGniysnxbfq
+	jmp	.L_16_blocks_ok_837
 
-.L_16_blocks_overflow_rbFvoGniysnxbfq:
+.L_16_blocks_overflow_837:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%zmm29,%zmm0,%zmm0
-.L_16_blocks_ok_rbFvoGniysnxbfq:
+.L_16_blocks_ok_837:
 
 
 
@@ -115323,7 +115323,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_FCFuahmbwioAgwe
+	jl	.L_small_initial_partial_block_838
 
 
 
@@ -115368,8 +115368,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_FCFuahmbwioAgwe
-.L_small_initial_partial_block_FCFuahmbwioAgwe:
+	jmp	.L_small_initial_compute_done_838
+.L_small_initial_partial_block_838:
 
 
 
@@ -115417,32 +115417,32 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_FCFuahmbwioAgwe:
+.L_small_initial_compute_done_838:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_FCFuahmbwioAgwe
+	je	.L_after_reduction_838
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_FCFuahmbwioAgwe:
-	jmp	.L_last_blocks_done_obndhAGbhpDwcwD
-.L_last_num_blocks_is_5_obndhAGbhpDwcwD:
+.L_after_reduction_838:
+	jmp	.L_last_blocks_done_830
+.L_last_num_blocks_is_5_830:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$251,%r15d
-	jae	.L_16_blocks_overflow_mCnedkbcelkfhgd
+	jae	.L_16_blocks_overflow_839
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%xmm27,%xmm0,%xmm3
-	jmp	.L_16_blocks_ok_mCnedkbcelkfhgd
+	jmp	.L_16_blocks_ok_839
 
-.L_16_blocks_overflow_mCnedkbcelkfhgd:
+.L_16_blocks_overflow_839:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%xmm29,%xmm3,%xmm3
-.L_16_blocks_ok_mCnedkbcelkfhgd:
+.L_16_blocks_ok_839:
 
 
 
@@ -115554,7 +115554,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_dhhhEzBrhyefkpb
+	jl	.L_small_initial_partial_block_840
 
 
 
@@ -115605,8 +115605,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_dhhhEzBrhyefkpb
-.L_small_initial_partial_block_dhhhEzBrhyefkpb:
+	jmp	.L_small_initial_compute_done_840
+.L_small_initial_partial_block_840:
 
 
 
@@ -115654,32 +115654,32 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_dhhhEzBrhyefkpb:
+.L_small_initial_compute_done_840:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_dhhhEzBrhyefkpb
+	je	.L_after_reduction_840
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_dhhhEzBrhyefkpb:
-	jmp	.L_last_blocks_done_obndhAGbhpDwcwD
-.L_last_num_blocks_is_6_obndhAGbhpDwcwD:
+.L_after_reduction_840:
+	jmp	.L_last_blocks_done_830
+.L_last_num_blocks_is_6_830:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$250,%r15d
-	jae	.L_16_blocks_overflow_DCGjrdfzAwhcjay
+	jae	.L_16_blocks_overflow_841
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%ymm27,%ymm0,%ymm3
-	jmp	.L_16_blocks_ok_DCGjrdfzAwhcjay
+	jmp	.L_16_blocks_ok_841
 
-.L_16_blocks_overflow_DCGjrdfzAwhcjay:
+.L_16_blocks_overflow_841:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%ymm29,%ymm3,%ymm3
-.L_16_blocks_ok_DCGjrdfzAwhcjay:
+.L_16_blocks_ok_841:
 
 
 
@@ -115791,7 +115791,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_GozpeluEtznBemc
+	jl	.L_small_initial_partial_block_842
 
 
 
@@ -115842,8 +115842,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_GozpeluEtznBemc
-.L_small_initial_partial_block_GozpeluEtznBemc:
+	jmp	.L_small_initial_compute_done_842
+.L_small_initial_partial_block_842:
 
 
 
@@ -115897,32 +115897,32 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_GozpeluEtznBemc:
+.L_small_initial_compute_done_842:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_GozpeluEtznBemc
+	je	.L_after_reduction_842
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_GozpeluEtznBemc:
-	jmp	.L_last_blocks_done_obndhAGbhpDwcwD
-.L_last_num_blocks_is_7_obndhAGbhpDwcwD:
+.L_after_reduction_842:
+	jmp	.L_last_blocks_done_830
+.L_last_num_blocks_is_7_830:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$249,%r15d
-	jae	.L_16_blocks_overflow_gyjpEtAobldqEEj
+	jae	.L_16_blocks_overflow_843
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
-	jmp	.L_16_blocks_ok_gyjpEtAobldqEEj
+	jmp	.L_16_blocks_ok_843
 
-.L_16_blocks_overflow_gyjpEtAobldqEEj:
+.L_16_blocks_overflow_843:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
-.L_16_blocks_ok_gyjpEtAobldqEEj:
+.L_16_blocks_ok_843:
 
 
 
@@ -116034,7 +116034,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_ipnpdhiCmBAwahp
+	jl	.L_small_initial_partial_block_844
 
 
 
@@ -116086,8 +116086,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_ipnpdhiCmBAwahp
-.L_small_initial_partial_block_ipnpdhiCmBAwahp:
+	jmp	.L_small_initial_compute_done_844
+.L_small_initial_partial_block_844:
 
 
 
@@ -116141,32 +116141,32 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_ipnpdhiCmBAwahp:
+.L_small_initial_compute_done_844:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_ipnpdhiCmBAwahp
+	je	.L_after_reduction_844
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_ipnpdhiCmBAwahp:
-	jmp	.L_last_blocks_done_obndhAGbhpDwcwD
-.L_last_num_blocks_is_8_obndhAGbhpDwcwD:
+.L_after_reduction_844:
+	jmp	.L_last_blocks_done_830
+.L_last_num_blocks_is_8_830:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$248,%r15d
-	jae	.L_16_blocks_overflow_rvBgqcrdGAdFhrz
+	jae	.L_16_blocks_overflow_845
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
-	jmp	.L_16_blocks_ok_rvBgqcrdGAdFhrz
+	jmp	.L_16_blocks_ok_845
 
-.L_16_blocks_overflow_rvBgqcrdGAdFhrz:
+.L_16_blocks_overflow_845:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
-.L_16_blocks_ok_rvBgqcrdGAdFhrz:
+.L_16_blocks_ok_845:
 
 
 
@@ -116278,7 +116278,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_odzdxgnGExAlkDw
+	jl	.L_small_initial_partial_block_846
 
 
 
@@ -116332,8 +116332,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_odzdxgnGExAlkDw
-.L_small_initial_partial_block_odzdxgnGExAlkDw:
+	jmp	.L_small_initial_compute_done_846
+.L_small_initial_partial_block_846:
 
 
 
@@ -116388,26 +116388,26 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_odzdxgnGExAlkDw:
+.L_small_initial_compute_done_846:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_odzdxgnGExAlkDw
+	je	.L_after_reduction_846
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_odzdxgnGExAlkDw:
-	jmp	.L_last_blocks_done_obndhAGbhpDwcwD
-.L_last_num_blocks_is_9_obndhAGbhpDwcwD:
+.L_after_reduction_846:
+	jmp	.L_last_blocks_done_830
+.L_last_num_blocks_is_9_830:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$247,%r15d
-	jae	.L_16_blocks_overflow_kcFAmzBbrxgdibi
+	jae	.L_16_blocks_overflow_847
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%xmm27,%xmm3,%xmm4
-	jmp	.L_16_blocks_ok_kcFAmzBbrxgdibi
+	jmp	.L_16_blocks_ok_847
 
-.L_16_blocks_overflow_kcFAmzBbrxgdibi:
+.L_16_blocks_overflow_847:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -116416,7 +116416,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%xmm29,%xmm4,%xmm4
-.L_16_blocks_ok_kcFAmzBbrxgdibi:
+.L_16_blocks_ok_847:
 
 
 
@@ -116547,7 +116547,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_gwxGvCfzwlanoxm
+	jl	.L_small_initial_partial_block_848
 
 
 
@@ -116607,8 +116607,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_gwxGvCfzwlanoxm
-.L_small_initial_partial_block_gwxGvCfzwlanoxm:
+	jmp	.L_small_initial_compute_done_848
+.L_small_initial_partial_block_848:
 
 
 
@@ -116665,26 +116665,26 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_gwxGvCfzwlanoxm:
+.L_small_initial_compute_done_848:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_gwxGvCfzwlanoxm
+	je	.L_after_reduction_848
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_gwxGvCfzwlanoxm:
-	jmp	.L_last_blocks_done_obndhAGbhpDwcwD
-.L_last_num_blocks_is_10_obndhAGbhpDwcwD:
+.L_after_reduction_848:
+	jmp	.L_last_blocks_done_830
+.L_last_num_blocks_is_10_830:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$246,%r15d
-	jae	.L_16_blocks_overflow_iFinvhmymrAnrEB
+	jae	.L_16_blocks_overflow_849
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%ymm27,%ymm3,%ymm4
-	jmp	.L_16_blocks_ok_iFinvhmymrAnrEB
+	jmp	.L_16_blocks_ok_849
 
-.L_16_blocks_overflow_iFinvhmymrAnrEB:
+.L_16_blocks_overflow_849:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -116693,7 +116693,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%ymm29,%ymm4,%ymm4
-.L_16_blocks_ok_iFinvhmymrAnrEB:
+.L_16_blocks_ok_849:
 
 
 
@@ -116824,7 +116824,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_vvxcGqdEzEGCcqF
+	jl	.L_small_initial_partial_block_850
 
 
 
@@ -116884,8 +116884,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_vvxcGqdEzEGCcqF
-.L_small_initial_partial_block_vvxcGqdEzEGCcqF:
+	jmp	.L_small_initial_compute_done_850
+.L_small_initial_partial_block_850:
 
 
 
@@ -116948,26 +116948,26 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_vvxcGqdEzEGCcqF:
+.L_small_initial_compute_done_850:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_vvxcGqdEzEGCcqF
+	je	.L_after_reduction_850
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_vvxcGqdEzEGCcqF:
-	jmp	.L_last_blocks_done_obndhAGbhpDwcwD
-.L_last_num_blocks_is_11_obndhAGbhpDwcwD:
+.L_after_reduction_850:
+	jmp	.L_last_blocks_done_830
+.L_last_num_blocks_is_11_830:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$245,%r15d
-	jae	.L_16_blocks_overflow_hpgBbEgzweaErAA
+	jae	.L_16_blocks_overflow_851
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
-	jmp	.L_16_blocks_ok_hpgBbEgzweaErAA
+	jmp	.L_16_blocks_ok_851
 
-.L_16_blocks_overflow_hpgBbEgzweaErAA:
+.L_16_blocks_overflow_851:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -116976,7 +116976,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
-.L_16_blocks_ok_hpgBbEgzweaErAA:
+.L_16_blocks_ok_851:
 
 
 
@@ -117107,7 +117107,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_sdjrqwBwbppdvDD
+	jl	.L_small_initial_partial_block_852
 
 
 
@@ -117168,8 +117168,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_sdjrqwBwbppdvDD
-.L_small_initial_partial_block_sdjrqwBwbppdvDD:
+	jmp	.L_small_initial_compute_done_852
+.L_small_initial_partial_block_852:
 
 
 
@@ -117232,26 +117232,26 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_sdjrqwBwbppdvDD:
+.L_small_initial_compute_done_852:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_sdjrqwBwbppdvDD
+	je	.L_after_reduction_852
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_sdjrqwBwbppdvDD:
-	jmp	.L_last_blocks_done_obndhAGbhpDwcwD
-.L_last_num_blocks_is_12_obndhAGbhpDwcwD:
+.L_after_reduction_852:
+	jmp	.L_last_blocks_done_830
+.L_last_num_blocks_is_12_830:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$244,%r15d
-	jae	.L_16_blocks_overflow_lmCAymmsEgbAyzq
+	jae	.L_16_blocks_overflow_853
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
-	jmp	.L_16_blocks_ok_lmCAymmsEgbAyzq
+	jmp	.L_16_blocks_ok_853
 
-.L_16_blocks_overflow_lmCAymmsEgbAyzq:
+.L_16_blocks_overflow_853:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -117260,7 +117260,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
-.L_16_blocks_ok_lmCAymmsEgbAyzq:
+.L_16_blocks_ok_853:
 
 
 
@@ -117391,7 +117391,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_eqoFDwfrricghto
+	jl	.L_small_initial_partial_block_854
 
 
 
@@ -117450,8 +117450,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_eqoFDwfrricghto
-.L_small_initial_partial_block_eqoFDwfrricghto:
+	jmp	.L_small_initial_compute_done_854
+.L_small_initial_partial_block_854:
 
 
 
@@ -117515,27 +117515,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_eqoFDwfrricghto:
+.L_small_initial_compute_done_854:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_eqoFDwfrricghto
+	je	.L_after_reduction_854
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_eqoFDwfrricghto:
-	jmp	.L_last_blocks_done_obndhAGbhpDwcwD
-.L_last_num_blocks_is_13_obndhAGbhpDwcwD:
+.L_after_reduction_854:
+	jmp	.L_last_blocks_done_830
+.L_last_num_blocks_is_13_830:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$243,%r15d
-	jae	.L_16_blocks_overflow_kqxretCfxjCFlaF
+	jae	.L_16_blocks_overflow_855
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%xmm27,%xmm4,%xmm5
-	jmp	.L_16_blocks_ok_kqxretCfxjCFlaF
+	jmp	.L_16_blocks_ok_855
 
-.L_16_blocks_overflow_kqxretCfxjCFlaF:
+.L_16_blocks_overflow_855:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -117546,7 +117546,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%xmm29,%xmm5,%xmm5
-.L_16_blocks_ok_kqxretCfxjCFlaF:
+.L_16_blocks_ok_855:
 
 
 
@@ -117696,7 +117696,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_mDhAFfCiursnmgi
+	jl	.L_small_initial_partial_block_856
 
 
 
@@ -117761,8 +117761,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_mDhAFfCiursnmgi
-.L_small_initial_partial_block_mDhAFfCiursnmgi:
+	jmp	.L_small_initial_compute_done_856
+.L_small_initial_partial_block_856:
 
 
 
@@ -117824,27 +117824,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_mDhAFfCiursnmgi:
+.L_small_initial_compute_done_856:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_mDhAFfCiursnmgi
+	je	.L_after_reduction_856
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_mDhAFfCiursnmgi:
-	jmp	.L_last_blocks_done_obndhAGbhpDwcwD
-.L_last_num_blocks_is_14_obndhAGbhpDwcwD:
+.L_after_reduction_856:
+	jmp	.L_last_blocks_done_830
+.L_last_num_blocks_is_14_830:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$242,%r15d
-	jae	.L_16_blocks_overflow_qqntgyscqBoyCzt
+	jae	.L_16_blocks_overflow_857
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%ymm27,%ymm4,%ymm5
-	jmp	.L_16_blocks_ok_qqntgyscqBoyCzt
+	jmp	.L_16_blocks_ok_857
 
-.L_16_blocks_overflow_qqntgyscqBoyCzt:
+.L_16_blocks_overflow_857:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -117855,7 +117855,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%ymm29,%ymm5,%ymm5
-.L_16_blocks_ok_qqntgyscqBoyCzt:
+.L_16_blocks_ok_857:
 
 
 
@@ -118005,7 +118005,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_mAeEwEBnFkievuA
+	jl	.L_small_initial_partial_block_858
 
 
 
@@ -118070,8 +118070,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_mAeEwEBnFkievuA
-.L_small_initial_partial_block_mAeEwEBnFkievuA:
+	jmp	.L_small_initial_compute_done_858
+.L_small_initial_partial_block_858:
 
 
 
@@ -118139,27 +118139,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_mAeEwEBnFkievuA:
+.L_small_initial_compute_done_858:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_mAeEwEBnFkievuA
+	je	.L_after_reduction_858
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_mAeEwEBnFkievuA:
-	jmp	.L_last_blocks_done_obndhAGbhpDwcwD
-.L_last_num_blocks_is_15_obndhAGbhpDwcwD:
+.L_after_reduction_858:
+	jmp	.L_last_blocks_done_830
+.L_last_num_blocks_is_15_830:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$241,%r15d
-	jae	.L_16_blocks_overflow_krpjvpsuBeCykEy
+	jae	.L_16_blocks_overflow_859
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_krpjvpsuBeCykEy
+	jmp	.L_16_blocks_ok_859
 
-.L_16_blocks_overflow_krpjvpsuBeCykEy:
+.L_16_blocks_overflow_859:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -118170,7 +118170,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_krpjvpsuBeCykEy:
+.L_16_blocks_ok_859:
 
 
 
@@ -118320,7 +118320,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_ClFCmglpDmcEEuf
+	jl	.L_small_initial_partial_block_860
 
 
 
@@ -118386,8 +118386,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_ClFCmglpDmcEEuf
-.L_small_initial_partial_block_ClFCmglpDmcEEuf:
+	jmp	.L_small_initial_compute_done_860
+.L_small_initial_partial_block_860:
 
 
 
@@ -118455,27 +118455,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_ClFCmglpDmcEEuf:
+.L_small_initial_compute_done_860:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_ClFCmglpDmcEEuf
+	je	.L_after_reduction_860
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_ClFCmglpDmcEEuf:
-	jmp	.L_last_blocks_done_obndhAGbhpDwcwD
-.L_last_num_blocks_is_16_obndhAGbhpDwcwD:
+.L_after_reduction_860:
+	jmp	.L_last_blocks_done_830
+.L_last_num_blocks_is_16_830:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$240,%r15d
-	jae	.L_16_blocks_overflow_ECDfjlodgjrampA
+	jae	.L_16_blocks_overflow_861
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_ECDfjlodgjrampA
+	jmp	.L_16_blocks_ok_861
 
-.L_16_blocks_overflow_ECDfjlodgjrampA:
+.L_16_blocks_overflow_861:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -118486,7 +118486,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_ECDfjlodgjrampA:
+.L_16_blocks_ok_861:
 
 
 
@@ -118633,7 +118633,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm21,%zmm21
 	vextracti32x4	$3,%zmm21,%xmm7
 	subq	$16 * (16 - 1),%r8
-.L_small_initial_partial_block_DponctGCxbolodr:
+.L_small_initial_partial_block_862:
 
 
 
@@ -118702,11 +118702,11 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_DponctGCxbolodr:
+.L_small_initial_compute_done_862:
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_DponctGCxbolodr:
-	jmp	.L_last_blocks_done_obndhAGbhpDwcwD
-.L_last_num_blocks_is_0_obndhAGbhpDwcwD:
+.L_after_reduction_862:
+	jmp	.L_last_blocks_done_830
+.L_last_num_blocks_is_0_830:
 	vmovdqa64	1024(%rsp),%zmm13
 	vmovdqu64	0(%rsp,%rbx,1),%zmm12
 	vpclmulqdq	$0x11,%zmm12,%zmm13,%zmm0
@@ -118767,18 +118767,18 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm24,%xmm3,%xmm14
 
-.L_last_blocks_done_obndhAGbhpDwcwD:
+.L_last_blocks_done_830:
 	vpshufb	%xmm29,%xmm2,%xmm2
-	jmp	.L_ghash_done_BgFfAgFalCBiqtf
-.L_encrypt_32_blocks_BgFfAgFalCBiqtf:
+	jmp	.L_ghash_done_821
+.L_encrypt_32_blocks_821:
 	cmpb	$240,%r15b
-	jae	.L_16_blocks_overflow_wjnebcsacfhthiC
+	jae	.L_16_blocks_overflow_863
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_wjnebcsacfhthiC
-.L_16_blocks_overflow_wjnebcsacfhthiC:
+	jmp	.L_16_blocks_ok_863
+.L_16_blocks_overflow_863:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -118789,7 +118789,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_wjnebcsacfhthiC:
+.L_16_blocks_ok_863:
 	vbroadcastf64x2	0(%rdi),%zmm30
 	vpxorq	768(%rsp),%zmm14,%zmm8
 	vmovdqu64	0(%rsp),%zmm1
@@ -118977,13 +118977,13 @@ ossl_aes_gcm_decrypt_avx512:
 	vmovdqa64	%zmm4,1408(%rsp)
 	vmovdqa64	%zmm5,1472(%rsp)
 	cmpb	$240,%r15b
-	jae	.L_16_blocks_overflow_sxplopcerpBCxFh
+	jae	.L_16_blocks_overflow_864
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_sxplopcerpBCxFh
-.L_16_blocks_overflow_sxplopcerpBCxFh:
+	jmp	.L_16_blocks_ok_864
+.L_16_blocks_overflow_864:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -118994,7 +118994,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_sxplopcerpBCxFh:
+.L_16_blocks_ok_864:
 	vbroadcastf64x2	0(%rdi),%zmm30
 	vmovdqa64	1024(%rsp),%zmm8
 	vmovdqu64	256(%rsp),%zmm1
@@ -119250,61 +119250,61 @@ ossl_aes_gcm_decrypt_avx512:
 	movl	%r8d,%r10d
 	addl	$15,%r10d
 	shrl	$4,%r10d
-	je	.L_last_num_blocks_is_0_qqnkGjkvxcoBuuo
+	je	.L_last_num_blocks_is_0_865
 
 	cmpl	$8,%r10d
-	je	.L_last_num_blocks_is_8_qqnkGjkvxcoBuuo
-	jb	.L_last_num_blocks_is_7_1_qqnkGjkvxcoBuuo
+	je	.L_last_num_blocks_is_8_865
+	jb	.L_last_num_blocks_is_7_1_865
 
 
 	cmpl	$12,%r10d
-	je	.L_last_num_blocks_is_12_qqnkGjkvxcoBuuo
-	jb	.L_last_num_blocks_is_11_9_qqnkGjkvxcoBuuo
+	je	.L_last_num_blocks_is_12_865
+	jb	.L_last_num_blocks_is_11_9_865
 
 
 	cmpl	$15,%r10d
-	je	.L_last_num_blocks_is_15_qqnkGjkvxcoBuuo
-	ja	.L_last_num_blocks_is_16_qqnkGjkvxcoBuuo
+	je	.L_last_num_blocks_is_15_865
+	ja	.L_last_num_blocks_is_16_865
 	cmpl	$14,%r10d
-	je	.L_last_num_blocks_is_14_qqnkGjkvxcoBuuo
-	jmp	.L_last_num_blocks_is_13_qqnkGjkvxcoBuuo
+	je	.L_last_num_blocks_is_14_865
+	jmp	.L_last_num_blocks_is_13_865
 
-.L_last_num_blocks_is_11_9_qqnkGjkvxcoBuuo:
+.L_last_num_blocks_is_11_9_865:
 
 	cmpl	$10,%r10d
-	je	.L_last_num_blocks_is_10_qqnkGjkvxcoBuuo
-	ja	.L_last_num_blocks_is_11_qqnkGjkvxcoBuuo
-	jmp	.L_last_num_blocks_is_9_qqnkGjkvxcoBuuo
+	je	.L_last_num_blocks_is_10_865
+	ja	.L_last_num_blocks_is_11_865
+	jmp	.L_last_num_blocks_is_9_865
 
-.L_last_num_blocks_is_7_1_qqnkGjkvxcoBuuo:
+.L_last_num_blocks_is_7_1_865:
 	cmpl	$4,%r10d
-	je	.L_last_num_blocks_is_4_qqnkGjkvxcoBuuo
-	jb	.L_last_num_blocks_is_3_1_qqnkGjkvxcoBuuo
+	je	.L_last_num_blocks_is_4_865
+	jb	.L_last_num_blocks_is_3_1_865
 
 	cmpl	$6,%r10d
-	ja	.L_last_num_blocks_is_7_qqnkGjkvxcoBuuo
-	je	.L_last_num_blocks_is_6_qqnkGjkvxcoBuuo
-	jmp	.L_last_num_blocks_is_5_qqnkGjkvxcoBuuo
+	ja	.L_last_num_blocks_is_7_865
+	je	.L_last_num_blocks_is_6_865
+	jmp	.L_last_num_blocks_is_5_865
 
-.L_last_num_blocks_is_3_1_qqnkGjkvxcoBuuo:
+.L_last_num_blocks_is_3_1_865:
 
 	cmpl	$2,%r10d
-	ja	.L_last_num_blocks_is_3_qqnkGjkvxcoBuuo
-	je	.L_last_num_blocks_is_2_qqnkGjkvxcoBuuo
-.L_last_num_blocks_is_1_qqnkGjkvxcoBuuo:
+	ja	.L_last_num_blocks_is_3_865
+	je	.L_last_num_blocks_is_2_865
+.L_last_num_blocks_is_1_865:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$255,%r15d
-	jae	.L_16_blocks_overflow_CqbEeivFDehuczk
+	jae	.L_16_blocks_overflow_866
 	vpaddd	%xmm28,%xmm2,%xmm0
-	jmp	.L_16_blocks_ok_CqbEeivFDehuczk
+	jmp	.L_16_blocks_ok_866
 
-.L_16_blocks_overflow_CqbEeivFDehuczk:
+.L_16_blocks_overflow_866:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%xmm29,%xmm0,%xmm0
-.L_16_blocks_ok_CqbEeivFDehuczk:
+.L_16_blocks_ok_866:
 
 
 
@@ -119396,7 +119396,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_ovvcrpptyxpdEsi
+	jl	.L_small_initial_partial_block_867
 
 
 
@@ -119440,8 +119440,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_ovvcrpptyxpdEsi
-.L_small_initial_partial_block_ovvcrpptyxpdEsi:
+	jmp	.L_small_initial_compute_done_867
+.L_small_initial_partial_block_867:
 
 
 
@@ -119493,24 +119493,24 @@ ossl_aes_gcm_decrypt_avx512:
 
 	vpxorq	%xmm7,%xmm14,%xmm14
 
-	jmp	.L_after_reduction_ovvcrpptyxpdEsi
-.L_small_initial_compute_done_ovvcrpptyxpdEsi:
-.L_after_reduction_ovvcrpptyxpdEsi:
-	jmp	.L_last_blocks_done_qqnkGjkvxcoBuuo
-.L_last_num_blocks_is_2_qqnkGjkvxcoBuuo:
+	jmp	.L_after_reduction_867
+.L_small_initial_compute_done_867:
+.L_after_reduction_867:
+	jmp	.L_last_blocks_done_865
+.L_last_num_blocks_is_2_865:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$254,%r15d
-	jae	.L_16_blocks_overflow_lyEGefDEjqtrjnk
+	jae	.L_16_blocks_overflow_868
 	vpaddd	%ymm28,%ymm2,%ymm0
-	jmp	.L_16_blocks_ok_lyEGefDEjqtrjnk
+	jmp	.L_16_blocks_ok_868
 
-.L_16_blocks_overflow_lyEGefDEjqtrjnk:
+.L_16_blocks_overflow_868:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%ymm29,%ymm0,%ymm0
-.L_16_blocks_ok_lyEGefDEjqtrjnk:
+.L_16_blocks_ok_868:
 
 
 
@@ -119603,7 +119603,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_jwCvcbksDlsktFg
+	jl	.L_small_initial_partial_block_869
 
 
 
@@ -119647,8 +119647,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_jwCvcbksDlsktFg
-.L_small_initial_partial_block_jwCvcbksDlsktFg:
+	jmp	.L_small_initial_compute_done_869
+.L_small_initial_partial_block_869:
 
 
 
@@ -119695,27 +119695,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_jwCvcbksDlsktFg:
+.L_small_initial_compute_done_869:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_jwCvcbksDlsktFg
+	je	.L_after_reduction_869
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_jwCvcbksDlsktFg:
-	jmp	.L_last_blocks_done_qqnkGjkvxcoBuuo
-.L_last_num_blocks_is_3_qqnkGjkvxcoBuuo:
+.L_after_reduction_869:
+	jmp	.L_last_blocks_done_865
+.L_last_num_blocks_is_3_865:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$253,%r15d
-	jae	.L_16_blocks_overflow_FDwabmGcchsEryf
+	jae	.L_16_blocks_overflow_870
 	vpaddd	%zmm28,%zmm2,%zmm0
-	jmp	.L_16_blocks_ok_FDwabmGcchsEryf
+	jmp	.L_16_blocks_ok_870
 
-.L_16_blocks_overflow_FDwabmGcchsEryf:
+.L_16_blocks_overflow_870:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%zmm29,%zmm0,%zmm0
-.L_16_blocks_ok_FDwabmGcchsEryf:
+.L_16_blocks_ok_870:
 
 
 
@@ -119808,7 +119808,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_oezfjaeCotimFCc
+	jl	.L_small_initial_partial_block_871
 
 
 
@@ -119853,8 +119853,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_oezfjaeCotimFCc
-.L_small_initial_partial_block_oezfjaeCotimFCc:
+	jmp	.L_small_initial_compute_done_871
+.L_small_initial_partial_block_871:
 
 
 
@@ -119901,27 +119901,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_oezfjaeCotimFCc:
+.L_small_initial_compute_done_871:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_oezfjaeCotimFCc
+	je	.L_after_reduction_871
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_oezfjaeCotimFCc:
-	jmp	.L_last_blocks_done_qqnkGjkvxcoBuuo
-.L_last_num_blocks_is_4_qqnkGjkvxcoBuuo:
+.L_after_reduction_871:
+	jmp	.L_last_blocks_done_865
+.L_last_num_blocks_is_4_865:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$252,%r15d
-	jae	.L_16_blocks_overflow_GdjDnwnfgiqsdaw
+	jae	.L_16_blocks_overflow_872
 	vpaddd	%zmm28,%zmm2,%zmm0
-	jmp	.L_16_blocks_ok_GdjDnwnfgiqsdaw
+	jmp	.L_16_blocks_ok_872
 
-.L_16_blocks_overflow_GdjDnwnfgiqsdaw:
+.L_16_blocks_overflow_872:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%zmm29,%zmm0,%zmm0
-.L_16_blocks_ok_GdjDnwnfgiqsdaw:
+.L_16_blocks_ok_872:
 
 
 
@@ -120014,7 +120014,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_ukCgwvlDoBwGkvz
+	jl	.L_small_initial_partial_block_873
 
 
 
@@ -120059,8 +120059,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_ukCgwvlDoBwGkvz
-.L_small_initial_partial_block_ukCgwvlDoBwGkvz:
+	jmp	.L_small_initial_compute_done_873
+.L_small_initial_partial_block_873:
 
 
 
@@ -120108,32 +120108,32 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_ukCgwvlDoBwGkvz:
+.L_small_initial_compute_done_873:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_ukCgwvlDoBwGkvz
+	je	.L_after_reduction_873
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_ukCgwvlDoBwGkvz:
-	jmp	.L_last_blocks_done_qqnkGjkvxcoBuuo
-.L_last_num_blocks_is_5_qqnkGjkvxcoBuuo:
+.L_after_reduction_873:
+	jmp	.L_last_blocks_done_865
+.L_last_num_blocks_is_5_865:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$251,%r15d
-	jae	.L_16_blocks_overflow_nqhlhgxEGgzrkif
+	jae	.L_16_blocks_overflow_874
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%xmm27,%xmm0,%xmm3
-	jmp	.L_16_blocks_ok_nqhlhgxEGgzrkif
+	jmp	.L_16_blocks_ok_874
 
-.L_16_blocks_overflow_nqhlhgxEGgzrkif:
+.L_16_blocks_overflow_874:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%xmm29,%xmm3,%xmm3
-.L_16_blocks_ok_nqhlhgxEGgzrkif:
+.L_16_blocks_ok_874:
 
 
 
@@ -120245,7 +120245,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_duxrFblrgGhstzC
+	jl	.L_small_initial_partial_block_875
 
 
 
@@ -120296,8 +120296,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_duxrFblrgGhstzC
-.L_small_initial_partial_block_duxrFblrgGhstzC:
+	jmp	.L_small_initial_compute_done_875
+.L_small_initial_partial_block_875:
 
 
 
@@ -120345,32 +120345,32 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_duxrFblrgGhstzC:
+.L_small_initial_compute_done_875:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_duxrFblrgGhstzC
+	je	.L_after_reduction_875
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_duxrFblrgGhstzC:
-	jmp	.L_last_blocks_done_qqnkGjkvxcoBuuo
-.L_last_num_blocks_is_6_qqnkGjkvxcoBuuo:
+.L_after_reduction_875:
+	jmp	.L_last_blocks_done_865
+.L_last_num_blocks_is_6_865:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$250,%r15d
-	jae	.L_16_blocks_overflow_EdyCnseyshzrwih
+	jae	.L_16_blocks_overflow_876
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%ymm27,%ymm0,%ymm3
-	jmp	.L_16_blocks_ok_EdyCnseyshzrwih
+	jmp	.L_16_blocks_ok_876
 
-.L_16_blocks_overflow_EdyCnseyshzrwih:
+.L_16_blocks_overflow_876:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%ymm29,%ymm3,%ymm3
-.L_16_blocks_ok_EdyCnseyshzrwih:
+.L_16_blocks_ok_876:
 
 
 
@@ -120482,7 +120482,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_BqbnserxoazdhFF
+	jl	.L_small_initial_partial_block_877
 
 
 
@@ -120533,8 +120533,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_BqbnserxoazdhFF
-.L_small_initial_partial_block_BqbnserxoazdhFF:
+	jmp	.L_small_initial_compute_done_877
+.L_small_initial_partial_block_877:
 
 
 
@@ -120588,32 +120588,32 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_BqbnserxoazdhFF:
+.L_small_initial_compute_done_877:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_BqbnserxoazdhFF
+	je	.L_after_reduction_877
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_BqbnserxoazdhFF:
-	jmp	.L_last_blocks_done_qqnkGjkvxcoBuuo
-.L_last_num_blocks_is_7_qqnkGjkvxcoBuuo:
+.L_after_reduction_877:
+	jmp	.L_last_blocks_done_865
+.L_last_num_blocks_is_7_865:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$249,%r15d
-	jae	.L_16_blocks_overflow_lgtCCEbGyjrusov
+	jae	.L_16_blocks_overflow_878
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
-	jmp	.L_16_blocks_ok_lgtCCEbGyjrusov
+	jmp	.L_16_blocks_ok_878
 
-.L_16_blocks_overflow_lgtCCEbGyjrusov:
+.L_16_blocks_overflow_878:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
-.L_16_blocks_ok_lgtCCEbGyjrusov:
+.L_16_blocks_ok_878:
 
 
 
@@ -120725,7 +120725,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_Bowrjocufyajgdk
+	jl	.L_small_initial_partial_block_879
 
 
 
@@ -120777,8 +120777,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_Bowrjocufyajgdk
-.L_small_initial_partial_block_Bowrjocufyajgdk:
+	jmp	.L_small_initial_compute_done_879
+.L_small_initial_partial_block_879:
 
 
 
@@ -120832,32 +120832,32 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_Bowrjocufyajgdk:
+.L_small_initial_compute_done_879:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_Bowrjocufyajgdk
+	je	.L_after_reduction_879
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_Bowrjocufyajgdk:
-	jmp	.L_last_blocks_done_qqnkGjkvxcoBuuo
-.L_last_num_blocks_is_8_qqnkGjkvxcoBuuo:
+.L_after_reduction_879:
+	jmp	.L_last_blocks_done_865
+.L_last_num_blocks_is_8_865:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$248,%r15d
-	jae	.L_16_blocks_overflow_heoanoulcmlywmy
+	jae	.L_16_blocks_overflow_880
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
-	jmp	.L_16_blocks_ok_heoanoulcmlywmy
+	jmp	.L_16_blocks_ok_880
 
-.L_16_blocks_overflow_heoanoulcmlywmy:
+.L_16_blocks_overflow_880:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
-.L_16_blocks_ok_heoanoulcmlywmy:
+.L_16_blocks_ok_880:
 
 
 
@@ -120969,7 +120969,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_fGlGlyfbcbFljuz
+	jl	.L_small_initial_partial_block_881
 
 
 
@@ -121023,8 +121023,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_fGlGlyfbcbFljuz
-.L_small_initial_partial_block_fGlGlyfbcbFljuz:
+	jmp	.L_small_initial_compute_done_881
+.L_small_initial_partial_block_881:
 
 
 
@@ -121079,26 +121079,26 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_fGlGlyfbcbFljuz:
+.L_small_initial_compute_done_881:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_fGlGlyfbcbFljuz
+	je	.L_after_reduction_881
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_fGlGlyfbcbFljuz:
-	jmp	.L_last_blocks_done_qqnkGjkvxcoBuuo
-.L_last_num_blocks_is_9_qqnkGjkvxcoBuuo:
+.L_after_reduction_881:
+	jmp	.L_last_blocks_done_865
+.L_last_num_blocks_is_9_865:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$247,%r15d
-	jae	.L_16_blocks_overflow_xcejihsCfFBCguz
+	jae	.L_16_blocks_overflow_882
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%xmm27,%xmm3,%xmm4
-	jmp	.L_16_blocks_ok_xcejihsCfFBCguz
+	jmp	.L_16_blocks_ok_882
 
-.L_16_blocks_overflow_xcejihsCfFBCguz:
+.L_16_blocks_overflow_882:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -121107,7 +121107,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%xmm29,%xmm4,%xmm4
-.L_16_blocks_ok_xcejihsCfFBCguz:
+.L_16_blocks_ok_882:
 
 
 
@@ -121238,7 +121238,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_poykjChppCBGnwc
+	jl	.L_small_initial_partial_block_883
 
 
 
@@ -121298,8 +121298,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_poykjChppCBGnwc
-.L_small_initial_partial_block_poykjChppCBGnwc:
+	jmp	.L_small_initial_compute_done_883
+.L_small_initial_partial_block_883:
 
 
 
@@ -121356,26 +121356,26 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_poykjChppCBGnwc:
+.L_small_initial_compute_done_883:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_poykjChppCBGnwc
+	je	.L_after_reduction_883
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_poykjChppCBGnwc:
-	jmp	.L_last_blocks_done_qqnkGjkvxcoBuuo
-.L_last_num_blocks_is_10_qqnkGjkvxcoBuuo:
+.L_after_reduction_883:
+	jmp	.L_last_blocks_done_865
+.L_last_num_blocks_is_10_865:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$246,%r15d
-	jae	.L_16_blocks_overflow_oehzythuvqAuqBv
+	jae	.L_16_blocks_overflow_884
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%ymm27,%ymm3,%ymm4
-	jmp	.L_16_blocks_ok_oehzythuvqAuqBv
+	jmp	.L_16_blocks_ok_884
 
-.L_16_blocks_overflow_oehzythuvqAuqBv:
+.L_16_blocks_overflow_884:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -121384,7 +121384,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%ymm29,%ymm4,%ymm4
-.L_16_blocks_ok_oehzythuvqAuqBv:
+.L_16_blocks_ok_884:
 
 
 
@@ -121515,7 +121515,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_mviDFpolCcEqyiv
+	jl	.L_small_initial_partial_block_885
 
 
 
@@ -121575,8 +121575,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_mviDFpolCcEqyiv
-.L_small_initial_partial_block_mviDFpolCcEqyiv:
+	jmp	.L_small_initial_compute_done_885
+.L_small_initial_partial_block_885:
 
 
 
@@ -121639,26 +121639,26 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_mviDFpolCcEqyiv:
+.L_small_initial_compute_done_885:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_mviDFpolCcEqyiv
+	je	.L_after_reduction_885
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_mviDFpolCcEqyiv:
-	jmp	.L_last_blocks_done_qqnkGjkvxcoBuuo
-.L_last_num_blocks_is_11_qqnkGjkvxcoBuuo:
+.L_after_reduction_885:
+	jmp	.L_last_blocks_done_865
+.L_last_num_blocks_is_11_865:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$245,%r15d
-	jae	.L_16_blocks_overflow_mBmunjifwhveAaw
+	jae	.L_16_blocks_overflow_886
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
-	jmp	.L_16_blocks_ok_mBmunjifwhveAaw
+	jmp	.L_16_blocks_ok_886
 
-.L_16_blocks_overflow_mBmunjifwhveAaw:
+.L_16_blocks_overflow_886:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -121667,7 +121667,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
-.L_16_blocks_ok_mBmunjifwhveAaw:
+.L_16_blocks_ok_886:
 
 
 
@@ -121798,7 +121798,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_vjtyfFDhBkEljof
+	jl	.L_small_initial_partial_block_887
 
 
 
@@ -121859,8 +121859,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_vjtyfFDhBkEljof
-.L_small_initial_partial_block_vjtyfFDhBkEljof:
+	jmp	.L_small_initial_compute_done_887
+.L_small_initial_partial_block_887:
 
 
 
@@ -121923,26 +121923,26 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_vjtyfFDhBkEljof:
+.L_small_initial_compute_done_887:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_vjtyfFDhBkEljof
+	je	.L_after_reduction_887
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_vjtyfFDhBkEljof:
-	jmp	.L_last_blocks_done_qqnkGjkvxcoBuuo
-.L_last_num_blocks_is_12_qqnkGjkvxcoBuuo:
+.L_after_reduction_887:
+	jmp	.L_last_blocks_done_865
+.L_last_num_blocks_is_12_865:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$244,%r15d
-	jae	.L_16_blocks_overflow_eAgndieweEemknm
+	jae	.L_16_blocks_overflow_888
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
-	jmp	.L_16_blocks_ok_eAgndieweEemknm
+	jmp	.L_16_blocks_ok_888
 
-.L_16_blocks_overflow_eAgndieweEemknm:
+.L_16_blocks_overflow_888:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -121951,7 +121951,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
-.L_16_blocks_ok_eAgndieweEemknm:
+.L_16_blocks_ok_888:
 
 
 
@@ -122082,7 +122082,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_mFybdBtGDhGsnhi
+	jl	.L_small_initial_partial_block_889
 
 
 
@@ -122141,8 +122141,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_mFybdBtGDhGsnhi
-.L_small_initial_partial_block_mFybdBtGDhGsnhi:
+	jmp	.L_small_initial_compute_done_889
+.L_small_initial_partial_block_889:
 
 
 
@@ -122206,27 +122206,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_mFybdBtGDhGsnhi:
+.L_small_initial_compute_done_889:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_mFybdBtGDhGsnhi
+	je	.L_after_reduction_889
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_mFybdBtGDhGsnhi:
-	jmp	.L_last_blocks_done_qqnkGjkvxcoBuuo
-.L_last_num_blocks_is_13_qqnkGjkvxcoBuuo:
+.L_after_reduction_889:
+	jmp	.L_last_blocks_done_865
+.L_last_num_blocks_is_13_865:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$243,%r15d
-	jae	.L_16_blocks_overflow_jllxzssyhpuoxEg
+	jae	.L_16_blocks_overflow_890
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%xmm27,%xmm4,%xmm5
-	jmp	.L_16_blocks_ok_jllxzssyhpuoxEg
+	jmp	.L_16_blocks_ok_890
 
-.L_16_blocks_overflow_jllxzssyhpuoxEg:
+.L_16_blocks_overflow_890:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -122237,7 +122237,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%xmm29,%xmm5,%xmm5
-.L_16_blocks_ok_jllxzssyhpuoxEg:
+.L_16_blocks_ok_890:
 
 
 
@@ -122387,7 +122387,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_GADbjiefrEfBbkv
+	jl	.L_small_initial_partial_block_891
 
 
 
@@ -122452,8 +122452,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_GADbjiefrEfBbkv
-.L_small_initial_partial_block_GADbjiefrEfBbkv:
+	jmp	.L_small_initial_compute_done_891
+.L_small_initial_partial_block_891:
 
 
 
@@ -122515,27 +122515,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_GADbjiefrEfBbkv:
+.L_small_initial_compute_done_891:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_GADbjiefrEfBbkv
+	je	.L_after_reduction_891
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_GADbjiefrEfBbkv:
-	jmp	.L_last_blocks_done_qqnkGjkvxcoBuuo
-.L_last_num_blocks_is_14_qqnkGjkvxcoBuuo:
+.L_after_reduction_891:
+	jmp	.L_last_blocks_done_865
+.L_last_num_blocks_is_14_865:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$242,%r15d
-	jae	.L_16_blocks_overflow_cyxhszCytFixiqC
+	jae	.L_16_blocks_overflow_892
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%ymm27,%ymm4,%ymm5
-	jmp	.L_16_blocks_ok_cyxhszCytFixiqC
+	jmp	.L_16_blocks_ok_892
 
-.L_16_blocks_overflow_cyxhszCytFixiqC:
+.L_16_blocks_overflow_892:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -122546,7 +122546,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%ymm29,%ymm5,%ymm5
-.L_16_blocks_ok_cyxhszCytFixiqC:
+.L_16_blocks_ok_892:
 
 
 
@@ -122696,7 +122696,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_viyqdahlbpvrqaj
+	jl	.L_small_initial_partial_block_893
 
 
 
@@ -122761,8 +122761,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_viyqdahlbpvrqaj
-.L_small_initial_partial_block_viyqdahlbpvrqaj:
+	jmp	.L_small_initial_compute_done_893
+.L_small_initial_partial_block_893:
 
 
 
@@ -122830,27 +122830,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_viyqdahlbpvrqaj:
+.L_small_initial_compute_done_893:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_viyqdahlbpvrqaj
+	je	.L_after_reduction_893
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_viyqdahlbpvrqaj:
-	jmp	.L_last_blocks_done_qqnkGjkvxcoBuuo
-.L_last_num_blocks_is_15_qqnkGjkvxcoBuuo:
+.L_after_reduction_893:
+	jmp	.L_last_blocks_done_865
+.L_last_num_blocks_is_15_865:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$241,%r15d
-	jae	.L_16_blocks_overflow_vzamjyBkjfFvdud
+	jae	.L_16_blocks_overflow_894
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_vzamjyBkjfFvdud
+	jmp	.L_16_blocks_ok_894
 
-.L_16_blocks_overflow_vzamjyBkjfFvdud:
+.L_16_blocks_overflow_894:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -122861,7 +122861,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_vzamjyBkjfFvdud:
+.L_16_blocks_ok_894:
 
 
 
@@ -123011,7 +123011,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_vsdGzscuaFpqgaG
+	jl	.L_small_initial_partial_block_895
 
 
 
@@ -123077,8 +123077,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_vsdGzscuaFpqgaG
-.L_small_initial_partial_block_vsdGzscuaFpqgaG:
+	jmp	.L_small_initial_compute_done_895
+.L_small_initial_partial_block_895:
 
 
 
@@ -123146,27 +123146,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_vsdGzscuaFpqgaG:
+.L_small_initial_compute_done_895:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_vsdGzscuaFpqgaG
+	je	.L_after_reduction_895
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_vsdGzscuaFpqgaG:
-	jmp	.L_last_blocks_done_qqnkGjkvxcoBuuo
-.L_last_num_blocks_is_16_qqnkGjkvxcoBuuo:
+.L_after_reduction_895:
+	jmp	.L_last_blocks_done_865
+.L_last_num_blocks_is_16_865:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$240,%r15d
-	jae	.L_16_blocks_overflow_jqbtuccBdCnDcvB
+	jae	.L_16_blocks_overflow_896
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_jqbtuccBdCnDcvB
+	jmp	.L_16_blocks_ok_896
 
-.L_16_blocks_overflow_jqbtuccBdCnDcvB:
+.L_16_blocks_overflow_896:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -123177,7 +123177,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_jqbtuccBdCnDcvB:
+.L_16_blocks_ok_896:
 
 
 
@@ -123324,7 +123324,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm21,%zmm21
 	vextracti32x4	$3,%zmm21,%xmm7
 	subq	$16 * (16 - 1),%r8
-.L_small_initial_partial_block_hxtqwfsDpatqBqd:
+.L_small_initial_partial_block_897:
 
 
 
@@ -123393,11 +123393,11 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_hxtqwfsDpatqBqd:
+.L_small_initial_compute_done_897:
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_hxtqwfsDpatqBqd:
-	jmp	.L_last_blocks_done_qqnkGjkvxcoBuuo
-.L_last_num_blocks_is_0_qqnkGjkvxcoBuuo:
+.L_after_reduction_897:
+	jmp	.L_last_blocks_done_865
+.L_last_num_blocks_is_0_865:
 	vmovdqa64	768(%rsp),%zmm13
 	vpxorq	%zmm14,%zmm13,%zmm13
 	vmovdqu64	0(%rsp,%rbx,1),%zmm12
@@ -123459,18 +123459,18 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm24,%xmm3,%xmm14
 
-.L_last_blocks_done_qqnkGjkvxcoBuuo:
+.L_last_blocks_done_865:
 	vpshufb	%xmm29,%xmm2,%xmm2
-	jmp	.L_ghash_done_BgFfAgFalCBiqtf
-.L_encrypt_16_blocks_BgFfAgFalCBiqtf:
+	jmp	.L_ghash_done_821
+.L_encrypt_16_blocks_821:
 	cmpb	$240,%r15b
-	jae	.L_16_blocks_overflow_xsuBFhiDiBdExbA
+	jae	.L_16_blocks_overflow_898
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_xsuBFhiDiBdExbA
-.L_16_blocks_overflow_xsuBFhiDiBdExbA:
+	jmp	.L_16_blocks_ok_898
+.L_16_blocks_overflow_898:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -123481,7 +123481,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_xsuBFhiDiBdExbA:
+.L_16_blocks_ok_898:
 	vbroadcastf64x2	0(%rdi),%zmm30
 	vpxorq	768(%rsp),%zmm14,%zmm8
 	vmovdqu64	0(%rsp),%zmm1
@@ -123706,61 +123706,61 @@ ossl_aes_gcm_decrypt_avx512:
 	movl	%r8d,%r10d
 	addl	$15,%r10d
 	shrl	$4,%r10d
-	je	.L_last_num_blocks_is_0_bmmCnCClAGkAgFj
+	je	.L_last_num_blocks_is_0_899
 
 	cmpl	$8,%r10d
-	je	.L_last_num_blocks_is_8_bmmCnCClAGkAgFj
-	jb	.L_last_num_blocks_is_7_1_bmmCnCClAGkAgFj
+	je	.L_last_num_blocks_is_8_899
+	jb	.L_last_num_blocks_is_7_1_899
 
 
 	cmpl	$12,%r10d
-	je	.L_last_num_blocks_is_12_bmmCnCClAGkAgFj
-	jb	.L_last_num_blocks_is_11_9_bmmCnCClAGkAgFj
+	je	.L_last_num_blocks_is_12_899
+	jb	.L_last_num_blocks_is_11_9_899
 
 
 	cmpl	$15,%r10d
-	je	.L_last_num_blocks_is_15_bmmCnCClAGkAgFj
-	ja	.L_last_num_blocks_is_16_bmmCnCClAGkAgFj
+	je	.L_last_num_blocks_is_15_899
+	ja	.L_last_num_blocks_is_16_899
 	cmpl	$14,%r10d
-	je	.L_last_num_blocks_is_14_bmmCnCClAGkAgFj
-	jmp	.L_last_num_blocks_is_13_bmmCnCClAGkAgFj
+	je	.L_last_num_blocks_is_14_899
+	jmp	.L_last_num_blocks_is_13_899
 
-.L_last_num_blocks_is_11_9_bmmCnCClAGkAgFj:
+.L_last_num_blocks_is_11_9_899:
 
 	cmpl	$10,%r10d
-	je	.L_last_num_blocks_is_10_bmmCnCClAGkAgFj
-	ja	.L_last_num_blocks_is_11_bmmCnCClAGkAgFj
-	jmp	.L_last_num_blocks_is_9_bmmCnCClAGkAgFj
+	je	.L_last_num_blocks_is_10_899
+	ja	.L_last_num_blocks_is_11_899
+	jmp	.L_last_num_blocks_is_9_899
 
-.L_last_num_blocks_is_7_1_bmmCnCClAGkAgFj:
+.L_last_num_blocks_is_7_1_899:
 	cmpl	$4,%r10d
-	je	.L_last_num_blocks_is_4_bmmCnCClAGkAgFj
-	jb	.L_last_num_blocks_is_3_1_bmmCnCClAGkAgFj
+	je	.L_last_num_blocks_is_4_899
+	jb	.L_last_num_blocks_is_3_1_899
 
 	cmpl	$6,%r10d
-	ja	.L_last_num_blocks_is_7_bmmCnCClAGkAgFj
-	je	.L_last_num_blocks_is_6_bmmCnCClAGkAgFj
-	jmp	.L_last_num_blocks_is_5_bmmCnCClAGkAgFj
+	ja	.L_last_num_blocks_is_7_899
+	je	.L_last_num_blocks_is_6_899
+	jmp	.L_last_num_blocks_is_5_899
 
-.L_last_num_blocks_is_3_1_bmmCnCClAGkAgFj:
+.L_last_num_blocks_is_3_1_899:
 
 	cmpl	$2,%r10d
-	ja	.L_last_num_blocks_is_3_bmmCnCClAGkAgFj
-	je	.L_last_num_blocks_is_2_bmmCnCClAGkAgFj
-.L_last_num_blocks_is_1_bmmCnCClAGkAgFj:
+	ja	.L_last_num_blocks_is_3_899
+	je	.L_last_num_blocks_is_2_899
+.L_last_num_blocks_is_1_899:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$255,%r15d
-	jae	.L_16_blocks_overflow_hGgwkkmdjbqwjDp
+	jae	.L_16_blocks_overflow_900
 	vpaddd	%xmm28,%xmm2,%xmm0
-	jmp	.L_16_blocks_ok_hGgwkkmdjbqwjDp
+	jmp	.L_16_blocks_ok_900
 
-.L_16_blocks_overflow_hGgwkkmdjbqwjDp:
+.L_16_blocks_overflow_900:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%xmm29,%xmm0,%xmm0
-.L_16_blocks_ok_hGgwkkmdjbqwjDp:
+.L_16_blocks_ok_900:
 
 
 
@@ -123875,7 +123875,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_ofcgydBjFqroECm
+	jl	.L_small_initial_partial_block_901
 
 
 
@@ -123917,8 +123917,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_ofcgydBjFqroECm
-.L_small_initial_partial_block_ofcgydBjFqroECm:
+	jmp	.L_small_initial_compute_done_901
+.L_small_initial_partial_block_901:
 
 
 
@@ -123942,24 +123942,24 @@ ossl_aes_gcm_decrypt_avx512:
 
 	vpxorq	%xmm7,%xmm14,%xmm14
 
-	jmp	.L_after_reduction_ofcgydBjFqroECm
-.L_small_initial_compute_done_ofcgydBjFqroECm:
-.L_after_reduction_ofcgydBjFqroECm:
-	jmp	.L_last_blocks_done_bmmCnCClAGkAgFj
-.L_last_num_blocks_is_2_bmmCnCClAGkAgFj:
+	jmp	.L_after_reduction_901
+.L_small_initial_compute_done_901:
+.L_after_reduction_901:
+	jmp	.L_last_blocks_done_899
+.L_last_num_blocks_is_2_899:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$254,%r15d
-	jae	.L_16_blocks_overflow_pawopGfayscdgvw
+	jae	.L_16_blocks_overflow_902
 	vpaddd	%ymm28,%ymm2,%ymm0
-	jmp	.L_16_blocks_ok_pawopGfayscdgvw
+	jmp	.L_16_blocks_ok_902
 
-.L_16_blocks_overflow_pawopGfayscdgvw:
+.L_16_blocks_overflow_902:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%ymm29,%ymm0,%ymm0
-.L_16_blocks_ok_pawopGfayscdgvw:
+.L_16_blocks_ok_902:
 
 
 
@@ -124075,7 +124075,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_kuGedDpafeFAzAj
+	jl	.L_small_initial_partial_block_903
 
 
 
@@ -124117,8 +124117,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_kuGedDpafeFAzAj
-.L_small_initial_partial_block_kuGedDpafeFAzAj:
+	jmp	.L_small_initial_compute_done_903
+.L_small_initial_partial_block_903:
 
 
 
@@ -124163,27 +124163,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_kuGedDpafeFAzAj:
+.L_small_initial_compute_done_903:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_kuGedDpafeFAzAj
+	je	.L_after_reduction_903
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_kuGedDpafeFAzAj:
-	jmp	.L_last_blocks_done_bmmCnCClAGkAgFj
-.L_last_num_blocks_is_3_bmmCnCClAGkAgFj:
+.L_after_reduction_903:
+	jmp	.L_last_blocks_done_899
+.L_last_num_blocks_is_3_899:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$253,%r15d
-	jae	.L_16_blocks_overflow_FwEFvgquiDiDCmw
+	jae	.L_16_blocks_overflow_904
 	vpaddd	%zmm28,%zmm2,%zmm0
-	jmp	.L_16_blocks_ok_FwEFvgquiDiDCmw
+	jmp	.L_16_blocks_ok_904
 
-.L_16_blocks_overflow_FwEFvgquiDiDCmw:
+.L_16_blocks_overflow_904:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%zmm29,%zmm0,%zmm0
-.L_16_blocks_ok_FwEFvgquiDiDCmw:
+.L_16_blocks_ok_904:
 
 
 
@@ -124299,7 +124299,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_vkiEvcBfqmiFBqt
+	jl	.L_small_initial_partial_block_905
 
 
 
@@ -124342,8 +124342,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_vkiEvcBfqmiFBqt
-.L_small_initial_partial_block_vkiEvcBfqmiFBqt:
+	jmp	.L_small_initial_compute_done_905
+.L_small_initial_partial_block_905:
 
 
 
@@ -124388,27 +124388,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_vkiEvcBfqmiFBqt:
+.L_small_initial_compute_done_905:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_vkiEvcBfqmiFBqt
+	je	.L_after_reduction_905
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_vkiEvcBfqmiFBqt:
-	jmp	.L_last_blocks_done_bmmCnCClAGkAgFj
-.L_last_num_blocks_is_4_bmmCnCClAGkAgFj:
+.L_after_reduction_905:
+	jmp	.L_last_blocks_done_899
+.L_last_num_blocks_is_4_899:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$252,%r15d
-	jae	.L_16_blocks_overflow_jxjBkgBpDcdcffm
+	jae	.L_16_blocks_overflow_906
 	vpaddd	%zmm28,%zmm2,%zmm0
-	jmp	.L_16_blocks_ok_jxjBkgBpDcdcffm
+	jmp	.L_16_blocks_ok_906
 
-.L_16_blocks_overflow_jxjBkgBpDcdcffm:
+.L_16_blocks_overflow_906:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%zmm29,%zmm0,%zmm0
-.L_16_blocks_ok_jxjBkgBpDcdcffm:
+.L_16_blocks_ok_906:
 
 
 
@@ -124524,7 +124524,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_qecodegreduBirC
+	jl	.L_small_initial_partial_block_907
 
 
 
@@ -124566,8 +124566,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_qecodegreduBirC
-.L_small_initial_partial_block_qecodegreduBirC:
+	jmp	.L_small_initial_compute_done_907
+.L_small_initial_partial_block_907:
 
 
 
@@ -124613,32 +124613,32 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_qecodegreduBirC:
+.L_small_initial_compute_done_907:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_qecodegreduBirC
+	je	.L_after_reduction_907
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_qecodegreduBirC:
-	jmp	.L_last_blocks_done_bmmCnCClAGkAgFj
-.L_last_num_blocks_is_5_bmmCnCClAGkAgFj:
+.L_after_reduction_907:
+	jmp	.L_last_blocks_done_899
+.L_last_num_blocks_is_5_899:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$251,%r15d
-	jae	.L_16_blocks_overflow_xrbDdkkfxkForcf
+	jae	.L_16_blocks_overflow_908
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%xmm27,%xmm0,%xmm3
-	jmp	.L_16_blocks_ok_xrbDdkkfxkForcf
+	jmp	.L_16_blocks_ok_908
 
-.L_16_blocks_overflow_xrbDdkkfxkForcf:
+.L_16_blocks_overflow_908:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%xmm29,%xmm3,%xmm3
-.L_16_blocks_ok_xrbDdkkfxkForcf:
+.L_16_blocks_ok_908:
 
 
 
@@ -124773,7 +124773,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_ipkrpGonrvDdlul
+	jl	.L_small_initial_partial_block_909
 
 
 
@@ -124825,8 +124825,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_ipkrpGonrvDdlul
-.L_small_initial_partial_block_ipkrpGonrvDdlul:
+	jmp	.L_small_initial_compute_done_909
+.L_small_initial_partial_block_909:
 
 
 
@@ -124871,32 +124871,32 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_ipkrpGonrvDdlul:
+.L_small_initial_compute_done_909:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_ipkrpGonrvDdlul
+	je	.L_after_reduction_909
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_ipkrpGonrvDdlul:
-	jmp	.L_last_blocks_done_bmmCnCClAGkAgFj
-.L_last_num_blocks_is_6_bmmCnCClAGkAgFj:
+.L_after_reduction_909:
+	jmp	.L_last_blocks_done_899
+.L_last_num_blocks_is_6_899:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$250,%r15d
-	jae	.L_16_blocks_overflow_CtwuEdGsnajdAbF
+	jae	.L_16_blocks_overflow_910
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%ymm27,%ymm0,%ymm3
-	jmp	.L_16_blocks_ok_CtwuEdGsnajdAbF
+	jmp	.L_16_blocks_ok_910
 
-.L_16_blocks_overflow_CtwuEdGsnajdAbF:
+.L_16_blocks_overflow_910:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%ymm29,%ymm3,%ymm3
-.L_16_blocks_ok_CtwuEdGsnajdAbF:
+.L_16_blocks_ok_910:
 
 
 
@@ -125031,7 +125031,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_irvmxinkoauBnnn
+	jl	.L_small_initial_partial_block_911
 
 
 
@@ -125083,8 +125083,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_irvmxinkoauBnnn
-.L_small_initial_partial_block_irvmxinkoauBnnn:
+	jmp	.L_small_initial_compute_done_911
+.L_small_initial_partial_block_911:
 
 
 
@@ -125139,32 +125139,32 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_irvmxinkoauBnnn:
+.L_small_initial_compute_done_911:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_irvmxinkoauBnnn
+	je	.L_after_reduction_911
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_irvmxinkoauBnnn:
-	jmp	.L_last_blocks_done_bmmCnCClAGkAgFj
-.L_last_num_blocks_is_7_bmmCnCClAGkAgFj:
+.L_after_reduction_911:
+	jmp	.L_last_blocks_done_899
+.L_last_num_blocks_is_7_899:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$249,%r15d
-	jae	.L_16_blocks_overflow_EeAvozbiewjvgFD
+	jae	.L_16_blocks_overflow_912
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
-	jmp	.L_16_blocks_ok_EeAvozbiewjvgFD
+	jmp	.L_16_blocks_ok_912
 
-.L_16_blocks_overflow_EeAvozbiewjvgFD:
+.L_16_blocks_overflow_912:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
-.L_16_blocks_ok_EeAvozbiewjvgFD:
+.L_16_blocks_ok_912:
 
 
 
@@ -125299,7 +125299,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_zglGxGAzpFcFiGB
+	jl	.L_small_initial_partial_block_913
 
 
 
@@ -125352,8 +125352,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_zglGxGAzpFcFiGB
-.L_small_initial_partial_block_zglGxGAzpFcFiGB:
+	jmp	.L_small_initial_compute_done_913
+.L_small_initial_partial_block_913:
 
 
 
@@ -125408,32 +125408,32 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_zglGxGAzpFcFiGB:
+.L_small_initial_compute_done_913:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_zglGxGAzpFcFiGB
+	je	.L_after_reduction_913
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_zglGxGAzpFcFiGB:
-	jmp	.L_last_blocks_done_bmmCnCClAGkAgFj
-.L_last_num_blocks_is_8_bmmCnCClAGkAgFj:
+.L_after_reduction_913:
+	jmp	.L_last_blocks_done_899
+.L_last_num_blocks_is_8_899:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$248,%r15d
-	jae	.L_16_blocks_overflow_zaEkzmpqyunpECD
+	jae	.L_16_blocks_overflow_914
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
-	jmp	.L_16_blocks_ok_zaEkzmpqyunpECD
+	jmp	.L_16_blocks_ok_914
 
-.L_16_blocks_overflow_zaEkzmpqyunpECD:
+.L_16_blocks_overflow_914:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
-.L_16_blocks_ok_zaEkzmpqyunpECD:
+.L_16_blocks_ok_914:
 
 
 
@@ -125568,7 +125568,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_nutzgwpyocmmbbl
+	jl	.L_small_initial_partial_block_915
 
 
 
@@ -125619,8 +125619,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_nutzgwpyocmmbbl
-.L_small_initial_partial_block_nutzgwpyocmmbbl:
+	jmp	.L_small_initial_compute_done_915
+.L_small_initial_partial_block_915:
 
 
 
@@ -125676,26 +125676,26 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_nutzgwpyocmmbbl:
+.L_small_initial_compute_done_915:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_nutzgwpyocmmbbl
+	je	.L_after_reduction_915
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_nutzgwpyocmmbbl:
-	jmp	.L_last_blocks_done_bmmCnCClAGkAgFj
-.L_last_num_blocks_is_9_bmmCnCClAGkAgFj:
+.L_after_reduction_915:
+	jmp	.L_last_blocks_done_899
+.L_last_num_blocks_is_9_899:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$247,%r15d
-	jae	.L_16_blocks_overflow_ijaxBzyhokmrwhB
+	jae	.L_16_blocks_overflow_916
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%xmm27,%xmm3,%xmm4
-	jmp	.L_16_blocks_ok_ijaxBzyhokmrwhB
+	jmp	.L_16_blocks_ok_916
 
-.L_16_blocks_overflow_ijaxBzyhokmrwhB:
+.L_16_blocks_overflow_916:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -125704,7 +125704,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%xmm29,%xmm4,%xmm4
-.L_16_blocks_ok_ijaxBzyhokmrwhB:
+.L_16_blocks_ok_916:
 
 
 
@@ -125858,7 +125858,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_kgFmECqeDtpBDkx
+	jl	.L_small_initial_partial_block_917
 
 
 
@@ -125919,8 +125919,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_kgFmECqeDtpBDkx
-.L_small_initial_partial_block_kgFmECqeDtpBDkx:
+	jmp	.L_small_initial_compute_done_917
+.L_small_initial_partial_block_917:
 
 
 
@@ -125974,26 +125974,26 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_kgFmECqeDtpBDkx:
+.L_small_initial_compute_done_917:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_kgFmECqeDtpBDkx
+	je	.L_after_reduction_917
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_kgFmECqeDtpBDkx:
-	jmp	.L_last_blocks_done_bmmCnCClAGkAgFj
-.L_last_num_blocks_is_10_bmmCnCClAGkAgFj:
+.L_after_reduction_917:
+	jmp	.L_last_blocks_done_899
+.L_last_num_blocks_is_10_899:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$246,%r15d
-	jae	.L_16_blocks_overflow_GzdExkqDxAbkvEo
+	jae	.L_16_blocks_overflow_918
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%ymm27,%ymm3,%ymm4
-	jmp	.L_16_blocks_ok_GzdExkqDxAbkvEo
+	jmp	.L_16_blocks_ok_918
 
-.L_16_blocks_overflow_GzdExkqDxAbkvEo:
+.L_16_blocks_overflow_918:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -126002,7 +126002,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%ymm29,%ymm4,%ymm4
-.L_16_blocks_ok_GzdExkqDxAbkvEo:
+.L_16_blocks_ok_918:
 
 
 
@@ -126156,7 +126156,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_AAiCDrFrytDuCDn
+	jl	.L_small_initial_partial_block_919
 
 
 
@@ -126217,8 +126217,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_AAiCDrFrytDuCDn
-.L_small_initial_partial_block_AAiCDrFrytDuCDn:
+	jmp	.L_small_initial_compute_done_919
+.L_small_initial_partial_block_919:
 
 
 
@@ -126282,26 +126282,26 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_AAiCDrFrytDuCDn:
+.L_small_initial_compute_done_919:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_AAiCDrFrytDuCDn
+	je	.L_after_reduction_919
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_AAiCDrFrytDuCDn:
-	jmp	.L_last_blocks_done_bmmCnCClAGkAgFj
-.L_last_num_blocks_is_11_bmmCnCClAGkAgFj:
+.L_after_reduction_919:
+	jmp	.L_last_blocks_done_899
+.L_last_num_blocks_is_11_899:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$245,%r15d
-	jae	.L_16_blocks_overflow_yltlCswbDrnGDok
+	jae	.L_16_blocks_overflow_920
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
-	jmp	.L_16_blocks_ok_yltlCswbDrnGDok
+	jmp	.L_16_blocks_ok_920
 
-.L_16_blocks_overflow_yltlCswbDrnGDok:
+.L_16_blocks_overflow_920:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -126310,7 +126310,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
-.L_16_blocks_ok_yltlCswbDrnGDok:
+.L_16_blocks_ok_920:
 
 
 
@@ -126464,7 +126464,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_tDngsvCGbzkAsuh
+	jl	.L_small_initial_partial_block_921
 
 
 
@@ -126526,8 +126526,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_tDngsvCGbzkAsuh
-.L_small_initial_partial_block_tDngsvCGbzkAsuh:
+	jmp	.L_small_initial_compute_done_921
+.L_small_initial_partial_block_921:
 
 
 
@@ -126591,26 +126591,26 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_tDngsvCGbzkAsuh:
+.L_small_initial_compute_done_921:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_tDngsvCGbzkAsuh
+	je	.L_after_reduction_921
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_tDngsvCGbzkAsuh:
-	jmp	.L_last_blocks_done_bmmCnCClAGkAgFj
-.L_last_num_blocks_is_12_bmmCnCClAGkAgFj:
+.L_after_reduction_921:
+	jmp	.L_last_blocks_done_899
+.L_last_num_blocks_is_12_899:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$244,%r15d
-	jae	.L_16_blocks_overflow_GalprwEtyEjbdqq
+	jae	.L_16_blocks_overflow_922
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
-	jmp	.L_16_blocks_ok_GalprwEtyEjbdqq
+	jmp	.L_16_blocks_ok_922
 
-.L_16_blocks_overflow_GalprwEtyEjbdqq:
+.L_16_blocks_overflow_922:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -126619,7 +126619,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
-.L_16_blocks_ok_GalprwEtyEjbdqq:
+.L_16_blocks_ok_922:
 
 
 
@@ -126773,7 +126773,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_EcsrurdgazbByqj
+	jl	.L_small_initial_partial_block_923
 
 
 
@@ -126829,8 +126829,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_EcsrurdgazbByqj
-.L_small_initial_partial_block_EcsrurdgazbByqj:
+	jmp	.L_small_initial_compute_done_923
+.L_small_initial_partial_block_923:
 
 
 
@@ -126895,27 +126895,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_EcsrurdgazbByqj:
+.L_small_initial_compute_done_923:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_EcsrurdgazbByqj
+	je	.L_after_reduction_923
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_EcsrurdgazbByqj:
-	jmp	.L_last_blocks_done_bmmCnCClAGkAgFj
-.L_last_num_blocks_is_13_bmmCnCClAGkAgFj:
+.L_after_reduction_923:
+	jmp	.L_last_blocks_done_899
+.L_last_num_blocks_is_13_899:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$243,%r15d
-	jae	.L_16_blocks_overflow_ihAecDstcbcoicc
+	jae	.L_16_blocks_overflow_924
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%xmm27,%xmm4,%xmm5
-	jmp	.L_16_blocks_ok_ihAecDstcbcoicc
+	jmp	.L_16_blocks_ok_924
 
-.L_16_blocks_overflow_ihAecDstcbcoicc:
+.L_16_blocks_overflow_924:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -126926,7 +126926,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%xmm29,%xmm5,%xmm5
-.L_16_blocks_ok_ihAecDstcbcoicc:
+.L_16_blocks_ok_924:
 
 
 
@@ -127099,7 +127099,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_roqkaFiszosAqgz
+	jl	.L_small_initial_partial_block_925
 
 
 
@@ -127165,8 +127165,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_roqkaFiszosAqgz
-.L_small_initial_partial_block_roqkaFiszosAqgz:
+	jmp	.L_small_initial_compute_done_925
+.L_small_initial_partial_block_925:
 
 
 
@@ -127225,27 +127225,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_roqkaFiszosAqgz:
+.L_small_initial_compute_done_925:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_roqkaFiszosAqgz
+	je	.L_after_reduction_925
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_roqkaFiszosAqgz:
-	jmp	.L_last_blocks_done_bmmCnCClAGkAgFj
-.L_last_num_blocks_is_14_bmmCnCClAGkAgFj:
+.L_after_reduction_925:
+	jmp	.L_last_blocks_done_899
+.L_last_num_blocks_is_14_899:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$242,%r15d
-	jae	.L_16_blocks_overflow_qasAxEunzlsgDip
+	jae	.L_16_blocks_overflow_926
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%ymm27,%ymm4,%ymm5
-	jmp	.L_16_blocks_ok_qasAxEunzlsgDip
+	jmp	.L_16_blocks_ok_926
 
-.L_16_blocks_overflow_qasAxEunzlsgDip:
+.L_16_blocks_overflow_926:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -127256,7 +127256,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%ymm29,%ymm5,%ymm5
-.L_16_blocks_ok_qasAxEunzlsgDip:
+.L_16_blocks_ok_926:
 
 
 
@@ -127429,7 +127429,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_hcbivhienxrdbiF
+	jl	.L_small_initial_partial_block_927
 
 
 
@@ -127495,8 +127495,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_hcbivhienxrdbiF
-.L_small_initial_partial_block_hcbivhienxrdbiF:
+	jmp	.L_small_initial_compute_done_927
+.L_small_initial_partial_block_927:
 
 
 
@@ -127565,27 +127565,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_hcbivhienxrdbiF:
+.L_small_initial_compute_done_927:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_hcbivhienxrdbiF
+	je	.L_after_reduction_927
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_hcbivhienxrdbiF:
-	jmp	.L_last_blocks_done_bmmCnCClAGkAgFj
-.L_last_num_blocks_is_15_bmmCnCClAGkAgFj:
+.L_after_reduction_927:
+	jmp	.L_last_blocks_done_899
+.L_last_num_blocks_is_15_899:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$241,%r15d
-	jae	.L_16_blocks_overflow_ahaqtuobjhjiqnG
+	jae	.L_16_blocks_overflow_928
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_ahaqtuobjhjiqnG
+	jmp	.L_16_blocks_ok_928
 
-.L_16_blocks_overflow_ahaqtuobjhjiqnG:
+.L_16_blocks_overflow_928:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -127596,7 +127596,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_ahaqtuobjhjiqnG:
+.L_16_blocks_ok_928:
 
 
 
@@ -127769,7 +127769,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_nfuiydADpehainf
+	jl	.L_small_initial_partial_block_929
 
 
 
@@ -127836,8 +127836,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_nfuiydADpehainf
-.L_small_initial_partial_block_nfuiydADpehainf:
+	jmp	.L_small_initial_compute_done_929
+.L_small_initial_partial_block_929:
 
 
 
@@ -127906,27 +127906,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_nfuiydADpehainf:
+.L_small_initial_compute_done_929:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_nfuiydADpehainf
+	je	.L_after_reduction_929
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_nfuiydADpehainf:
-	jmp	.L_last_blocks_done_bmmCnCClAGkAgFj
-.L_last_num_blocks_is_16_bmmCnCClAGkAgFj:
+.L_after_reduction_929:
+	jmp	.L_last_blocks_done_899
+.L_last_num_blocks_is_16_899:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$240,%r15d
-	jae	.L_16_blocks_overflow_uidgFuqCojcnwky
+	jae	.L_16_blocks_overflow_930
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_uidgFuqCojcnwky
+	jmp	.L_16_blocks_ok_930
 
-.L_16_blocks_overflow_uidgFuqCojcnwky:
+.L_16_blocks_overflow_930:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -127937,7 +127937,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_uidgFuqCojcnwky:
+.L_16_blocks_ok_930:
 
 
 
@@ -128107,7 +128107,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm21,%zmm21
 	vextracti32x4	$3,%zmm21,%xmm7
 	subq	$16 * (16 - 1),%r8
-.L_small_initial_partial_block_cjqsridulpjfbmx:
+.L_small_initial_partial_block_931:
 
 
 
@@ -128177,11 +128177,11 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_cjqsridulpjfbmx:
+.L_small_initial_compute_done_931:
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_cjqsridulpjfbmx:
-	jmp	.L_last_blocks_done_bmmCnCClAGkAgFj
-.L_last_num_blocks_is_0_bmmCnCClAGkAgFj:
+.L_after_reduction_931:
+	jmp	.L_last_blocks_done_899
+.L_last_num_blocks_is_0_899:
 	vmovdqa64	1280(%rsp),%zmm13
 	vmovdqu64	512(%rsp),%zmm12
 	vpclmulqdq	$0x11,%zmm12,%zmm13,%zmm0
@@ -128242,18 +128242,18 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm24,%xmm3,%xmm14
 
-.L_last_blocks_done_bmmCnCClAGkAgFj:
+.L_last_blocks_done_899:
 	vpshufb	%xmm29,%xmm2,%xmm2
-	jmp	.L_ghash_done_BgFfAgFalCBiqtf
+	jmp	.L_ghash_done_821
 
-.L_message_below_32_blocks_BgFfAgFalCBiqtf:
+.L_message_below_32_blocks_821:
 
 
 	subq	$256,%r8
 	addq	$256,%r11
 	movl	%r8d,%r10d
 	testq	%r14,%r14
-	jnz	.L_skip_hkeys_precomputation_Earvmapwfbnrowd
+	jnz	.L_skip_hkeys_precomputation_932
 	vmovdqu64	640(%rsp),%zmm3
 
 
@@ -128381,7 +128381,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpternlogq	$0x96,%zmm7,%zmm6,%zmm5
 
 	vmovdqu64	%zmm5,256(%rsp)
-.L_skip_hkeys_precomputation_Earvmapwfbnrowd:
+.L_skip_hkeys_precomputation_932:
 	movq	$1,%r14
 	andl	$~15,%r10d
 	movl	$512,%ebx
@@ -128389,61 +128389,61 @@ ossl_aes_gcm_decrypt_avx512:
 	movl	%r8d,%r10d
 	addl	$15,%r10d
 	shrl	$4,%r10d
-	je	.L_last_num_blocks_is_0_dfkhivqAFxzwiGe
+	je	.L_last_num_blocks_is_0_933
 
 	cmpl	$8,%r10d
-	je	.L_last_num_blocks_is_8_dfkhivqAFxzwiGe
-	jb	.L_last_num_blocks_is_7_1_dfkhivqAFxzwiGe
+	je	.L_last_num_blocks_is_8_933
+	jb	.L_last_num_blocks_is_7_1_933
 
 
 	cmpl	$12,%r10d
-	je	.L_last_num_blocks_is_12_dfkhivqAFxzwiGe
-	jb	.L_last_num_blocks_is_11_9_dfkhivqAFxzwiGe
+	je	.L_last_num_blocks_is_12_933
+	jb	.L_last_num_blocks_is_11_9_933
 
 
 	cmpl	$15,%r10d
-	je	.L_last_num_blocks_is_15_dfkhivqAFxzwiGe
-	ja	.L_last_num_blocks_is_16_dfkhivqAFxzwiGe
+	je	.L_last_num_blocks_is_15_933
+	ja	.L_last_num_blocks_is_16_933
 	cmpl	$14,%r10d
-	je	.L_last_num_blocks_is_14_dfkhivqAFxzwiGe
-	jmp	.L_last_num_blocks_is_13_dfkhivqAFxzwiGe
+	je	.L_last_num_blocks_is_14_933
+	jmp	.L_last_num_blocks_is_13_933
 
-.L_last_num_blocks_is_11_9_dfkhivqAFxzwiGe:
+.L_last_num_blocks_is_11_9_933:
 
 	cmpl	$10,%r10d
-	je	.L_last_num_blocks_is_10_dfkhivqAFxzwiGe
-	ja	.L_last_num_blocks_is_11_dfkhivqAFxzwiGe
-	jmp	.L_last_num_blocks_is_9_dfkhivqAFxzwiGe
+	je	.L_last_num_blocks_is_10_933
+	ja	.L_last_num_blocks_is_11_933
+	jmp	.L_last_num_blocks_is_9_933
 
-.L_last_num_blocks_is_7_1_dfkhivqAFxzwiGe:
+.L_last_num_blocks_is_7_1_933:
 	cmpl	$4,%r10d
-	je	.L_last_num_blocks_is_4_dfkhivqAFxzwiGe
-	jb	.L_last_num_blocks_is_3_1_dfkhivqAFxzwiGe
+	je	.L_last_num_blocks_is_4_933
+	jb	.L_last_num_blocks_is_3_1_933
 
 	cmpl	$6,%r10d
-	ja	.L_last_num_blocks_is_7_dfkhivqAFxzwiGe
-	je	.L_last_num_blocks_is_6_dfkhivqAFxzwiGe
-	jmp	.L_last_num_blocks_is_5_dfkhivqAFxzwiGe
+	ja	.L_last_num_blocks_is_7_933
+	je	.L_last_num_blocks_is_6_933
+	jmp	.L_last_num_blocks_is_5_933
 
-.L_last_num_blocks_is_3_1_dfkhivqAFxzwiGe:
+.L_last_num_blocks_is_3_1_933:
 
 	cmpl	$2,%r10d
-	ja	.L_last_num_blocks_is_3_dfkhivqAFxzwiGe
-	je	.L_last_num_blocks_is_2_dfkhivqAFxzwiGe
-.L_last_num_blocks_is_1_dfkhivqAFxzwiGe:
+	ja	.L_last_num_blocks_is_3_933
+	je	.L_last_num_blocks_is_2_933
+.L_last_num_blocks_is_1_933:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$255,%r15d
-	jae	.L_16_blocks_overflow_qfBhoGFEfAudmsB
+	jae	.L_16_blocks_overflow_934
 	vpaddd	%xmm28,%xmm2,%xmm0
-	jmp	.L_16_blocks_ok_qfBhoGFEfAudmsB
+	jmp	.L_16_blocks_ok_934
 
-.L_16_blocks_overflow_qfBhoGFEfAudmsB:
+.L_16_blocks_overflow_934:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%xmm29,%xmm0,%xmm0
-.L_16_blocks_ok_qfBhoGFEfAudmsB:
+.L_16_blocks_ok_934:
 
 
 
@@ -128535,7 +128535,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_laBstqfnvmDyubg
+	jl	.L_small_initial_partial_block_935
 
 
 
@@ -128579,8 +128579,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_laBstqfnvmDyubg
-.L_small_initial_partial_block_laBstqfnvmDyubg:
+	jmp	.L_small_initial_compute_done_935
+.L_small_initial_partial_block_935:
 
 
 
@@ -128632,24 +128632,24 @@ ossl_aes_gcm_decrypt_avx512:
 
 	vpxorq	%xmm7,%xmm14,%xmm14
 
-	jmp	.L_after_reduction_laBstqfnvmDyubg
-.L_small_initial_compute_done_laBstqfnvmDyubg:
-.L_after_reduction_laBstqfnvmDyubg:
-	jmp	.L_last_blocks_done_dfkhivqAFxzwiGe
-.L_last_num_blocks_is_2_dfkhivqAFxzwiGe:
+	jmp	.L_after_reduction_935
+.L_small_initial_compute_done_935:
+.L_after_reduction_935:
+	jmp	.L_last_blocks_done_933
+.L_last_num_blocks_is_2_933:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$254,%r15d
-	jae	.L_16_blocks_overflow_DBDfdezDtfzgqyB
+	jae	.L_16_blocks_overflow_936
 	vpaddd	%ymm28,%ymm2,%ymm0
-	jmp	.L_16_blocks_ok_DBDfdezDtfzgqyB
+	jmp	.L_16_blocks_ok_936
 
-.L_16_blocks_overflow_DBDfdezDtfzgqyB:
+.L_16_blocks_overflow_936:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%ymm29,%ymm0,%ymm0
-.L_16_blocks_ok_DBDfdezDtfzgqyB:
+.L_16_blocks_ok_936:
 
 
 
@@ -128742,7 +128742,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_fzxzoyAmsdzqvlm
+	jl	.L_small_initial_partial_block_937
 
 
 
@@ -128786,8 +128786,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_fzxzoyAmsdzqvlm
-.L_small_initial_partial_block_fzxzoyAmsdzqvlm:
+	jmp	.L_small_initial_compute_done_937
+.L_small_initial_partial_block_937:
 
 
 
@@ -128834,27 +128834,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_fzxzoyAmsdzqvlm:
+.L_small_initial_compute_done_937:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_fzxzoyAmsdzqvlm
+	je	.L_after_reduction_937
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_fzxzoyAmsdzqvlm:
-	jmp	.L_last_blocks_done_dfkhivqAFxzwiGe
-.L_last_num_blocks_is_3_dfkhivqAFxzwiGe:
+.L_after_reduction_937:
+	jmp	.L_last_blocks_done_933
+.L_last_num_blocks_is_3_933:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$253,%r15d
-	jae	.L_16_blocks_overflow_zeAorDfehCBauCb
+	jae	.L_16_blocks_overflow_938
 	vpaddd	%zmm28,%zmm2,%zmm0
-	jmp	.L_16_blocks_ok_zeAorDfehCBauCb
+	jmp	.L_16_blocks_ok_938
 
-.L_16_blocks_overflow_zeAorDfehCBauCb:
+.L_16_blocks_overflow_938:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%zmm29,%zmm0,%zmm0
-.L_16_blocks_ok_zeAorDfehCBauCb:
+.L_16_blocks_ok_938:
 
 
 
@@ -128947,7 +128947,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_yvixmuEoyhuBlyB
+	jl	.L_small_initial_partial_block_939
 
 
 
@@ -128992,8 +128992,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_yvixmuEoyhuBlyB
-.L_small_initial_partial_block_yvixmuEoyhuBlyB:
+	jmp	.L_small_initial_compute_done_939
+.L_small_initial_partial_block_939:
 
 
 
@@ -129040,27 +129040,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_yvixmuEoyhuBlyB:
+.L_small_initial_compute_done_939:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_yvixmuEoyhuBlyB
+	je	.L_after_reduction_939
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_yvixmuEoyhuBlyB:
-	jmp	.L_last_blocks_done_dfkhivqAFxzwiGe
-.L_last_num_blocks_is_4_dfkhivqAFxzwiGe:
+.L_after_reduction_939:
+	jmp	.L_last_blocks_done_933
+.L_last_num_blocks_is_4_933:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$252,%r15d
-	jae	.L_16_blocks_overflow_zmdtbcEbrfioqbi
+	jae	.L_16_blocks_overflow_940
 	vpaddd	%zmm28,%zmm2,%zmm0
-	jmp	.L_16_blocks_ok_zmdtbcEbrfioqbi
+	jmp	.L_16_blocks_ok_940
 
-.L_16_blocks_overflow_zmdtbcEbrfioqbi:
+.L_16_blocks_overflow_940:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vpshufb	%zmm29,%zmm0,%zmm0
-.L_16_blocks_ok_zmdtbcEbrfioqbi:
+.L_16_blocks_ok_940:
 
 
 
@@ -129153,7 +129153,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_AkzFciirDhAcErk
+	jl	.L_small_initial_partial_block_941
 
 
 
@@ -129198,8 +129198,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_AkzFciirDhAcErk
-.L_small_initial_partial_block_AkzFciirDhAcErk:
+	jmp	.L_small_initial_compute_done_941
+.L_small_initial_partial_block_941:
 
 
 
@@ -129247,32 +129247,32 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_AkzFciirDhAcErk:
+.L_small_initial_compute_done_941:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_AkzFciirDhAcErk
+	je	.L_after_reduction_941
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_AkzFciirDhAcErk:
-	jmp	.L_last_blocks_done_dfkhivqAFxzwiGe
-.L_last_num_blocks_is_5_dfkhivqAFxzwiGe:
+.L_after_reduction_941:
+	jmp	.L_last_blocks_done_933
+.L_last_num_blocks_is_5_933:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$251,%r15d
-	jae	.L_16_blocks_overflow_CbaulglAsvBBDeC
+	jae	.L_16_blocks_overflow_942
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%xmm27,%xmm0,%xmm3
-	jmp	.L_16_blocks_ok_CbaulglAsvBBDeC
+	jmp	.L_16_blocks_ok_942
 
-.L_16_blocks_overflow_CbaulglAsvBBDeC:
+.L_16_blocks_overflow_942:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%xmm29,%xmm3,%xmm3
-.L_16_blocks_ok_CbaulglAsvBBDeC:
+.L_16_blocks_ok_942:
 
 
 
@@ -129384,7 +129384,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_obwCfxsnnxinEEG
+	jl	.L_small_initial_partial_block_943
 
 
 
@@ -129435,8 +129435,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_obwCfxsnnxinEEG
-.L_small_initial_partial_block_obwCfxsnnxinEEG:
+	jmp	.L_small_initial_compute_done_943
+.L_small_initial_partial_block_943:
 
 
 
@@ -129484,32 +129484,32 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_obwCfxsnnxinEEG:
+.L_small_initial_compute_done_943:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_obwCfxsnnxinEEG
+	je	.L_after_reduction_943
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_obwCfxsnnxinEEG:
-	jmp	.L_last_blocks_done_dfkhivqAFxzwiGe
-.L_last_num_blocks_is_6_dfkhivqAFxzwiGe:
+.L_after_reduction_943:
+	jmp	.L_last_blocks_done_933
+.L_last_num_blocks_is_6_933:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$250,%r15d
-	jae	.L_16_blocks_overflow_dElkfrzqgrzGFkB
+	jae	.L_16_blocks_overflow_944
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%ymm27,%ymm0,%ymm3
-	jmp	.L_16_blocks_ok_dElkfrzqgrzGFkB
+	jmp	.L_16_blocks_ok_944
 
-.L_16_blocks_overflow_dElkfrzqgrzGFkB:
+.L_16_blocks_overflow_944:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%ymm29,%ymm3,%ymm3
-.L_16_blocks_ok_dElkfrzqgrzGFkB:
+.L_16_blocks_ok_944:
 
 
 
@@ -129621,7 +129621,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_ueqDgpDlyfrDEzb
+	jl	.L_small_initial_partial_block_945
 
 
 
@@ -129672,8 +129672,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_ueqDgpDlyfrDEzb
-.L_small_initial_partial_block_ueqDgpDlyfrDEzb:
+	jmp	.L_small_initial_compute_done_945
+.L_small_initial_partial_block_945:
 
 
 
@@ -129727,32 +129727,32 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_ueqDgpDlyfrDEzb:
+.L_small_initial_compute_done_945:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_ueqDgpDlyfrDEzb
+	je	.L_after_reduction_945
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_ueqDgpDlyfrDEzb:
-	jmp	.L_last_blocks_done_dfkhivqAFxzwiGe
-.L_last_num_blocks_is_7_dfkhivqAFxzwiGe:
+.L_after_reduction_945:
+	jmp	.L_last_blocks_done_933
+.L_last_num_blocks_is_7_933:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$249,%r15d
-	jae	.L_16_blocks_overflow_mcCecmAtpnADcho
+	jae	.L_16_blocks_overflow_946
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
-	jmp	.L_16_blocks_ok_mcCecmAtpnADcho
+	jmp	.L_16_blocks_ok_946
 
-.L_16_blocks_overflow_mcCecmAtpnADcho:
+.L_16_blocks_overflow_946:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
-.L_16_blocks_ok_mcCecmAtpnADcho:
+.L_16_blocks_ok_946:
 
 
 
@@ -129864,7 +129864,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_ussziGFsDahzgCA
+	jl	.L_small_initial_partial_block_947
 
 
 
@@ -129916,8 +129916,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_ussziGFsDahzgCA
-.L_small_initial_partial_block_ussziGFsDahzgCA:
+	jmp	.L_small_initial_compute_done_947
+.L_small_initial_partial_block_947:
 
 
 
@@ -129971,32 +129971,32 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_ussziGFsDahzgCA:
+.L_small_initial_compute_done_947:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_ussziGFsDahzgCA
+	je	.L_after_reduction_947
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_ussziGFsDahzgCA:
-	jmp	.L_last_blocks_done_dfkhivqAFxzwiGe
-.L_last_num_blocks_is_8_dfkhivqAFxzwiGe:
+.L_after_reduction_947:
+	jmp	.L_last_blocks_done_933
+.L_last_num_blocks_is_8_933:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$64,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$248,%r15d
-	jae	.L_16_blocks_overflow_qyFkdltbnbywinD
+	jae	.L_16_blocks_overflow_948
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
-	jmp	.L_16_blocks_ok_qyFkdltbnbywinD
+	jmp	.L_16_blocks_ok_948
 
-.L_16_blocks_overflow_qyFkdltbnbywinD:
+.L_16_blocks_overflow_948:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
 	vpaddd	%zmm5,%zmm0,%zmm3
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
-.L_16_blocks_ok_qyFkdltbnbywinD:
+.L_16_blocks_ok_948:
 
 
 
@@ -130108,7 +130108,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_aFlFBFhvxwqbGFF
+	jl	.L_small_initial_partial_block_949
 
 
 
@@ -130162,8 +130162,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_aFlFBFhvxwqbGFF
-.L_small_initial_partial_block_aFlFBFhvxwqbGFF:
+	jmp	.L_small_initial_compute_done_949
+.L_small_initial_partial_block_949:
 
 
 
@@ -130218,26 +130218,26 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_aFlFBFhvxwqbGFF:
+.L_small_initial_compute_done_949:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_aFlFBFhvxwqbGFF
+	je	.L_after_reduction_949
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_aFlFBFhvxwqbGFF:
-	jmp	.L_last_blocks_done_dfkhivqAFxzwiGe
-.L_last_num_blocks_is_9_dfkhivqAFxzwiGe:
+.L_after_reduction_949:
+	jmp	.L_last_blocks_done_933
+.L_last_num_blocks_is_9_933:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$247,%r15d
-	jae	.L_16_blocks_overflow_jaAfqGlviFGpfab
+	jae	.L_16_blocks_overflow_950
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%xmm27,%xmm3,%xmm4
-	jmp	.L_16_blocks_ok_jaAfqGlviFGpfab
+	jmp	.L_16_blocks_ok_950
 
-.L_16_blocks_overflow_jaAfqGlviFGpfab:
+.L_16_blocks_overflow_950:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -130246,7 +130246,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%xmm29,%xmm4,%xmm4
-.L_16_blocks_ok_jaAfqGlviFGpfab:
+.L_16_blocks_ok_950:
 
 
 
@@ -130377,7 +130377,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_jxchlGjDidlqCCy
+	jl	.L_small_initial_partial_block_951
 
 
 
@@ -130437,8 +130437,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_jxchlGjDidlqCCy
-.L_small_initial_partial_block_jxchlGjDidlqCCy:
+	jmp	.L_small_initial_compute_done_951
+.L_small_initial_partial_block_951:
 
 
 
@@ -130495,26 +130495,26 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_jxchlGjDidlqCCy:
+.L_small_initial_compute_done_951:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_jxchlGjDidlqCCy
+	je	.L_after_reduction_951
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_jxchlGjDidlqCCy:
-	jmp	.L_last_blocks_done_dfkhivqAFxzwiGe
-.L_last_num_blocks_is_10_dfkhivqAFxzwiGe:
+.L_after_reduction_951:
+	jmp	.L_last_blocks_done_933
+.L_last_num_blocks_is_10_933:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$246,%r15d
-	jae	.L_16_blocks_overflow_ifxfunzGkahmzhG
+	jae	.L_16_blocks_overflow_952
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%ymm27,%ymm3,%ymm4
-	jmp	.L_16_blocks_ok_ifxfunzGkahmzhG
+	jmp	.L_16_blocks_ok_952
 
-.L_16_blocks_overflow_ifxfunzGkahmzhG:
+.L_16_blocks_overflow_952:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -130523,7 +130523,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%ymm29,%ymm4,%ymm4
-.L_16_blocks_ok_ifxfunzGkahmzhG:
+.L_16_blocks_ok_952:
 
 
 
@@ -130654,7 +130654,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_iksxtDvwxlrniDa
+	jl	.L_small_initial_partial_block_953
 
 
 
@@ -130714,8 +130714,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_iksxtDvwxlrniDa
-.L_small_initial_partial_block_iksxtDvwxlrniDa:
+	jmp	.L_small_initial_compute_done_953
+.L_small_initial_partial_block_953:
 
 
 
@@ -130778,26 +130778,26 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_iksxtDvwxlrniDa:
+.L_small_initial_compute_done_953:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_iksxtDvwxlrniDa
+	je	.L_after_reduction_953
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_iksxtDvwxlrniDa:
-	jmp	.L_last_blocks_done_dfkhivqAFxzwiGe
-.L_last_num_blocks_is_11_dfkhivqAFxzwiGe:
+.L_after_reduction_953:
+	jmp	.L_last_blocks_done_933
+.L_last_num_blocks_is_11_933:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$245,%r15d
-	jae	.L_16_blocks_overflow_egrmrylcwtttayy
+	jae	.L_16_blocks_overflow_954
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
-	jmp	.L_16_blocks_ok_egrmrylcwtttayy
+	jmp	.L_16_blocks_ok_954
 
-.L_16_blocks_overflow_egrmrylcwtttayy:
+.L_16_blocks_overflow_954:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -130806,7 +130806,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
-.L_16_blocks_ok_egrmrylcwtttayy:
+.L_16_blocks_ok_954:
 
 
 
@@ -130937,7 +130937,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_axjaDvuzGlCcwmm
+	jl	.L_small_initial_partial_block_955
 
 
 
@@ -130998,8 +130998,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_axjaDvuzGlCcwmm
-.L_small_initial_partial_block_axjaDvuzGlCcwmm:
+	jmp	.L_small_initial_compute_done_955
+.L_small_initial_partial_block_955:
 
 
 
@@ -131062,26 +131062,26 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_axjaDvuzGlCcwmm:
+.L_small_initial_compute_done_955:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_axjaDvuzGlCcwmm
+	je	.L_after_reduction_955
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_axjaDvuzGlCcwmm:
-	jmp	.L_last_blocks_done_dfkhivqAFxzwiGe
-.L_last_num_blocks_is_12_dfkhivqAFxzwiGe:
+.L_after_reduction_955:
+	jmp	.L_last_blocks_done_933
+.L_last_num_blocks_is_12_933:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$128,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$244,%r15d
-	jae	.L_16_blocks_overflow_zwssxCnymfxljrk
+	jae	.L_16_blocks_overflow_956
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
-	jmp	.L_16_blocks_ok_zwssxCnymfxljrk
+	jmp	.L_16_blocks_ok_956
 
-.L_16_blocks_overflow_zwssxCnymfxljrk:
+.L_16_blocks_overflow_956:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -131090,7 +131090,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm0,%zmm0
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
-.L_16_blocks_ok_zwssxCnymfxljrk:
+.L_16_blocks_ok_956:
 
 
 
@@ -131221,7 +131221,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_EvfsABAshgacfke
+	jl	.L_small_initial_partial_block_957
 
 
 
@@ -131280,8 +131280,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_EvfsABAshgacfke
-.L_small_initial_partial_block_EvfsABAshgacfke:
+	jmp	.L_small_initial_compute_done_957
+.L_small_initial_partial_block_957:
 
 
 
@@ -131345,27 +131345,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_EvfsABAshgacfke:
+.L_small_initial_compute_done_957:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_EvfsABAshgacfke
+	je	.L_after_reduction_957
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_EvfsABAshgacfke:
-	jmp	.L_last_blocks_done_dfkhivqAFxzwiGe
-.L_last_num_blocks_is_13_dfkhivqAFxzwiGe:
+.L_after_reduction_957:
+	jmp	.L_last_blocks_done_933
+.L_last_num_blocks_is_13_933:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$243,%r15d
-	jae	.L_16_blocks_overflow_vsvrsCrquqxomml
+	jae	.L_16_blocks_overflow_958
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%xmm27,%xmm4,%xmm5
-	jmp	.L_16_blocks_ok_vsvrsCrquqxomml
+	jmp	.L_16_blocks_ok_958
 
-.L_16_blocks_overflow_vsvrsCrquqxomml:
+.L_16_blocks_overflow_958:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -131376,7 +131376,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%xmm29,%xmm5,%xmm5
-.L_16_blocks_ok_vsvrsCrquqxomml:
+.L_16_blocks_ok_958:
 
 
 
@@ -131526,7 +131526,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_adjxckAomkBzbjw
+	jl	.L_small_initial_partial_block_959
 
 
 
@@ -131591,8 +131591,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_adjxckAomkBzbjw
-.L_small_initial_partial_block_adjxckAomkBzbjw:
+	jmp	.L_small_initial_compute_done_959
+.L_small_initial_partial_block_959:
 
 
 
@@ -131654,27 +131654,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_adjxckAomkBzbjw:
+.L_small_initial_compute_done_959:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_adjxckAomkBzbjw
+	je	.L_after_reduction_959
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_adjxckAomkBzbjw:
-	jmp	.L_last_blocks_done_dfkhivqAFxzwiGe
-.L_last_num_blocks_is_14_dfkhivqAFxzwiGe:
+.L_after_reduction_959:
+	jmp	.L_last_blocks_done_933
+.L_last_num_blocks_is_14_933:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$242,%r15d
-	jae	.L_16_blocks_overflow_hmvAkrCzrvDuoEr
+	jae	.L_16_blocks_overflow_960
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%ymm27,%ymm4,%ymm5
-	jmp	.L_16_blocks_ok_hmvAkrCzrvDuoEr
+	jmp	.L_16_blocks_ok_960
 
-.L_16_blocks_overflow_hmvAkrCzrvDuoEr:
+.L_16_blocks_overflow_960:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -131685,7 +131685,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%ymm29,%ymm5,%ymm5
-.L_16_blocks_ok_hmvAkrCzrvDuoEr:
+.L_16_blocks_ok_960:
 
 
 
@@ -131835,7 +131835,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_spDCszqGjFtddFj
+	jl	.L_small_initial_partial_block_961
 
 
 
@@ -131900,8 +131900,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_spDCszqGjFtddFj
-.L_small_initial_partial_block_spDCszqGjFtddFj:
+	jmp	.L_small_initial_compute_done_961
+.L_small_initial_partial_block_961:
 
 
 
@@ -131969,27 +131969,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_spDCszqGjFtddFj:
+.L_small_initial_compute_done_961:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_spDCszqGjFtddFj
+	je	.L_after_reduction_961
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_spDCszqGjFtddFj:
-	jmp	.L_last_blocks_done_dfkhivqAFxzwiGe
-.L_last_num_blocks_is_15_dfkhivqAFxzwiGe:
+.L_after_reduction_961:
+	jmp	.L_last_blocks_done_933
+.L_last_num_blocks_is_15_933:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$241,%r15d
-	jae	.L_16_blocks_overflow_ADsszwCrGfcvGFi
+	jae	.L_16_blocks_overflow_962
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_ADsszwCrGfcvGFi
+	jmp	.L_16_blocks_ok_962
 
-.L_16_blocks_overflow_ADsszwCrGfcvGFi:
+.L_16_blocks_overflow_962:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -132000,7 +132000,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_ADsszwCrGfcvGFi:
+.L_16_blocks_ok_962:
 
 
 
@@ -132150,7 +132150,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_yyncnqrfuDoFFfc
+	jl	.L_small_initial_partial_block_963
 
 
 
@@ -132216,8 +132216,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_yyncnqrfuDoFFfc
-.L_small_initial_partial_block_yyncnqrfuDoFFfc:
+	jmp	.L_small_initial_compute_done_963
+.L_small_initial_partial_block_963:
 
 
 
@@ -132285,27 +132285,27 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_yyncnqrfuDoFFfc:
+.L_small_initial_compute_done_963:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_yyncnqrfuDoFFfc
+	je	.L_after_reduction_963
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_yyncnqrfuDoFFfc:
-	jmp	.L_last_blocks_done_dfkhivqAFxzwiGe
-.L_last_num_blocks_is_16_dfkhivqAFxzwiGe:
+.L_after_reduction_963:
+	jmp	.L_last_blocks_done_933
+.L_last_num_blocks_is_16_933:
 	leaq	byte64_len_to_mask_table(%rip),%r10
 	movq	%r8,%rax
 	subq	$192,%rax
 	kmovq	(%r10,%rax,8),%k1
 	cmpl	$240,%r15d
-	jae	.L_16_blocks_overflow_kxFpEbqmfGrayjB
+	jae	.L_16_blocks_overflow_964
 	vpaddd	%zmm28,%zmm2,%zmm0
 	vpaddd	%zmm27,%zmm0,%zmm3
 	vpaddd	%zmm27,%zmm3,%zmm4
 	vpaddd	%zmm27,%zmm4,%zmm5
-	jmp	.L_16_blocks_ok_kxFpEbqmfGrayjB
+	jmp	.L_16_blocks_ok_964
 
-.L_16_blocks_overflow_kxFpEbqmfGrayjB:
+.L_16_blocks_overflow_964:
 	vpshufb	%zmm29,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
 	vmovdqa64	ddq_add_4444(%rip),%zmm5
@@ -132316,7 +132316,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm3,%zmm3
 	vpshufb	%zmm29,%zmm4,%zmm4
 	vpshufb	%zmm29,%zmm5,%zmm5
-.L_16_blocks_ok_kxFpEbqmfGrayjB:
+.L_16_blocks_ok_964:
 
 
 
@@ -132463,7 +132463,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm21,%zmm21
 	vextracti32x4	$3,%zmm21,%xmm7
 	subq	$16 * (16 - 1),%r8
-.L_small_initial_partial_block_cCmuyFygpFpuyFD:
+.L_small_initial_partial_block_965:
 
 
 
@@ -132532,11 +132532,11 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_cCmuyFygpFpuyFD:
+.L_small_initial_compute_done_965:
 	vpxorq	%xmm7,%xmm14,%xmm14
-.L_after_reduction_cCmuyFygpFpuyFD:
-	jmp	.L_last_blocks_done_dfkhivqAFxzwiGe
-.L_last_num_blocks_is_0_dfkhivqAFxzwiGe:
+.L_after_reduction_965:
+	jmp	.L_last_blocks_done_933
+.L_last_num_blocks_is_0_933:
 	vmovdqa64	768(%rsp),%zmm13
 	vpxorq	%zmm14,%zmm13,%zmm13
 	vmovdqu64	0(%rsp,%rbx,1),%zmm12
@@ -132598,65 +132598,65 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm24,%xmm3,%xmm14
 
-.L_last_blocks_done_dfkhivqAFxzwiGe:
+.L_last_blocks_done_933:
 	vpshufb	%xmm29,%xmm2,%xmm2
-	jmp	.L_ghash_done_BgFfAgFalCBiqtf
+	jmp	.L_ghash_done_821
 
-.L_message_below_equal_16_blocks_BgFfAgFalCBiqtf:
+.L_message_below_equal_16_blocks_821:
 
 
 	movl	%r8d,%r12d
 	addl	$15,%r12d
 	shrl	$4,%r12d
 	cmpq	$8,%r12
-	je	.L_small_initial_num_blocks_is_8_BFvobdvksttGkes
-	jl	.L_small_initial_num_blocks_is_7_1_BFvobdvksttGkes
+	je	.L_small_initial_num_blocks_is_8_966
+	jl	.L_small_initial_num_blocks_is_7_1_966
 
 
 	cmpq	$12,%r12
-	je	.L_small_initial_num_blocks_is_12_BFvobdvksttGkes
-	jl	.L_small_initial_num_blocks_is_11_9_BFvobdvksttGkes
+	je	.L_small_initial_num_blocks_is_12_966
+	jl	.L_small_initial_num_blocks_is_11_9_966
 
 
 	cmpq	$16,%r12
-	je	.L_small_initial_num_blocks_is_16_BFvobdvksttGkes
+	je	.L_small_initial_num_blocks_is_16_966
 	cmpq	$15,%r12
-	je	.L_small_initial_num_blocks_is_15_BFvobdvksttGkes
+	je	.L_small_initial_num_blocks_is_15_966
 	cmpq	$14,%r12
-	je	.L_small_initial_num_blocks_is_14_BFvobdvksttGkes
-	jmp	.L_small_initial_num_blocks_is_13_BFvobdvksttGkes
+	je	.L_small_initial_num_blocks_is_14_966
+	jmp	.L_small_initial_num_blocks_is_13_966
 
-.L_small_initial_num_blocks_is_11_9_BFvobdvksttGkes:
+.L_small_initial_num_blocks_is_11_9_966:
 
 	cmpq	$11,%r12
-	je	.L_small_initial_num_blocks_is_11_BFvobdvksttGkes
+	je	.L_small_initial_num_blocks_is_11_966
 	cmpq	$10,%r12
-	je	.L_small_initial_num_blocks_is_10_BFvobdvksttGkes
-	jmp	.L_small_initial_num_blocks_is_9_BFvobdvksttGkes
+	je	.L_small_initial_num_blocks_is_10_966
+	jmp	.L_small_initial_num_blocks_is_9_966
 
-.L_small_initial_num_blocks_is_7_1_BFvobdvksttGkes:
+.L_small_initial_num_blocks_is_7_1_966:
 	cmpq	$4,%r12
-	je	.L_small_initial_num_blocks_is_4_BFvobdvksttGkes
-	jl	.L_small_initial_num_blocks_is_3_1_BFvobdvksttGkes
+	je	.L_small_initial_num_blocks_is_4_966
+	jl	.L_small_initial_num_blocks_is_3_1_966
 
 	cmpq	$7,%r12
-	je	.L_small_initial_num_blocks_is_7_BFvobdvksttGkes
+	je	.L_small_initial_num_blocks_is_7_966
 	cmpq	$6,%r12
-	je	.L_small_initial_num_blocks_is_6_BFvobdvksttGkes
-	jmp	.L_small_initial_num_blocks_is_5_BFvobdvksttGkes
+	je	.L_small_initial_num_blocks_is_6_966
+	jmp	.L_small_initial_num_blocks_is_5_966
 
-.L_small_initial_num_blocks_is_3_1_BFvobdvksttGkes:
+.L_small_initial_num_blocks_is_3_1_966:
 
 	cmpq	$3,%r12
-	je	.L_small_initial_num_blocks_is_3_BFvobdvksttGkes
+	je	.L_small_initial_num_blocks_is_3_966
 	cmpq	$2,%r12
-	je	.L_small_initial_num_blocks_is_2_BFvobdvksttGkes
+	je	.L_small_initial_num_blocks_is_2_966
 
 
 
 
 
-.L_small_initial_num_blocks_is_1_BFvobdvksttGkes:
+.L_small_initial_num_blocks_is_1_966:
 	vmovdqa64	SHUF_MASK(%rip),%xmm29
 	vpaddd	ONE(%rip),%xmm2,%xmm0
 	leaq	byte64_len_to_mask_table(%rip),%r10
@@ -132705,7 +132705,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_xwoqffAokxjdyfe
+	jl	.L_small_initial_partial_block_967
 
 
 
@@ -132747,8 +132747,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_xwoqffAokxjdyfe
-.L_small_initial_partial_block_xwoqffAokxjdyfe:
+	jmp	.L_small_initial_compute_done_967
+.L_small_initial_partial_block_967:
 
 
 
@@ -132772,11 +132772,11 @@ ossl_aes_gcm_decrypt_avx512:
 
 	vpxorq	%xmm13,%xmm14,%xmm14
 
-	jmp	.L_after_reduction_xwoqffAokxjdyfe
-.L_small_initial_compute_done_xwoqffAokxjdyfe:
-.L_after_reduction_xwoqffAokxjdyfe:
-	jmp	.L_small_initial_blocks_encrypted_BFvobdvksttGkes
-.L_small_initial_num_blocks_is_2_BFvobdvksttGkes:
+	jmp	.L_after_reduction_967
+.L_small_initial_compute_done_967:
+.L_after_reduction_967:
+	jmp	.L_small_initial_blocks_encrypted_966
+.L_small_initial_num_blocks_is_2_966:
 	vmovdqa64	SHUF_MASK(%rip),%ymm29
 	vshufi64x2	$0,%ymm2,%ymm2,%ymm0
 	vpaddd	ddq_add_1234(%rip),%ymm0,%ymm0
@@ -132827,7 +132827,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_docblAAffyjncil
+	jl	.L_small_initial_partial_block_968
 
 
 
@@ -132869,8 +132869,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_docblAAffyjncil
-.L_small_initial_partial_block_docblAAffyjncil:
+	jmp	.L_small_initial_compute_done_968
+.L_small_initial_partial_block_968:
 
 
 
@@ -132915,14 +132915,14 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_docblAAffyjncil:
+.L_small_initial_compute_done_968:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_docblAAffyjncil
+	je	.L_after_reduction_968
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_docblAAffyjncil:
-	jmp	.L_small_initial_blocks_encrypted_BFvobdvksttGkes
-.L_small_initial_num_blocks_is_3_BFvobdvksttGkes:
+.L_after_reduction_968:
+	jmp	.L_small_initial_blocks_encrypted_966
+.L_small_initial_num_blocks_is_3_966:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -132973,7 +132973,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_qwjngbegozfGvCf
+	jl	.L_small_initial_partial_block_969
 
 
 
@@ -133016,8 +133016,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_qwjngbegozfGvCf
-.L_small_initial_partial_block_qwjngbegozfGvCf:
+	jmp	.L_small_initial_compute_done_969
+.L_small_initial_partial_block_969:
 
 
 
@@ -133062,14 +133062,14 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_qwjngbegozfGvCf:
+.L_small_initial_compute_done_969:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_qwjngbegozfGvCf
+	je	.L_after_reduction_969
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_qwjngbegozfGvCf:
-	jmp	.L_small_initial_blocks_encrypted_BFvobdvksttGkes
-.L_small_initial_num_blocks_is_4_BFvobdvksttGkes:
+.L_after_reduction_969:
+	jmp	.L_small_initial_blocks_encrypted_966
+.L_small_initial_num_blocks_is_4_966:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -133120,7 +133120,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_lykpwlhBrquzBjq
+	jl	.L_small_initial_partial_block_970
 
 
 
@@ -133162,8 +133162,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_lykpwlhBrquzBjq
-.L_small_initial_partial_block_lykpwlhBrquzBjq:
+	jmp	.L_small_initial_compute_done_970
+.L_small_initial_partial_block_970:
 
 
 
@@ -133209,14 +133209,14 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_lykpwlhBrquzBjq:
+.L_small_initial_compute_done_970:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_lykpwlhBrquzBjq
+	je	.L_after_reduction_970
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_lykpwlhBrquzBjq:
-	jmp	.L_small_initial_blocks_encrypted_BFvobdvksttGkes
-.L_small_initial_num_blocks_is_5_BFvobdvksttGkes:
+.L_after_reduction_970:
+	jmp	.L_small_initial_blocks_encrypted_966
+.L_small_initial_num_blocks_is_5_966:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -133289,7 +133289,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_wEBEjcxteoEEbdv
+	jl	.L_small_initial_partial_block_971
 
 
 
@@ -133341,8 +133341,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_wEBEjcxteoEEbdv
-.L_small_initial_partial_block_wEBEjcxteoEEbdv:
+	jmp	.L_small_initial_compute_done_971
+.L_small_initial_partial_block_971:
 
 
 
@@ -133387,14 +133387,14 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_wEBEjcxteoEEbdv:
+.L_small_initial_compute_done_971:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_wEBEjcxteoEEbdv
+	je	.L_after_reduction_971
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_wEBEjcxteoEEbdv:
-	jmp	.L_small_initial_blocks_encrypted_BFvobdvksttGkes
-.L_small_initial_num_blocks_is_6_BFvobdvksttGkes:
+.L_after_reduction_971:
+	jmp	.L_small_initial_blocks_encrypted_966
+.L_small_initial_num_blocks_is_6_966:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -133467,7 +133467,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_GeGuFrqjgnGatCq
+	jl	.L_small_initial_partial_block_972
 
 
 
@@ -133519,8 +133519,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_GeGuFrqjgnGatCq
-.L_small_initial_partial_block_GeGuFrqjgnGatCq:
+	jmp	.L_small_initial_compute_done_972
+.L_small_initial_partial_block_972:
 
 
 
@@ -133575,14 +133575,14 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_GeGuFrqjgnGatCq:
+.L_small_initial_compute_done_972:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_GeGuFrqjgnGatCq
+	je	.L_after_reduction_972
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_GeGuFrqjgnGatCq:
-	jmp	.L_small_initial_blocks_encrypted_BFvobdvksttGkes
-.L_small_initial_num_blocks_is_7_BFvobdvksttGkes:
+.L_after_reduction_972:
+	jmp	.L_small_initial_blocks_encrypted_966
+.L_small_initial_num_blocks_is_7_966:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -133655,7 +133655,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_dnuemxcuxqiahko
+	jl	.L_small_initial_partial_block_973
 
 
 
@@ -133708,8 +133708,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_dnuemxcuxqiahko
-.L_small_initial_partial_block_dnuemxcuxqiahko:
+	jmp	.L_small_initial_compute_done_973
+.L_small_initial_partial_block_973:
 
 
 
@@ -133764,14 +133764,14 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_dnuemxcuxqiahko:
+.L_small_initial_compute_done_973:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_dnuemxcuxqiahko
+	je	.L_after_reduction_973
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_dnuemxcuxqiahko:
-	jmp	.L_small_initial_blocks_encrypted_BFvobdvksttGkes
-.L_small_initial_num_blocks_is_8_BFvobdvksttGkes:
+.L_after_reduction_973:
+	jmp	.L_small_initial_blocks_encrypted_966
+.L_small_initial_num_blocks_is_8_966:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -133844,7 +133844,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_lqkatnvbmenDGmu
+	jl	.L_small_initial_partial_block_974
 
 
 
@@ -133895,8 +133895,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_lqkatnvbmenDGmu
-.L_small_initial_partial_block_lqkatnvbmenDGmu:
+	jmp	.L_small_initial_compute_done_974
+.L_small_initial_partial_block_974:
 
 
 
@@ -133952,14 +133952,14 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_lqkatnvbmenDGmu:
+.L_small_initial_compute_done_974:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_lqkatnvbmenDGmu
+	je	.L_after_reduction_974
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_lqkatnvbmenDGmu:
-	jmp	.L_small_initial_blocks_encrypted_BFvobdvksttGkes
-.L_small_initial_num_blocks_is_9_BFvobdvksttGkes:
+.L_after_reduction_974:
+	jmp	.L_small_initial_blocks_encrypted_966
+.L_small_initial_num_blocks_is_9_966:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -134053,7 +134053,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_akbdAxxFivazzvn
+	jl	.L_small_initial_partial_block_975
 
 
 
@@ -134114,8 +134114,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_akbdAxxFivazzvn
-.L_small_initial_partial_block_akbdAxxFivazzvn:
+	jmp	.L_small_initial_compute_done_975
+.L_small_initial_partial_block_975:
 
 
 
@@ -134169,14 +134169,14 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_akbdAxxFivazzvn:
+.L_small_initial_compute_done_975:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_akbdAxxFivazzvn
+	je	.L_after_reduction_975
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_akbdAxxFivazzvn:
-	jmp	.L_small_initial_blocks_encrypted_BFvobdvksttGkes
-.L_small_initial_num_blocks_is_10_BFvobdvksttGkes:
+.L_after_reduction_975:
+	jmp	.L_small_initial_blocks_encrypted_966
+.L_small_initial_num_blocks_is_10_966:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -134270,7 +134270,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_gtCBivDqyilstnw
+	jl	.L_small_initial_partial_block_976
 
 
 
@@ -134331,8 +134331,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_gtCBivDqyilstnw
-.L_small_initial_partial_block_gtCBivDqyilstnw:
+	jmp	.L_small_initial_compute_done_976
+.L_small_initial_partial_block_976:
 
 
 
@@ -134396,14 +134396,14 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_gtCBivDqyilstnw:
+.L_small_initial_compute_done_976:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_gtCBivDqyilstnw
+	je	.L_after_reduction_976
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_gtCBivDqyilstnw:
-	jmp	.L_small_initial_blocks_encrypted_BFvobdvksttGkes
-.L_small_initial_num_blocks_is_11_BFvobdvksttGkes:
+.L_after_reduction_976:
+	jmp	.L_small_initial_blocks_encrypted_966
+.L_small_initial_num_blocks_is_11_966:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -134497,7 +134497,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_yCajAbdipitxdfG
+	jl	.L_small_initial_partial_block_977
 
 
 
@@ -134559,8 +134559,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_yCajAbdipitxdfG
-.L_small_initial_partial_block_yCajAbdipitxdfG:
+	jmp	.L_small_initial_compute_done_977
+.L_small_initial_partial_block_977:
 
 
 
@@ -134624,14 +134624,14 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_yCajAbdipitxdfG:
+.L_small_initial_compute_done_977:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_yCajAbdipitxdfG
+	je	.L_after_reduction_977
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_yCajAbdipitxdfG:
-	jmp	.L_small_initial_blocks_encrypted_BFvobdvksttGkes
-.L_small_initial_num_blocks_is_12_BFvobdvksttGkes:
+.L_after_reduction_977:
+	jmp	.L_small_initial_blocks_encrypted_966
+.L_small_initial_num_blocks_is_12_966:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -134725,7 +134725,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_GrGfiAqrrtbgoFj
+	jl	.L_small_initial_partial_block_978
 
 
 
@@ -134781,8 +134781,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_GrGfiAqrrtbgoFj
-.L_small_initial_partial_block_GrGfiAqrrtbgoFj:
+	jmp	.L_small_initial_compute_done_978
+.L_small_initial_partial_block_978:
 
 
 
@@ -134847,14 +134847,14 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_GrGfiAqrrtbgoFj:
+.L_small_initial_compute_done_978:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_GrGfiAqrrtbgoFj
+	je	.L_after_reduction_978
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_GrGfiAqrrtbgoFj:
-	jmp	.L_small_initial_blocks_encrypted_BFvobdvksttGkes
-.L_small_initial_num_blocks_is_13_BFvobdvksttGkes:
+.L_after_reduction_978:
+	jmp	.L_small_initial_blocks_encrypted_966
+.L_small_initial_num_blocks_is_13_966:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -134969,7 +134969,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_vxgEbbwrzCsbngh
+	jl	.L_small_initial_partial_block_979
 
 
 
@@ -135035,8 +135035,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_vxgEbbwrzCsbngh
-.L_small_initial_partial_block_vxgEbbwrzCsbngh:
+	jmp	.L_small_initial_compute_done_979
+.L_small_initial_partial_block_979:
 
 
 
@@ -135095,14 +135095,14 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_vxgEbbwrzCsbngh:
+.L_small_initial_compute_done_979:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_vxgEbbwrzCsbngh
+	je	.L_after_reduction_979
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_vxgEbbwrzCsbngh:
-	jmp	.L_small_initial_blocks_encrypted_BFvobdvksttGkes
-.L_small_initial_num_blocks_is_14_BFvobdvksttGkes:
+.L_after_reduction_979:
+	jmp	.L_small_initial_blocks_encrypted_966
+.L_small_initial_num_blocks_is_14_966:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -135217,7 +135217,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_lCAefFCethapCBx
+	jl	.L_small_initial_partial_block_980
 
 
 
@@ -135283,8 +135283,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_lCAefFCethapCBx
-.L_small_initial_partial_block_lCAefFCethapCBx:
+	jmp	.L_small_initial_compute_done_980
+.L_small_initial_partial_block_980:
 
 
 
@@ -135353,14 +135353,14 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_lCAefFCethapCBx:
+.L_small_initial_compute_done_980:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_lCAefFCethapCBx
+	je	.L_after_reduction_980
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_lCAefFCethapCBx:
-	jmp	.L_small_initial_blocks_encrypted_BFvobdvksttGkes
-.L_small_initial_num_blocks_is_15_BFvobdvksttGkes:
+.L_after_reduction_980:
+	jmp	.L_small_initial_blocks_encrypted_966
+.L_small_initial_num_blocks_is_15_966:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -135475,7 +135475,7 @@ ossl_aes_gcm_decrypt_avx512:
 
 
 	cmpq	$16,%r8
-	jl	.L_small_initial_partial_block_yAmanilitAqeGch
+	jl	.L_small_initial_partial_block_981
 
 
 
@@ -135542,8 +135542,8 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-	jmp	.L_small_initial_compute_done_yAmanilitAqeGch
-.L_small_initial_partial_block_yAmanilitAqeGch:
+	jmp	.L_small_initial_compute_done_981
+.L_small_initial_partial_block_981:
 
 
 
@@ -135612,14 +135612,14 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_yAmanilitAqeGch:
+.L_small_initial_compute_done_981:
 
 	orq	%r8,%r8
-	je	.L_after_reduction_yAmanilitAqeGch
+	je	.L_after_reduction_981
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_yAmanilitAqeGch:
-	jmp	.L_small_initial_blocks_encrypted_BFvobdvksttGkes
-.L_small_initial_num_blocks_is_16_BFvobdvksttGkes:
+.L_after_reduction_981:
+	jmp	.L_small_initial_blocks_encrypted_966
+.L_small_initial_num_blocks_is_16_966:
 	vmovdqa64	SHUF_MASK(%rip),%zmm29
 	vshufi64x2	$0,%zmm2,%zmm2,%zmm2
 	vpaddd	ddq_add_1234(%rip),%zmm2,%zmm0
@@ -135731,7 +135731,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vpshufb	%zmm29,%zmm11,%zmm11
 	vextracti32x4	$3,%zmm11,%xmm13
 	subq	$16 * (16 - 1),%r8
-.L_small_initial_partial_block_adFtlCftbzzmqiy:
+.L_small_initial_partial_block_982:
 
 
 
@@ -135801,18 +135801,18 @@ ossl_aes_gcm_decrypt_avx512:
 	vpslldq	$4,%xmm14,%xmm14
 	vpternlogq	$0x96,%xmm0,%xmm5,%xmm14
 
-.L_small_initial_compute_done_adFtlCftbzzmqiy:
+.L_small_initial_compute_done_982:
 	vpxorq	%xmm13,%xmm14,%xmm14
-.L_after_reduction_adFtlCftbzzmqiy:
-.L_small_initial_blocks_encrypted_BFvobdvksttGkes:
-.L_ghash_done_BgFfAgFalCBiqtf:
+.L_after_reduction_982:
+.L_small_initial_blocks_encrypted_966:
+.L_ghash_done_821:
 	vmovdqu64	%xmm2,0(%rsi)
 	vmovdqu64	%xmm14,64(%rsi)
-.L_enc_dec_done_BgFfAgFalCBiqtf:
+.L_enc_dec_done_821:
 	jmp	.Lexit_gcm_decrypt
 .Lexit_gcm_decrypt:
 	cmpq	$256,%r8
-	jbe	.Lskip_hkeys_cleanup_bDoEcnfhdqoqhlk
+	jbe	.Lskip_hkeys_cleanup_983
 	vpxor	%xmm0,%xmm0,%xmm0
 	vmovdqa64	%zmm0,0(%rsp)
 	vmovdqa64	%zmm0,64(%rsp)
@@ -135826,7 +135826,7 @@ ossl_aes_gcm_decrypt_avx512:
 	vmovdqa64	%zmm0,576(%rsp)
 	vmovdqa64	%zmm0,640(%rsp)
 	vmovdqa64	%zmm0,704(%rsp)
-.Lskip_hkeys_cleanup_bDoEcnfhdqoqhlk:
+.Lskip_hkeys_cleanup_983:
 	vzeroupper
 	leaq	(%rbp),%rsp
 .cfi_def_cfa_register	%rsp
@@ -135864,7 +135864,7 @@ ossl_aes_gcm_finalize_avx512:
 
 
 	cmpq	$0,%rsi
-	je	.L_partial_done_FqapxBplxvFlEbc
+	je	.L_partial_done_984
 
 	vpclmulqdq	$0x11,%xmm2,%xmm4,%xmm0
 	vpclmulqdq	$0x00,%xmm2,%xmm4,%xmm16
@@ -135894,7 +135894,7 @@ ossl_aes_gcm_finalize_avx512:
 
 	vpternlogq	$0x96,%xmm16,%xmm0,%xmm4
 
-.L_partial_done_FqapxBplxvFlEbc:
+.L_partial_done_984:
 	vmovq	56(%rdi),%xmm5
 	vpinsrq	$1,48(%rdi),%xmm5,%xmm5
 	vpsllq	$3,%xmm5,%xmm5
@@ -135932,7 +135932,7 @@ ossl_aes_gcm_finalize_avx512:
 	vpshufb	SHUF_MASK(%rip),%xmm4,%xmm4
 	vpxor	%xmm4,%xmm3,%xmm3
 
-.L_return_T_FqapxBplxvFlEbc:
+.L_return_T_984:
 	vmovdqu	%xmm3,64(%rdi)
 .Labort_finalize:
 	.byte	0xf3,0xc3
