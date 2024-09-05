@@ -147,7 +147,6 @@ set(crypto_srcs
         crypto/bsearch.c
         crypto/buffer/buf_err.c
         crypto/buffer/buffer.c
-        crypto/chacha/chacha_enc.c
         crypto/cmac/cmac.c
         crypto/cms/cms_asn1.c
         crypto/cms/cms_att.c
@@ -700,6 +699,7 @@ if (${ANDROID_ABI} STREQUAL "armeabi-v7a")
             crypto/armv4cpuid.S
             crypto/bn/asm/armv4-gf2m.S
             crypto/bn/asm/armv4-mont.S
+            crypto/chacha/asm/chacha-armv4.S
             crypto/ec/asm/ecp_nistz256-armv4.S
             crypto/modes/asm/ghash-armv4.S
             crypto/modes/asm/ghashv8-armx.S
@@ -719,6 +719,7 @@ elseif (${ANDROID_ABI} STREQUAL "arm64-v8a")
             crypto/armcap.c
             crypto/bn/asm/armv8-mont.S
             crypto/chacha/asm/chacha-armv8-sve.S
+            crypto/chacha/asm/chacha-armv8.S
             crypto/ec/asm/ecp_nistz256-armv8.S
             crypto/ec/asm/ecp_sm2p256-armv8.S
             crypto/md5/asm/md5-aarch64.S
@@ -745,6 +746,7 @@ elseif (${ANDROID_ABI} STREQUAL "x86")
             crypto/bn/asm/co-586.S
             crypto/bn/asm/x86-gf2m.S
             crypto/bn/asm/x86-mont.S
+            crypto/chacha/asm/chacha-x86.S
             crypto/des/asm/crypt586.S
             crypto/des/asm/des-586.S
             crypto/ec/asm/ecp_nistz256-x86.S
@@ -781,6 +783,7 @@ elseif (${ANDROID_ABI} STREQUAL "x86_64")
             crypto/bn/asm/x86_64-gf2m.S
             crypto/bn/asm/x86_64-mont.S
             crypto/bn/asm/x86_64-mont5.S
+            crypto/chacha/asm/chacha-x86_64.S
             crypto/ec/asm/ecp_nistz256-x86_64.S
             crypto/md5/asm/md5-x86_64.S
             crypto/modes/asm/aesni-gcm-x86_64.S

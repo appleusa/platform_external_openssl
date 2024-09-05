@@ -542,7 +542,7 @@ function import() {
   gen_asm_arm crypto/bn/asm/armv4-mont.pl
   gen_asm_arm crypto/armv4cpuid.pl
   gen_asm_arm crypto/sha/asm/keccak1600-armv4.pl
-
+  gen_asm_arm crypto/chacha/asm/chacha-armv4.pl
 
   # Generate armv8 asm
   gen_asm_arm64 crypto/aes/asm/aesv8-armx.pl crypto/aes/asm/aesv8-armx-64.S
@@ -557,18 +557,16 @@ function import() {
   gen_asm_arm64 crypto/poly1305/asm/poly1305-armv8.pl
   gen_asm_arm64 crypto/ec/asm/ecp_nistz256-armv8.pl
   gen_asm_arm64 crypto/ec/asm/ecp_sm2p256-armv8.pl
-  gen_asm_arm64 crypto/poly1305/asm/poly1305-armv8.pl
   gen_asm_arm64 crypto/bn/asm/armv8-mont.pl
   gen_asm_arm64 crypto/sha/asm/keccak1600-armv8.pl
   gen_asm_arm64 crypto/modes/asm/aes-gcm-armv8_64.pl
   gen_asm_arm64 crypto/sm4/asm/sm4-armv8.pl
   gen_asm_arm64 crypto/sm4/asm/vpsm4-armv8.pl
   gen_asm_arm64	crypto/chacha/asm/chacha-armv8-sve.pl
+  gen_asm_arm64	crypto/chacha/asm/chacha-armv8.pl
   gen_asm_arm64 crypto/md5/asm/md5-aarch64.pl
   gen_asm_arm64 crypto/sm3/asm/sm3-armv8.pl
   gen_asm_arm64 crypto/sm4/asm/vpsm4_ex-armv8.pl
-
-
 
   # Generate x86 asm
   gen_asm_x86 crypto/x86cpuid.pl
@@ -591,12 +589,13 @@ function import() {
   gen_asm_x86 crypto/sha/asm/sha1-586.pl
   gen_asm_x86 crypto/sha/asm/sha512-586.pl
   gen_asm_x86 crypto/des/asm/des-586.pl
-  gen_asm_x86 crypto/poly1305/asm/poly1305-x86.pl
   gen_asm_x86 crypto/bn/asm/x86-gf2m.pl
   gen_asm_x86 crypto/bf/asm/bf-586.pl
   gen_asm_x86 crypto/modes/asm/ghash-x86.pl
   gen_asm_x86 crypto/ec/asm/ecp_nistz256-x86.pl
   gen_asm_x86 crypto/sha/asm/keccak1600-mmx.pl
+  gen_asm_x86 crypto/chacha/asm/chacha-x86.pl
+
 
   # Generate x86_64 asm
   
@@ -642,6 +641,7 @@ function import() {
 	gen_asm_x86_64 crypto/bn/asm/rsaz-4k-avx512.pl
 	gen_asm_x86_64 crypto/modes/asm/aes-gcm-avx512.pl
 
+  gen_asm_x86_64 crypto/chacha/asm/chacha-x86_64.pl
   
   cd ..
 
