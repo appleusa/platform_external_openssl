@@ -263,6 +263,7 @@ function generate_build_config_headers() {
   make include/openssl/asn1.h include/openssl/asn1t.h include/openssl/bio.h include/openssl/cmp.h include/openssl/cms.h include/openssl/conf.h include/openssl/configuration.h include/openssl/crmf.h include/openssl/crypto.h include/openssl/ct.h include/openssl/err.h include/openssl/ess.h
   make include/openssl/fipskey.h include/openssl/ocsp.h include/openssl/opensslv.h include/openssl/pkcs12.h include/openssl/pkcs7.h include/openssl/safestack.h include/openssl/srp.h include/openssl/ssl.h include/openssl/ui.h include/openssl/x509.h include/openssl/x509_vfy.h include/openssl/x509v3.h
   make include/openssl/core_names.h include/internal/param_names.h crypto/params_idx.c
+  make include/openssl/comp.h include/openssl/x509_acert.h
 
   rm -f apps/CA.pl.bak openssl/opensslconf.h.bak
   mv -f include/crypto/bn_conf.h include/crypto/bn_conf-$outname.h

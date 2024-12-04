@@ -162,6 +162,7 @@ set(crypto_srcs
         crypto/cms/cms_pwri.c
         crypto/cms/cms_sd.c
         crypto/cms/cms_smime.c
+        crypto/comp_methods.c
         crypto/comp/c_brotli.c
         crypto/comp/c_zlib.c
         crypto/comp/c_zstd.c
@@ -200,6 +201,7 @@ set(crypto_srcs
         crypto/ctype.c
         crypto/cpuid.c
         crypto/cversion.c
+        crypto/defaults.c
         crypto/des/cbc_cksm.c
         crypto/des/cbc_enc.c
         crypto/des/cfb64ede.c
@@ -420,12 +422,14 @@ set(crypto_srcs
         crypto/ffc/ffc_params_generate.c
         crypto/ffc/ffc_params_validate.c
         crypto/getenv.c
+        crypto/hashtable/hashtable.c
         crypto/hmac/hmac.c
         crypto/hpke/hpke.c
         crypto/hpke/hpke_util.c
         crypto/http/http_client.c
         crypto/http/http_err.c
         crypto/http/http_lib.c
+        crypto/indicator_core.c
         crypto/info.c
         crypto/init.c
         crypto/initthread.c
@@ -622,6 +626,7 @@ set(crypto_srcs
         crypto/x509/v3_no_rev_avail.c
         crypto/x509/v3_single_use.c
         crypto/x509/v3_soa_id.c
+        crypto/x509/x509_acert.c
         crypto/x509/x509_att.c
         crypto/x509/x509_cmp.c
         crypto/x509/x509_d2.c
@@ -658,9 +663,12 @@ set(crypto_srcs
         crypto/x509/pcy_map.c
         crypto/x509/pcy_node.c
         crypto/x509/pcy_tree.c
+        crypto/x509/v3_ac_tgt.c
         crypto/x509/v3_admis.c
         crypto/x509/v3_akeya.c
         crypto/x509/v3_akid.c
+        crypto/x509/v3_audit_id.c
+        crypto/x509/v3_battcons.c
         crypto/x509/v3_bcons.c
         crypto/x509/v3_bitst.c
         crypto/x509/v3_conf.c
@@ -672,6 +680,7 @@ set(crypto_srcs
         crypto/x509/v3_ia5.c
         crypto/x509/v3_info.c
         crypto/x509/v3_int.c
+        crypto/x509/v3_iobo.c
         crypto/x509/v3_ist.c
         crypto/x509/v3_lib.c
         crypto/x509/v3_ncons.c
@@ -683,9 +692,11 @@ set(crypto_srcs
         crypto/x509/v3_prn.c
         crypto/x509/v3_purp.c
         crypto/x509/v3_san.c
+        crypto/x509/v3_sda.c
         crypto/x509/v3_skid.c
         crypto/x509/v3_sxnet.c
         crypto/x509/v3_tlsf.c
+        crypto/x509/v3_usernotice.c
         crypto/x509/v3_utf8.c
         crypto/x509/v3_utl.c
         crypto/x509/v3err.c
@@ -974,7 +985,6 @@ set(provider_srcs
         providers/implementations/macs/kmac_prov.c
         providers/implementations/macs/poly1305_prov.c
         providers/implementations/macs/siphash_prov.c
-        providers/implementations/rands/crngt.c
         providers/implementations/rands/drbg.c
         providers/implementations/rands/drbg_ctr.c
         providers/implementations/rands/drbg_hash.c
@@ -1015,7 +1025,8 @@ target_include_directories(crypto PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/openssl/crypto/ec/curve448/
         ${CMAKE_CURRENT_SOURCE_DIR}/openssl/providers/common/include/
         ${CMAKE_CURRENT_SOURCE_DIR}/openssl/providers/implementations/include/
-        )
+        ${CMAKE_CURRENT_SOURCE_DIR}/openssl/providers/fips/include/
+)
 
 target_include_directories(crypto PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/openssl/crypto/modes
@@ -1109,7 +1120,6 @@ set(ssl_srcs
         ssl/d1_lib.c
         ssl/d1_msg.c
         ssl/d1_srtp.c
-        ssl/event_queue.c
         ssl/methods.c
         ssl/pqueue.c
         ssl/priority_queue.c
